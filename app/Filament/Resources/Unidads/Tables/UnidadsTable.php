@@ -14,6 +14,9 @@ class UnidadsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('nombre')
                 ->label('Unidades')
                     ->searchable(),

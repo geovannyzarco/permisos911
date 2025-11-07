@@ -15,6 +15,7 @@ class EntidadsTable
         return $table
             ->columns([
                 TextColumn::make('id')
+                ->label('ID')
                     ->sortable(),
                 TextColumn::make('nombre')
                     ->searchable(),

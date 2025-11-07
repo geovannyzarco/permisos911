@@ -15,10 +15,11 @@ class EstadosTable
         return $table
             ->columns([
                 TextColumn::make('id')
+                    ->label('ID')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('entidad.nombre')
-                    ->label('Emtidad')
+                    ->label('Entidad')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('nombre')

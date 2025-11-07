@@ -14,6 +14,9 @@ class HorariosTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('nombre')
                     ->searchable(),
                 TextColumn::make('horas_jornada')

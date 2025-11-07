@@ -18,7 +18,7 @@ class EntidadResource extends Resource
 {
     protected static ?string $model = Entidad::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
 
     protected static ?string $recordTitleAttribute = 'Entidades';
     protected static ?string $navigationLabel = 'Entidades';

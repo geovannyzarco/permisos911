@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Divisions\Tables;
 
+use Dom\Text;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -14,6 +15,9 @@ class DivisionsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->sortable()
+                    ->label('ID'),
                 TextColumn::make('nombre')
                     ->searchable(),
                 TextColumn::make('ubicacion')
