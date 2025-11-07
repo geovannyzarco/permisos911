@@ -11,7 +11,7 @@ class Estado extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['entidad_id'];
+    protected $fillable = ['entidad_id', 'nombre'];
 
     protected $searchableFields = ['*'];
 

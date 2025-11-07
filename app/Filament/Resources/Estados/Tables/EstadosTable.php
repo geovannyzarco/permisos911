@@ -14,9 +14,13 @@ class EstadosTable
     {
         return $table
             ->columns([
-                TextColumn::make('entidad_id')
+                TextColumn::make('id')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('entidad.nombre')
+                    ->label('Emtidad')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('nombre')
                     ->sortable()
                     ->searchable(),

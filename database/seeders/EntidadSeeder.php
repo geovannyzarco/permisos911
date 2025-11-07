@@ -12,8 +12,7 @@ class EntidadSeeder extends Seeder
      */
     public function run(): void
     {
-        Entidad::factory()
-            ->count(5)
-            ->create();
+        Entidad::create(['nombre' => 'Empleados']);
+        Entidad::create(['nombre' => 'Permisos']);
     }
 }
