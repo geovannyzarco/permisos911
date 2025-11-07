@@ -23,6 +23,8 @@ class UnidadResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Unidades';
     protected static ?string $navigationLabel = 'Unidades';
+    protected static ?string $pluralModelLabel = 'Unidades';
+    protected static ?string $modelLabel = 'Unidad';
 
     public static function form(Schema $schema): Schema
     {

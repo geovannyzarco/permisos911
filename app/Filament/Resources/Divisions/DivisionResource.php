@@ -21,6 +21,8 @@ class DivisionResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $navigationLabel = 'Divisiones';
+    protected static ?string $pluralModelLabel = 'Divisiones';
+    protected static ?string $modelLabel = 'Division';
 
     protected static ?string $recordTitleAttribute = 'Divisiones';
 
