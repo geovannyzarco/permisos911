@@ -2,18 +2,42 @@
 
 namespace Database\Seeders;
 
-use App\Models\TipoPermiso;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class TipoPermisoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        TipoPermiso::factory()
-            ->count(5)
-            ->create();
+        $path = database_path('seeders/datos/tipo_permisos.csv');
+
+        if (!File::exists($path)) {
+            $this->command->error("No se encontró el archivo tipo_permisos.csv en: $path");
+            return;
+        }
+
+        $file = fopen($path, 'r');
+
+        // Saltar la primera línea (encabezados)
+        fgetcsv($file);
+
+        $registros = 0;
+
+        while (($data = fgetcsv($file)) !== false) {
+            // CSV esperado: "id","nombre"
+            $nombre = $data[1] ?? null;
+
+            if ($nombre) {
+                DB::table('tipo_permisos')->insert([
+                    'nombre' => $nombre,
+                ]);
+                $registros++;
+            }
+        }
+
+        fclose($file);
+
+        $this->command->info("Se importaron {$registros} registros en la tabla tipo_permisos.");
     }
 }
