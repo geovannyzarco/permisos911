@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EntidadSeeder::class);
         $this->call(EstadoSeeder::class);
         $this->call(GrupoSeeder::class);
-        //$this->call(HorarioSeeder::class);
+        $this->call(HorarioSeeder::class);
         //$this->call(NivelSeeder::class);
         //$this->call(PermisoSeeder::class);
         //$this->call(TipoPermisoSeeder::class);
