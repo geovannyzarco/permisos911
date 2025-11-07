@@ -12,8 +12,9 @@ class NivelSeeder extends Seeder
      */
     public function run(): void
     {
-        Nivel::factory()
-            ->count(5)
-            ->create();
+        Nivel::create(['nivel' => 'Empleado']);
+        Nivel::create(['nivel' => 'Jefe de Grupo']);
+        Nivel::create(['nivel' => 'Jefe de Unidad']);
+        Nivel::create(['nivel' => 'Jefe de Division']);
     }
 }
