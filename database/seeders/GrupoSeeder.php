@@ -2,18 +2,39 @@
 
 namespace Database\Seeders;
 
-use App\Models\Grupo;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class GrupoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Grupo::factory()
-            ->count(5)
-            ->create();
+        $path = database_path('seeders/datos/grupos.csv');
+
+        if (!File::exists($path)) {
+            $this->command->error("El archivo grupos.csv no se encontró en: $path");
+            return;
+        }
+
+        $file = fopen($path, 'r');
+
+        // Saltar la primera línea (encabezados)
+        fgetcsv($file);
+
+        while (($data = fgetcsv($file)) !== false) {
+            // CSV: "id","name"
+            $nombre = $data[1] ?? null;
+
+            if ($nombre) {
+                DB::table('grupos')->insert([
+                    'nombre' => $nombre,
+                ]);
+            }
+        }
+
+        fclose($file);
+
+        $this->command->info('Datos de grupos importados correctamente.');
     }
 }
