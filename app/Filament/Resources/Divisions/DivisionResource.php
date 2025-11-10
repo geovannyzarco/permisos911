@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class DivisionResource extends Resource
 {
@@ -23,7 +24,8 @@ class DivisionResource extends Resource
     protected static ?string $navigationLabel = 'Divisiones';
     protected static ?string $pluralModelLabel = 'Divisiones';
     protected static ?string $modelLabel = 'Division';
-
+    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'Divisiones';
 
     public static function form(Schema $schema): Schema

@@ -13,12 +13,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class HorarioResource extends Resource
 {
     protected static ?string $model = Horario::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
+    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'Horarios';
 

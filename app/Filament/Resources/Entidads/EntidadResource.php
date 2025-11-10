@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class EntidadResource extends Resource
 {
@@ -22,6 +23,8 @@ class EntidadResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Entidades';
     protected static ?string $navigationLabel = 'Entidades';
+    protected static string | UnitEnum | null $navigationGroup = 'Mantenimiento';
+    protected static ?int $navigationSort = 3;
     protected static ?string $pluralModelLabel = 'Entidades';
     protected static ?string $modelLabel = 'Entidad';
 

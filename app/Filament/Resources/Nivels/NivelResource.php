@@ -13,12 +13,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class NivelResource extends Resource
 {
     protected static ?string $model = Nivel::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserPlus;
+    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationLabel = 'Niveles';
     protected static ?string $pluralModelLabel = 'Niveles';

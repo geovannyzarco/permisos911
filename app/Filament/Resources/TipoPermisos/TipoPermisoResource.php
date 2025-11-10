@@ -13,13 +13,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class TipoPermisoResource extends Resource
 {
     protected static ?string $model = TipoPermiso::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
-
+    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'Tipos de Permisos';
 
     public static function form(Schema $schema): Schema

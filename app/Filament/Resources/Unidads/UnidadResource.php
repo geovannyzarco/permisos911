@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 
 class UnidadResource extends Resource
@@ -20,6 +21,8 @@ class UnidadResource extends Resource
     protected static ?string $model = Unidad::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
+    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'Unidades';
     protected static ?string $navigationLabel = 'Unidades';
