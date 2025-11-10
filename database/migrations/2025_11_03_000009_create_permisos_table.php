@@ -16,17 +16,16 @@ return new class extends Migration {
             $table->dateTime('desde');
             $table->dateTime('hasta');
             $table->text('motivo');
-            $table->text('adjunto');
-            $table->text('comentarios');
+            $table->text('adjunto')->nullable();
+            $table->text('comentarios')->nullable();
             $table->unsignedBigInteger('empleado_id');
             $table->unsignedBigInteger('tipo_permiso_id');
             $table->integer('id_estado_aprobacion_grupo');
-            $table->integer('id_jefe_grupo');
-            $table->dateTime('fecha_aprobacion');
-            $table->integer('id_aprobacion_unidad');
-            $table->integer('id_jefe_unidad');
-            $table->dateTime('fecha_aprobacion_unidad');
-
+            $table->integer('id_jefe_grupo')->nullable();
+            $table->dateTime('fecha_aprobacion_grupo')->nullable(); //  importante
+            $table->integer('id_aprobacion_unidad')->nullable();
+            $table->integer('id_jefe_unidad')->nullable();
+            $table->dateTime('fecha_aprobacion_unidad')->nullable(); //  importante
             $table->timestamps();
         });
     }

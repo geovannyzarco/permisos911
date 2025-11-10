@@ -52,4 +52,14 @@ class Permiso extends Model
     {
         return $this->hasMany(Compensado::class);
     }
+
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'id_estado_aprobacion_grupo');
+    }
+
+    public function estadoUnidad()
+    {
+        return $this->belongsTo(Estado::class, 'id_aprobacion_unidad');
+    }
 }
