@@ -17,7 +17,7 @@ class EstadoSeeder extends Seeder
             ['nombre' => 'INACTIVO','entidad_id' => 1],
             ['nombre' => 'APROBADO','entidad_id' => 2],
             ['nombre' => 'PENDIENTE','entidad_id' => 2],
-            ['nombre' => 'ANULADO','entidad_id' => 2],
+            ['nombre' => 'RECHAZADO','entidad_id' => 2],
         ];
 
         foreach ($estados as $estado) {

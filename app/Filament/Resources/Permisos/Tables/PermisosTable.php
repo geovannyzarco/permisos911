@@ -7,6 +7,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PermisosTable
@@ -30,7 +32,15 @@ class PermisosTable
 
             ])
             ->filters([
-                //
+                    SelectFilter::make('estado_id')
+                    ->label('Estado de Aprobación')
+                    ->relationship(
+                        name:'estado',
+                        titleAttribute:'nombre',
+                        modifyQueryUsing: fn($query)=>$query->where('entidad_id',2)
+                        )
+                    ->preload()
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
