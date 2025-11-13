@@ -7,12 +7,15 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Spatie\Permission\Traits\HasRoles;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 class User extends Authenticatable
 {
     use Notifiable;
     use HasFactory;
     use Searchable;
+    use HasRoles;
+    use HasPanelShield;
 
     protected $fillable = ['name', 'oni','email', 'password'];
 
