@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('grupos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

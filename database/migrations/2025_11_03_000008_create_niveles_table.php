@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->bigIncrements('id');
             $table->string('nivel');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

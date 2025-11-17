@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->text('adjunto');
             $table->unsignedBigInteger('permiso_id');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

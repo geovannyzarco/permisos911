@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('nombre');
             $table->unsignedBigInteger('entidad_id');
             $table->foreign('entidad_id')->references('id')->on('entidades')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

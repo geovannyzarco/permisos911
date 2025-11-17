@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('nivel_id');
             $table->unsignedBigInteger('estado_id');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

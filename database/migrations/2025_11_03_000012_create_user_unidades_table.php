@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('user_unidades', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

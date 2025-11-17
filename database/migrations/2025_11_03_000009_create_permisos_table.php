@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('permisos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('fecha_creacion');
-            $table->dateTime('desde');
-            $table->dateTime('hasta');
+            $table->dateTimeTz('desde');
+            $table->dateTimeTz('hasta');
             $table->text('motivo');
             $table->text('adjunto')->nullable();
             $table->text('comentarios')->nullable();
@@ -22,11 +22,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('tipo_permiso_id');
             $table->integer('id_estado_aprobacion_grupo');
             $table->integer('id_jefe_grupo')->nullable();
-            $table->dateTime('fecha_aprobacion_grupo')->nullable(); //  importante
+            $table->dateTimeTz('fecha_aprobacion_grupo')->nullable(); //  importante
             $table->integer('id_aprobacion_unidad')->nullable();
             $table->integer('id_jefe_unidad')->nullable();
-            $table->dateTime('fecha_aprobacion_unidad')->nullable(); //  importante
-            $table->timestamps();
+            $table->dateTimeTz('fecha_aprobacion_unidad')->nullable(); //  importante
+            $table->timestampsTz();
         });
     }
 
