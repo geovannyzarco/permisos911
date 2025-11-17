@@ -24,6 +24,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function username()
+    {
+        return 'oni';
+    }
+
+
     public function isSuperAdmin(): bool
     {
         return in_array($this->email, config('auth.super_admins'));
