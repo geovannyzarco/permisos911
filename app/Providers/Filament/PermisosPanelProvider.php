@@ -2,11 +2,11 @@
 
 namespace App\Providers\Filament;
 
-<<<<<<< HEAD
+
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-=======
+
 use App\Filament\Pages\Login;
->>>>>>> a04db34d30b59592265ed2c0053ceff613b0dfe0
+
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,9 +33,7 @@ class PermisosPanelProvider extends PanelProvider
             ->default()
             ->id('permisos')
             ->path('permisos')
-          ->authPages([
-                \App\Filament\Pages\Login::class,
-                    ])
+
             ->colors([
                 'primary' => Color::Amber,
             ])
