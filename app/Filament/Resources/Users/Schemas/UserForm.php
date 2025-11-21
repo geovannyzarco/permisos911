@@ -31,6 +31,7 @@ class UserForm
                     ->maxLength(255)
                     ->rule('nullable')
                     ->placeholder('Deja en blanco si no deseas cambiarla'),
+<<<<<<< HEAD
                 Select::make('roles')
                 ->relationship('roles', 'name')
                 ->multiple()
@@ -41,6 +42,12 @@ class UserForm
                CheckboxList::make('roles')
                     ->relationship('roles', 'name')
                     ->searchable(),
+=======
+
+
+
+
+>>>>>>> a04db34d30b59592265ed2c0053ceff613b0dfe0
                             ]);
     }
 }

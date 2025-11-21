@@ -5,25 +5,30 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
 
 class PermisoSeeder extends Seeder
 {
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-        $path = database_path('seeders\datos\permisos.csv'); // Ruta del archivo CSV
+        $path = database_path('seeders/datos/permisos.csv');
 
         if (!file_exists($path)) {
             $this->command->error("No se encontró el archivo: $path");
             return;
         }
 
+        // 🔥 Cargar todos los IDs válidos
+        $empleadosValidos = DB::table('empleados')->pluck('id')->toArray();
+        $tiposValidos = DB::table('tipo_permisos')->pluck('id')->toArray();
+
         $file = fopen($path, 'r');
-        $header = fgetcsv($file); // Leer encabezado
+        $header = fgetcsv($file);
+
+        $invalidos = []; // Para reportar errores
+        $insertados = 0;
 
         while (($row = fgetcsv($file)) !== false) {
-            // Mapear columnas del CSV a los campos de la tabla
+
             [
                 $id,
                 $id_empleado,
@@ -37,38 +42,54 @@ class PermisoSeeder extends Seeder
                 $id_estado
             ] = $row;
 
-            // Convertir fechas al formato adecuado (YYYY-MM-DD o YYYY-MM-DD HH:MM:SS)
-            $fecha_creacion = $this->parseDate($fecha_creacion);
-            $desde = $this->parseDate($desde);
-            $hasta = $this->parseDate($hasta);
+            // ❌ Validar empleado
+            if (!in_array($id_empleado, $empleadosValidos)) {
+                $invalidos[] = "Empleado inexistente: empleado_id=$id_empleado (permiso $id)";
+                continue;
+            }
 
+            // ❌ Validar tipo permiso
+            if (!in_array($id_tipo_permiso, $tiposValidos)) {
+                $invalidos[] = "TipoPermiso inexistente: tipo_permiso_id=$id_tipo_permiso (permiso $id)";
+                continue;
+            }
+
+            // ✔ Insertar solo si es válido
             DB::table('permisos')->insert([
-                'fecha_creacion' => $fecha_creacion,
-                'desde' => $desde,
-                'hasta' => $hasta,
+                'fecha_creacion' => $this->parseDate($fecha_creacion),
+                'desde' => $this->parseDate($desde),
+                'hasta' => $this->parseDate($hasta),
                 'motivo' => $motivo,
                 'adjunto' => $adjunto ?? '',
                 'comentarios' => $comentarios ?? '',
                 'empleado_id' => $id_empleado,
                 'tipo_permiso_id' => $id_tipo_permiso,
                 'id_estado_aprobacion_grupo' => $id_estado,
-                'id_jefe_grupo' => 0, // Asignar por defecto (si aún no hay jefe)
+                'id_jefe_grupo' => null,
                 'fecha_aprobacion_grupo' => null,
-                'id_aprobacion_unidad' => 0,
-                'id_jefe_unidad' => 0,
+                'id_aprobacion_unidad' => null,
+                'id_jefe_unidad' => null,
                 'fecha_aprobacion_unidad' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            $insertados++;
         }
 
         fclose($file);
-        Schema::enableForeignKeyConstraints();
+
+        // ✔ Reporte final
+        $this->command->info("Permisos insertados: $insertados");
+
+        if (!empty($invalidos)) {
+            $this->command->warn("Registros inválidos encontrados:");
+            foreach ($invalidos as $linea) {
+                $this->command->warn(" - $linea");
+            }
+        }
     }
 
-    /**
-     * Convierte fechas del formato "d/m/Y H:i:s" al formato MySQL.
-     */
     private function parseDate(?string $date): ?string
     {
         if (empty($date)) {
@@ -76,7 +97,6 @@ class PermisoSeeder extends Seeder
         }
 
         try {
-            // Detectar si viene con hora
             if (str_contains($date, ':')) {
                 return Carbon::createFromFormat('d/m/Y H:i:s', $date)->format('Y-m-d H:i:s');
             } else {
@@ -86,5 +106,5 @@ class PermisoSeeder extends Seeder
             return null;
         }
     }
-
 }
+

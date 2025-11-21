@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'ep00116@se911.com',
             'password' => bcrypt('100504'),
+            'oni'=>'EP00116'
         ]);
     }
 }

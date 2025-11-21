@@ -15,16 +15,17 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriaSeeder::class);
         //$this->call(CompensadoSeeder::class);
         $this->call(DivisionSeeder::class);
+        $this->call(UnidadSeeder::class);
         $this->call(EntidadSeeder::class);
         $this->call(EstadoSeeder::class);
         $this->call(GrupoSeeder::class);
         $this->call(HorarioSeeder::class);
         $this->call(NivelSeeder::class);
-        $this->call(PermisoSeeder::class);
-        $this->call(TipoPermisoSeeder::class);
-        $this->call(UnidadSeeder::class);
-        $this->call(UserSeeder::class);
         $this->call(EmpleadoSeeder::class);
+        $this->call(TipoPermisoSeeder::class);
+        $this->call(PermisoSeeder::class);
+        $this->call(UserSeeder::class);
+
         //$this->call(UserUnidadSeeder::class);
     }
 }

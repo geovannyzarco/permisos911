@@ -2,7 +2,11 @@
 
 namespace App\Providers\Filament;
 
+<<<<<<< HEAD
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+=======
+use App\Filament\Pages\Login;
+>>>>>>> a04db34d30b59592265ed2c0053ceff613b0dfe0
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,6 +24,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+
 class PermisosPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -28,7 +33,9 @@ class PermisosPanelProvider extends PanelProvider
             ->default()
             ->id('permisos')
             ->path('permisos')
-            ->login()
+          ->authPages([
+                \App\Filament\Pages\Login::class,
+                    ])
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -36,6 +43,7 @@ class PermisosPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([

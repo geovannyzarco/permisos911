@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->integer('horas_jornada');
             $table->integer('horas_personales');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

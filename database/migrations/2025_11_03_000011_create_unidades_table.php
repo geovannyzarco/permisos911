@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('nombre');
             $table->unsignedBigInteger('division_id');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
