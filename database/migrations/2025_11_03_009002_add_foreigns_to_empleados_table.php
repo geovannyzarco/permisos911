@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('empleados', function (Blueprint $table) {
-            $table
+           $table
                 ->foreign('grupo_id')
                 ->references('id')
                 ->on('grupos')
