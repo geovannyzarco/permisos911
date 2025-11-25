@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 
 class PermisosTable
 {
@@ -35,7 +36,12 @@ class PermisosTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('pdf')
+                ->label('Generar PDF')
+                ->url(fn ($record) => route('permiso.pdf', ['id' => $record->id]))
+                ->openUrlInNewTab(),
             ])
+
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

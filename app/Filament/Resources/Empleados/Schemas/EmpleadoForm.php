@@ -61,8 +61,11 @@ class EmpleadoForm
                     ->image(),
 
                 SignaturePad::make('firma')
-                    ->label('Firma')
-                    ->backgroundColor('#f2efef'),
+                    ->label('Firma del empleado')
+                    ->backgroundColor('#f2efef')
+                    ->required()
+                    ->dehydrateStateUsing(fn($state) => $state)
+                     ->columnSpanFull(),
                     //https://filamentphp.com/plugins/saade-autograph
                     //->dotSize(2.0)
                    // ->lineMinWidth(0.5)
@@ -70,7 +73,7 @@ class EmpleadoForm
                    // ->throttle(16)
                    // ->minDistance(5)
                    // ->velocityFilterWeight(0.7)
-                   // ->backgroundColorOnDark('#f0a')     // Background color on dark mode (defaults to backgroundColor)
+                   //->backgroundColorOnDark('#f0a'),     // Background color on dark mode (defaults to backgroundColor)
                    // ->exportBackgroundColor('#f00')     // Background color on export (defaults to backgroundColor)
                    // ->penColor('#000')                  // Pen color on light mode
                    // ->penColorOnDark('#fff')            // Pen color on dark mode (defaults to penColor)
