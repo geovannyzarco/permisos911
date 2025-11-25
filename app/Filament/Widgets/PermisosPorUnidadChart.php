@@ -3,42 +3,57 @@
 namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
+use App\Models\Permiso;
+use Illuminate\Support\Carbon;
 
 class PermisosPorUnidadChart extends ChartWidget
 {
-    protected  ?string $heading = 'Permisos por Unidad (Año 2025)';
-    protected  string $color = 'success'; // opcional
+
+
     protected static ?int $sort = 3;
+    protected ?string $heading = 'Permisos por Unidad (Año actual)';
 
     protected function getData(): array
     {
         $year = now()->year;
-        $result = DB::select("
-            SELECT
-                dbo.unidades.nombre AS unidades,
-                COUNT(dbo.permisos.id) AS permisos
-            FROM dbo.permisos
-            INNER JOIN dbo.empleados ON dbo.permisos.empleado_id = dbo.empleados.id
-            INNER JOIN dbo.unidades ON dbo.empleados.unidad_id = dbo.unidades.id
-            WHERE YEAR(dbo.permisos.desde) = ".$year."
-            GROUP BY dbo.unidades.nombre
-        ");
 
-        $labels = [];
-        $values = [];
+        // ---- CONSULTA ELOQUENT ----
+        $result = Permiso::query()
+            ->selectRaw('unidades.nombre AS unidad, COUNT(permisos.id) AS total')
+            ->join('empleados', 'permisos.empleado_id', '=', 'empleados.id')
+            ->join('unidades', 'empleados.unidad_id', '=', 'unidades.id')
+            ->whereYear('permisos.desde', $year)
+            ->groupBy('unidades.nombre')
+            ->get();
 
-        foreach ($result as $row) {
-            $labels[] = $row->unidades;
-            $values[] = $row->permisos;
-        }
+        $labels = $result->pluck('unidad')->toArray();
+        $data   = $result->pluck('total')->toArray();
+
+        // ---- COLORES FIJOS (uno por unidad) ----
+        // Puedes agregar más si tienes más unidades
+        $fixedColors = [
+                        '#1E88E5',
+                        '#43A047',
+                        '#FB8C00',
+                        '#E53935',
+                        '#8E24AA',
+                        '#00ACC1',
+                        '#6D4C41',
+                        '#3949AB',
+        ];
+
+        // Ajustar colores según la cantidad de unidades
+        $colors = array_slice($fixedColors, 0, count($labels));
 
         return [
             'labels' => $labels,
             'datasets' => [
                 [
                     'label' => 'Permisos',
-                    'data' => $values,
+                    'data' => $data,
+                    'backgroundColor' => $colors,
+                    'borderColor' => '#fff',
+                    'borderWidth' => 1,
                 ],
             ],
         ];
@@ -48,4 +63,18 @@ class PermisosPorUnidadChart extends ChartWidget
     {
         return 'pie';
     }
+
+    // ---- OCULTAR LEYENDA DEBAJO ----
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => [
+                    'display' => false, // Oculta etiquetas de colores
+                ],
+            ],
+        ];
+    }
+
+
 }
