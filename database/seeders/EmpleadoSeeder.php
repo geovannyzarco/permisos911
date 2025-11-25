@@ -24,6 +24,12 @@ class EmpleadoSeeder extends Seeder
         $unidadesValidos = DB::table('unidades')->pluck('id')->toArray();
         $estadosValidos = DB::table('estados')->pluck('id')->toArray();
 
+        // 🔥 Valores por defecto si no existen
+        $DEFAULT_CATEGORIA = 29;
+        $DEFAULT_GRUPO = 22;
+        $DEFAULT_HORARIO = 6;
+        $DEFAULT_UNIDAD = 19;
+
         $csv = fopen($path, 'r');
         $headers = fgetcsv($csv);
 
@@ -33,32 +39,30 @@ class EmpleadoSeeder extends Seeder
         DB::statement('ALTER TABLE empleados NOCHECK CONSTRAINT ALL;');
 
         while (($data = fgetcsv($csv)) !== false) {
+
             $row = array_combine($headers, $data);
 
-            // Validaciones
-            if (!in_array($row['id_grupo'], $gruposValidos)) {
-                $invalidos[] = "Grupo inválido: {$row['id_grupo']} (empleado {$row['oni']})";
-                continue;
-            }
+            // 📌 Verificar y asignar valores por defecto si no existen
+            $grupo = in_array($row['id_grupo'], $gruposValidos)
+                        ? $row['id_grupo']
+                        : $DEFAULT_GRUPO;
 
-            if (!in_array($row['id_categoria'], $categoriasValidos)) {
-                $invalidos[] = "Categoría inválida: {$row['id_categoria']} (empleado {$row['oni']})";
-                continue;
-            }
+            $categoria = in_array($row['id_categoria'], $categoriasValidos)
+                        ? $row['id_categoria']
+                        : $DEFAULT_CATEGORIA;
 
-            if (!in_array($row['id_horario'], $horariosValidos)) {
-                $invalidos[] = "Horario inválido: {$row['id_horario']} (empleado {$row['oni']})";
-                continue;
-            }
+            $horario = in_array($row['id_horario'], $horariosValidos)
+                        ? $row['id_horario']
+                        : $DEFAULT_HORARIO;
 
-            if (!in_array($row['id_unidad'], $unidadesValidos)) {
-                $invalidos[] = "Unidad inválida: {$row['id_unidad']} (empleado {$row['oni']})";
-                continue;
-            }
+            $unidad = in_array($row['id_unidad'], $unidadesValidos)
+                        ? $row['id_unidad']
+                        : $DEFAULT_UNIDAD;
 
+            // Estado sí es obligatorio, si no existe, se reporta pero se usa NULL
             if (!in_array($row['id_estado'], $estadosValidos)) {
-                $invalidos[] = "Estado inválido: {$row['id_estado']} (empleado {$row['oni']})";
-                continue;
+                $invalidos[] = "Estado inválido '{$row['id_estado']}' para empleado {$row['oni']}.";
+                $row['id_estado'] = null;
             }
 
             // Insertar registro
@@ -67,10 +71,10 @@ class EmpleadoSeeder extends Seeder
                 'nombre' => $row['nombre'],
                 'foto' => '',
                 'firma' => '',
-                'grupo_id' => $row['id_grupo'],
-                'categoria_id' => $row['id_categoria'],
-                'horario_id' => $row['id_horario'],
-                'unidad_id' => $row['id_unidad'],
+                'grupo_id' => $grupo,
+                'categoria_id' => $categoria,
+                'horario_id' => $horario,
+                'unidad_id' => $unidad,
                 'nivel_id' => 1,
                 'estado_id' => $row['id_estado'],
             ]);
@@ -80,13 +84,12 @@ class EmpleadoSeeder extends Seeder
 
         fclose($csv);
 
-        // Ahora sí reactivar FK (porque ya no hay datos inválidos)
         DB::statement('ALTER TABLE empleados WITH CHECK CHECK CONSTRAINT ALL;');
 
         $this->command->info("Empleados insertados: $insertados");
 
         if (!empty($invalidos)) {
-            $this->command->warn("Registros inválidos encontrados:");
+            $this->command->warn("Advertencias durante la importación:");
             foreach ($invalidos as $msg) {
                 $this->command->warn(" - $msg");
             }
