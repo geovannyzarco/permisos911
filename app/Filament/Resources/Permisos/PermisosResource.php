@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class PermisosResource extends Resource
@@ -57,5 +58,15 @@ class PermisosResource extends Resource
             'view' => ViewPermisos::route('/{record}'),
             'edit' => EditPermisos::route('/{record}/edit'),
         ];
+    }
+
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+        if(! $user->empleado) {
+            return parent::getEloquentQuery()->whereRaw('1 = 0');
+        }
+        return parent::getEloquentQuery()->where('empleado_id', $user->empleado->id);
     }
 }
