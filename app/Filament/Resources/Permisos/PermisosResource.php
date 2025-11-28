@@ -67,6 +67,12 @@ class PermisosResource extends Resource
         if(! $user->empleado) {
             return parent::getEloquentQuery()->whereRaw('1 = 0');
         }
-        return parent::getEloquentQuery()->where('empleado_id', $user->empleado->id);
+        $query = parent::getEloquentQuery()->where('empleado_id', $user->empleado->id);
+        // AÑADE ESTO: Lógica SQL para calcular 'duracion'
+        $sqlDuracion = "CAST(DATEDIFF(DAY, desde, hasta) AS VARCHAR(10)) + ' días ' +
+                        CAST(DATEPART(HOUR, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' horas ' +
+                        CAST(DATEPART(MINUTE, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' minutos'";
+                // Añade el campo calculado a la selección
+        return $query->selectRaw("*, ({$sqlDuracion}) AS duracion");
     }
 }
