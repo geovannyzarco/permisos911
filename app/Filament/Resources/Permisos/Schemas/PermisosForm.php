@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Permisos\Schemas;
 
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -25,19 +26,24 @@ class PermisosForm
                     ->label('Tipo de Permiso')
                     ->relationship('tipoPermiso', 'nombre')
                     ->required(),
-                DatePicker::make('desde')
+                DateTimePicker::make('desde')
                     ->label('Desde')
+                    ->native(false)
+                    ->displayFormat('d/m/Y H:i')
+                    ->format('Y-m-d H:i')
+                    ->withoutSeconds()
                     ->required(),
-                DatePicker::make('hasta')
+                DateTimePicker::make('hasta')
                     ->label('Hasta')
+                    ->native(false)
+                    ->displayFormat('d/m/Y H:i')
+                    ->format('Y-m-d H:i')
+                    ->withoutSeconds()
                     ->required(),
                 TextInput::make('motivo')
                     ->label('Motivo')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('comentarios')
-                    ->label('Comentarios')
-                    ->maxLength(500),
                 FileUpload::make('adjunto')
                     ->label('Adjunto')
                     ->maxSize(10240) // 10 MB

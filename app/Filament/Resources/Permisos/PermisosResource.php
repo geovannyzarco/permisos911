@@ -60,19 +60,49 @@ class PermisosResource extends Resource
         ];
     }
 
-
     public static function getEloquentQuery(): Builder
     {
         $user = auth()->user();
-        if(! $user->empleado) {
+
+        if (! $user->empleado) {
             return parent::getEloquentQuery()->whereRaw('1 = 0');
         }
-        $query = parent::getEloquentQuery()->where('empleado_id', $user->empleado->id);
-        // AÑADE ESTO: Lógica SQL para calcular 'duracion'
-        $sqlDuracion = "CAST(DATEDIFF(DAY, desde, hasta) AS VARCHAR(10)) + ' días ' +
-                        CAST(DATEPART(HOUR, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' horas ' +
-                        CAST(DATEPART(MINUTE, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' minutos'";
-                // Añade el campo calculado a la selección
-        return $query->selectRaw("*, ({$sqlDuracion}) AS duracion");
+
+        $query = parent::getEloquentQuery()
+            ->where('empleado_id', $user->empleado->id);
+
+        // Campo calculado 'duracion' compatible con SQL Server 2008
+        $sqlDuracion = "
+            CAST(DATEDIFF(DAY, desde, hasta) AS VARCHAR(10)) + ' días ' +
+            CAST(DATEPART(HOUR, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' horas ' +
+            CAST(DATEPART(MINUTE, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' minutos'
+        ";
+
+        return $query->selectRaw("*, ($sqlDuracion) AS duracion");
     }
+
+    /**
+     * Se ejecuta antes de insertar el registro en base de datos
+     */
+    public static function mutateFormDataBeforeCreate(array $data): array
+    {
+        $user = auth()->user();
+
+        if ($user && $user->empleado) {
+            $data['empleado_id'] = $user->empleado->id;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Evitar que usuario cambie empleado en edición
+     */
+    public static function mutateFormDataBeforeSave(array $data): array
+    {
+        unset($data['empleado_id']); // impedir cambios al editar
+        return $data;
+    }
+
+
 }

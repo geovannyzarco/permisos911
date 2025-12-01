@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->text('comentarios')->nullable();
             $table->unsignedBigInteger('empleado_id');
             $table->unsignedBigInteger('tipo_permiso_id');
-            $table->integer('id_estado_aprobacion_grupo');
+            $table->integer('id_estado_aprobacion_grupo')->nullable();
             $table->integer('id_jefe_grupo')->nullable();
             $table->dateTimeTz('fecha_aprobacion_grupo')->nullable(); //  importante
             $table->integer('id_aprobacion_unidad')->nullable();
