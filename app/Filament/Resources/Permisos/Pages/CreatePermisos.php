@@ -14,5 +14,9 @@ class CreatePermisos extends CreateRecord
         return static::getResource()::mutateFormDataBeforeCreate($data);
     }
 
-
+public static function afterCreate($record): void
+    {
+        // Redirigir a editar una vez creado
+        redirect()->to(PermisosResource::getUrl('edit', ['record' => $record]));
+    }
 }
