@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->dateTime('desde');
             $table->dateTime('hasta');
             $table->text('justificacion');
-            $table->text('adjunto');
+            $table->text('adjunto')->nullable();
             $table->unsignedBigInteger('permiso_id');
 
             $table->timestampsTz();

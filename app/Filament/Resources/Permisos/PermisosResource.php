@@ -93,6 +93,9 @@ class PermisosResource extends Resource
             $data['empleado_id'] = $user->empleado->id;
         }
 
+        $data['id_estado_aprobacion_grupo'] = 4;
+        $data['id_aprobacion_unidad'] = 4;
+
         return $data;
     }
 

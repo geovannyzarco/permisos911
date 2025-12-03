@@ -16,6 +16,7 @@ class CompensadosTable
     public static function configure(Table $table): Table
     {
         return $table
+
             ->columns([
                 TextColumn::make('permiso_id')
                     ->label('Permiso ID')

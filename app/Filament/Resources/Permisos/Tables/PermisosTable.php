@@ -9,6 +9,10 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Tables\Columns\ViewColumn;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class PermisosTable
 {
@@ -28,10 +32,10 @@ class PermisosTable
                     ->label('Duración')
                     ->sortable(),
                 TextColumn::make('motivo')->label('Motivo')->limit(50)->sortable(),
-                TextColumn::make('estado.nombre')->label('Estado Aprobación Grupo')->sortable(),
-                TextColumn::make('fecha_aprobacion')->label('Fecha Aprobación')->dateTime('d/m/Y h:m')->sortable(),
-                TextColumn::make('estadoUnidad.nombre')->label('Aprobación Unidad')->sortable(),
-                TextColumn::make('fecha_aprobacion_unidad')->label('Fecha Aprobación Unidad')->dateTime('d/m/Y h:m')->sortable(),
+                TextColumn::make('estado.nombre')->label('VB')->sortable(),
+                TextColumn::make('fecha_aprobacion')->label('Fecha VB')->dateTime('d/m/Y h:m')->sortable(),
+                TextColumn::make('estadoUnidad.nombre')->label('Aprobación')->sortable(),
+                TextColumn::make('fecha_aprobacion_unidad')->label('Fecha Aprobación')->dateTime('d/m/Y h:m')->sortable(),
 
             ])
             ->filters([
@@ -41,7 +45,7 @@ class PermisosTable
                 ViewAction::make(),
                 EditAction::make(),
                 Action::make('pdf')
-                ->label('Generar PDF')
+                ->label('Hoja de Permiso')
                 ->url(fn ($record) => route('permiso.pdf', ['id' => $record->id]))
                 ->openUrlInNewTab(),
             ])

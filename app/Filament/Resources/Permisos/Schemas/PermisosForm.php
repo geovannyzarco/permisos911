@@ -46,7 +46,10 @@ class PermisosForm
                     ->maxLength(255),
                 FileUpload::make('adjunto')
                     ->label('Adjunto')
-                    ->maxSize(10240) // 10 MB
+                    ->preserveFilenames()
+                     ->downloadable()
+                    ->maxSize(10240)
+                    ->disk('public')
                     ->directory('permisos/adjuntos')
                     ->nullable(),
 

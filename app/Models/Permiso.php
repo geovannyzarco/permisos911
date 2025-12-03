@@ -28,6 +28,7 @@ class Permiso extends Model
         'fecha_aprobacion_unidad',
     ];
 
+
     protected $searchableFields = ['*'];
 
     protected $casts = [

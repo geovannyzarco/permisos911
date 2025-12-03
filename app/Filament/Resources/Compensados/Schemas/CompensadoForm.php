@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Compensados\Schemas;
 
+use Dom\Text;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -36,8 +37,6 @@ class CompensadoForm
                 FileUpload::make('adjunto')
                     ->label('Adjunto')
                     ->columnSpanFull(),
-                TextColumn::make('permiso_id')
-                    ->hidden()
             ]);
     }
 }
