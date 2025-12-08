@@ -8,10 +8,12 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
+        "bezhansalleh/filament-shield": "^4.0",
         "filament/filament": "4.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "saade/filament-autograph": "^4.0"
+        "saade/filament-autograph": "^4.0",
+        "spatie/laravel-permission": "^6.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

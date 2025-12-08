@@ -31,7 +31,8 @@ class UserForm
                     ->maxLength(255)
                     ->rule('nullable')
                     ->placeholder('Deja en blanco si no deseas cambiarla'),
-
+                CheckboxList::make('roles')
+                    ->relationship('roles', 'name')
 
 
 

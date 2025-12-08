@@ -14,6 +14,10 @@ class UsersTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable(),
@@ -32,7 +36,10 @@ class UsersTable
                     ->label('Fecha de Actualizacion')
                     ->dateTime()
                     ->sortable(),
-
+                TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
