@@ -5,12 +5,14 @@ namespace App\Filament\Resources\Permisos;
 use App\Filament\Resources\Permisos\Pages\CreatePermisos;
 use App\Filament\Resources\Permisos\Pages\EditPermisos;
 use App\Filament\Resources\Permisos\Pages\ListPermisos;
+use App\Filament\Resources\Permisos\Pages\UserDashboard;
 use App\Filament\Resources\Permisos\Pages\ViewPermisos;
 use App\Filament\Resources\Permisos\RelationManagers\CompensadosRelationManager;
 use App\Filament\Resources\Permisos\Schemas\PermisosForm;
 use App\Filament\Resources\Permisos\Schemas\PermisosInfolist;
 use App\Filament\Resources\Permisos\Tables\PermisosTable;
 use App\Models\Permiso;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -60,6 +62,7 @@ class PermisosResource extends Resource
             'create' => CreatePermisos::route('/create'),
             'view' => ViewPermisos::route('/{record}'),
             'edit' => EditPermisos::route('/{record}/edit'),
+
         ];
     }
 
