@@ -4,15 +4,18 @@ namespace App\Filament\Widgets;
 
 use App\Models\Empleado;
 use Filament\Widgets\Widget;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class InfoEmpleado extends Widget
 {
-    protected static bool $isDiscovered = false;
+
+    use HasWidgetShield;
+    //protected static bool $isDiscovered = false;
     protected string $view = 'filament.widgets.info-empleado';
-    public static function canView(): bool
-    {
-        return true;
-    }
+    protected static ?int $sort = 1;
+
 
     public static function getTitle(): string
     {
@@ -24,13 +27,16 @@ class InfoEmpleado extends Widget
         return 'heroicon-o-user-circle';
     }
 
-    public function getData(): array
+
+    public function getViewData(): array
     {
-        $empleado = Empleado::where('oni', auth()->user()->username)->first();
+
+        $user = Auth::user();
+        $empleado = $user?->empleado;
 
         return [
-
-            compact('empleado'),
+            'empleado' => $empleado,
+            'user' => $user,
         ];
     }
 }

@@ -5,11 +5,13 @@ namespace App\Filament\Widgets;
 use App\Models\Empleado;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TotalEmpleadosWidget extends BaseWidget
 {
-    protected ?string $heading = 'Resumen de Empleados';
-    protected static ?int $sort = 1;
+    use HasWidgetShield;
+    protected ?string $heading = 'Resumen de los Permisos';
+    protected static ?int $sort = 3;
     protected function getStats(): array
     {
  $totalActivos = Empleado::where('estado_id',1)->count();

@@ -6,10 +6,14 @@ use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Empleado;
 use App\Models\Permiso;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PermisosStats extends StatsOverviewWidget
 {
-    protected static bool $isDiscovered = false;
+    use HasWidgetShield;
+    protected ?string $heading = 'Resumen de mis permisos';
+    protected static ?int $sort = 1;
+   // protected static bool $isDiscovered = false;
     protected function getStats(): array
     {
 
@@ -27,15 +31,15 @@ class PermisosStats extends StatsOverviewWidget
 
         // Ajusta los IDs de estado según tu BD
         $aprobados = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado', 1)
+            ->where('id_estado_aprobacion_grupo', 3)
             ->count();
 
         $pendientes = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado', 2)
+            ->where('id_estado_aprobacion_grupo', 4)
             ->count();
 
         $denegados = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado', 3)
+            ->where('id_estado_aprobacion_grupo', 5)
             ->count();
 
         return [

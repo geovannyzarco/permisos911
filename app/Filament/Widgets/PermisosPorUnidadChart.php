@@ -5,12 +5,13 @@ namespace App\Filament\Widgets;
 use Filament\Widgets\ChartWidget;
 use App\Models\Permiso;
 use Illuminate\Support\Carbon;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PermisosPorUnidadChart extends ChartWidget
 {
 
-
-    protected static ?int $sort = 3;
+    use HasWidgetShield;
+    protected static ?int $sort = 4;
     protected ?string $heading = 'Permisos por Unidad (Año actual)';
 
     protected function getData(): array
