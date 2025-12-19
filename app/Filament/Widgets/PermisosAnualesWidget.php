@@ -13,7 +13,7 @@ class PermisosAnualesWidget extends BaseWidget
         use HasWidgetShield;
 
     protected ?string $heading = 'Resumen Permisos Empleados (Año actual)';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
     protected function getStats(): array
     {
         $year = Carbon::now()->year;

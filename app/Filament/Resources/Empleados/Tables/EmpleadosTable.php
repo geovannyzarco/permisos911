@@ -6,8 +6,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmpleadosTable
 {
@@ -45,7 +47,24 @@ class EmpleadosTable
 
             ])
             ->filters([
-                //
+                SelectFilter::make('grupo')
+                    ->label('Filtrar por Grupo')
+                    ->relationship('grupo', 'nombre'),
+                SelectFilter::make('categoria')
+                    ->label('Filtrar por Categoría')
+                    ->relationship('categoria', 'nombre'),
+                SelectFilter::make('unidad')
+                    ->label('Filtrar por Unidad')
+                    ->relationship('unidad', 'nombre'),
+                SelectFilter::make('estado')
+                    ->label('Filtrar por Estado')
+                    ->relationship('estado', 'nombre'),
+                SelectFilter::make('nivel')
+                    ->label('Filtrar por Nivel')
+                    ->relationship('nivel', 'nivel'),
+                SelectFilter::make('horario')
+                    ->label('Filtrar por Horario')
+                    ->relationship('horario', 'nombre'),
             ])
             ->recordActions([
                 ViewAction::make(),

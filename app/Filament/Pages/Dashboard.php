@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\InfoEmpleado;
+use App\Filament\Widgets\PermisosPorMesChart;
 use App\Filament\Widgets\TotalEmpleadosWidget;
 
 use Filament\Panel;
@@ -31,7 +32,7 @@ class Dashboard extends BaseDashboard
     {
         return [
             TotalEmpleadosWidget::class,
-
+            PermisosPorMesChart::class,
         ];
     }
 

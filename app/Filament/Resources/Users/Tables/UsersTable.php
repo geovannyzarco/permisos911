@@ -7,6 +7,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 
 class UsersTable
 {
@@ -42,7 +44,9 @@ class UsersTable
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('roles')
+                    ->label('Filtrar por Rol')
+                    ->relationship('roles', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),

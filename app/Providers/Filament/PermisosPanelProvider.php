@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Helper\CustomLogin;
 use App\Filament\Pages\Perfil;
+use App\Filament\Widgets\PermisosPorMesChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -46,6 +47,7 @@ class PermisosPanelProvider extends PanelProvider
             ->widgets([
                 //AccountWidget::class,
                 //FilamentInfoWidget::class,
+                PermisosPorMesChart::class,
 
             ])
             ->middleware([

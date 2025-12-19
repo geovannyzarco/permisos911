@@ -10,8 +10,8 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 class TotalEmpleadosWidget extends BaseWidget
 {
     use HasWidgetShield;
-    protected ?string $heading = 'Resumen de los Permisos';
-    protected static ?int $sort = 3;
+    protected ?string $heading = 'Estados de los empleados';
+    protected static ?int $sort = 2;
     protected function getStats(): array
     {
  $totalActivos = Empleado::where('estado_id',1)->count();
