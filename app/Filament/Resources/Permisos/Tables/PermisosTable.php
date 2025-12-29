@@ -29,8 +29,7 @@ class PermisosTable
                 TextColumn::make('desde')->label('Desde')->dateTime('d/m/Y h:m')->sortable(),
                 TextColumn::make('hasta')->label('Hasta')->dateTime('d/m/y h:m')->sortable(),
                 TextColumn::make('duracion')
-                    ->label('Duración')
-                    ->sortable(),
+                    ->label('Duración'),
                 TextColumn::make('motivo')->label('Motivo')->limit(50)->sortable(),
                 TextColumn::make('estado.nombre')->label('VB')->sortable(),
                 TextColumn::make('fecha_aprobacion')->label('Fecha VB')->dateTime('d/m/Y h:m')->sortable(),

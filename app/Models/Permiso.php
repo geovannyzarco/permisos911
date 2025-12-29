@@ -5,11 +5,14 @@ namespace App\Models;
 use App\Models\Scopes\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Permiso extends Model
 {
     use HasFactory;
     use Searchable;
+
+    protected $appends = ['duracion'];
 
     protected $fillable = [
         'fecha_creacion',
@@ -63,4 +66,27 @@ class Permiso extends Model
     {
         return $this->belongsTo(Estado::class, 'id_aprobacion_unidad');
     }
+
+    public function getDuracionAttribute(): string
+    {
+        if (!$this->desde || !$this->hasta) {
+            return '';
+        }
+
+        $desde = Carbon::parse($this->desde);
+        $hasta = Carbon::parse($this->hasta);
+
+        if ($hasta->lessThanOrEqualTo($desde)) {
+            return '0 días 0 horas 0 minutos';
+        }
+
+        $totalMinutes = $desde->diffInMinutes($hasta);
+
+        $dias = intdiv($totalMinutes, 1440);
+        $horas = intdiv($totalMinutes % 1440, 60);
+        $minutos = $totalMinutes % 60;
+
+        return "{$dias} días {$horas} horas {$minutos} minutos";
+    }
+
 }
