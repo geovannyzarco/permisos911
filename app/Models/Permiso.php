@@ -23,12 +23,12 @@ class Permiso extends Model
         'comentarios',
         'empleado_id',
         'tipo_permiso_id',
-        'id_estado_aprobacion_grupo',
-        'id_jefe_grupo',
+        'id_estado_vb',
+        'id_jefe_vb',
+        'fecha_vb',
+        'id_estado_aprobacion',
+        'id_jefe_aprobacion',
         'fecha_aprobacion',
-        'id_aprobacion_unidad',
-        'id_jefe_unidad',
-        'fecha_aprobacion_unidad',
     ];
 
 

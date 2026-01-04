@@ -77,6 +77,9 @@ class PermisosResource extends Resource
         $query = parent::getEloquentQuery()
             ->where('empleado_id', $user->empleado->id);
 
+        return parent::getEloquentQuery()
+        ->where('empleado_id', $user->empleado->id);
+
 
     }
 
@@ -91,8 +94,8 @@ class PermisosResource extends Resource
             $data['empleado_id'] = $user->empleado->id;
         }
 
-        $data['id_estado_vb'] = 4;
-        $data['id_estado_aprobacion'] = 4;
+        $data[''] = 4;
+        $data['id_aprobacion_unidad'] = 4;
 
         return $data;
     }
