@@ -37,7 +37,7 @@ class PermisosPorMesChart extends ChartWidget
             ->selectRaw('MONTH(desde) AS mes, COUNT(*) AS total')
             ->where('empleado_id', $empleado->id)
             ->whereYear('desde', now()->year)
-            ->where('id_estado_aprobacion_grupo', 3)
+            ->where('id_estado_aprobacion', 3)
             ->groupByRaw('MONTH(desde)')
             ->orderByRaw('MONTH(desde)')
             ->get();

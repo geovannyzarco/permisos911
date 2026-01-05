@@ -7,6 +7,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Empleado;
 use App\Models\Permiso;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Carbon\Carbon;
 
 class PermisosStats extends StatsOverviewWidget
 {
@@ -29,17 +30,21 @@ class PermisosStats extends StatsOverviewWidget
             return [];
         }
 
+        $year = now()->year;
         // Ajusta los IDs de estado según tu BD
         $aprobados = Permiso::where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', 3)
+            ->whereYear('desde', $year)
             ->count();
 
         $pendientes = Permiso::where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', 4)
+             ->whereYear('desde', $year)
             ->count();
 
         $denegados = Permiso::where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', 5)
+             ->whereYear('desde', $year)
             ->count();
 
         return [
