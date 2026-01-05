@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -10,11 +11,17 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 
+use Filament\Forms;
+use Illuminate\Database\Eloquent\Collection;
+use Spatie\Permission\Models\Role;
+use Filament\Forms\Components\Select;
+
 class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->paginated([10, 25, 50, 100, 'all'])
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
@@ -54,6 +61,24 @@ class UsersTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('asignar_rol')
+                        ->label('Asignar Rol')
+                        ->icon('heroicon-o-user-group')
+                        ->form([
+                           Select::make('role')
+                                ->label('Rol')
+                                ->options(function () {
+                                    return Role::pluck('name', 'id');
+                                })
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $role = Role::findById($data['role']);
+
+                            foreach ($records as $record) {
+                                $record->assignRole($role);
+                            }
+                        }),
                 ]),
             ]);
     }
