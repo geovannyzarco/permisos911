@@ -20,9 +20,9 @@ class PermisosAnualesWidget extends BaseWidget
 
         $query = Permiso::whereYear('fecha_creacion', $year);
 
-        $pendientes = (clone $query)->where('id_estado_aprobacion_grupo', 4)->count();
-        $aprobados = (clone $query)->where('id_estado_aprobacion_grupo', 3)->count();
-        $rechazados = (clone $query)->where('id_estado_aprobacion_grupo', 5)->count();
+        $pendientes = (clone $query)->where('id_estado_aprobacion', 4)->count();
+        $aprobados = (clone $query)->where('id_estado_aprobacion', 3)->count();
+        $rechazados = (clone $query)->where('id_estado_aprobacion', 5)->count();
 
         return [
             Stat::make('Pendientes', $pendientes)

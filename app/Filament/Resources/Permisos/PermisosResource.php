@@ -77,14 +77,10 @@ class PermisosResource extends Resource
         $query = parent::getEloquentQuery()
             ->where('empleado_id', $user->empleado->id);
 
-        // Campo calculado 'duracion' compatible con SQL Server 2008
-        $sqlDuracion = "
-            CAST(DATEDIFF(DAY, desde, hasta) AS VARCHAR(10)) + ' días ' +
-            CAST(DATEPART(HOUR, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' horas ' +
-            CAST(DATEPART(MINUTE, DATEADD(SECOND, DATEDIFF(SECOND, desde, hasta), 0)) AS VARCHAR(10)) + ' minutos'
-        ";
+        return parent::getEloquentQuery()
+        ->where('empleado_id', $user->empleado->id);
 
-        return $query->selectRaw("*, ($sqlDuracion) AS duracion");
+
     }
 
     /**
@@ -98,7 +94,7 @@ class PermisosResource extends Resource
             $data['empleado_id'] = $user->empleado->id;
         }
 
-        $data['id_estado_aprobacion_grupo'] = 4;
+        $data[''] = 4;
         $data['id_aprobacion_unidad'] = 4;
 
         return $data;

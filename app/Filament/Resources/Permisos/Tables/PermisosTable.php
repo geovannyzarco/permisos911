@@ -26,11 +26,10 @@ class PermisosTable
                 TextColumn::make('tipoPermiso.nombre')->label('Tipo de Permiso')->sortable()->searchable(),
                 TextColumn::make('empleado.oni')->label('ONI')->sortable()->searchable(),
                 TextColumn::make('empleado.nombre')->label('Empleado')->sortable()->searchable(),
-                TextColumn::make('desde')->label('Desde')->dateTime('d/m/Y h:m')->sortable(),
-                TextColumn::make('hasta')->label('Hasta')->dateTime('d/m/y h:m')->sortable(),
+                TextColumn::make('desde')->label('Desde')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('hasta')->label('Hasta')->dateTime('d/m/y H:i')->sortable(),
                 TextColumn::make('duracion')
-                    ->label('Duración')
-                    ->sortable(),
+                    ->label('Duración'),
                 TextColumn::make('motivo')->label('Motivo')->limit(50)->sortable(),
                 TextColumn::make('estado.nombre')->label('VB')->sortable(),
                 TextColumn::make('fecha_aprobacion')->label('Fecha VB')->dateTime('d/m/Y h:m')->sortable(),

@@ -31,15 +31,15 @@ class PermisosStats extends StatsOverviewWidget
 
         // Ajusta los IDs de estado según tu BD
         $aprobados = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado_aprobacion_grupo', 3)
+            ->where('id_estado_aprobacion', 3)
             ->count();
 
         $pendientes = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado_aprobacion_grupo', 4)
+            ->where('id_estado_aprobacion', 4)
             ->count();
 
         $denegados = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado_aprobacion_grupo', 5)
+            ->where('id_estado_aprobacion', 5)
             ->count();
 
         return [

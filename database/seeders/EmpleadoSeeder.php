@@ -36,7 +36,7 @@ class EmpleadoSeeder extends Seeder
         $insertados = 0;
         $invalidos = [];
 
-        DB::statement('ALTER TABLE empleados NOCHECK CONSTRAINT ALL;');
+        //DB::statement('ALTER TABLE empleados NOCHECK CONSTRAINT ALL;');
 
         while (($data = fgetcsv($csv)) !== false) {
 
@@ -84,7 +84,7 @@ class EmpleadoSeeder extends Seeder
 
         fclose($csv);
 
-        DB::statement('ALTER TABLE empleados WITH CHECK CHECK CONSTRAINT ALL;');
+       // DB::statement('ALTER TABLE empleados WITH CHECK CHECK CONSTRAINT ALL;');
 
         $this->command->info("Empleados insertados: $insertados");
 
