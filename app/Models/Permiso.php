@@ -38,8 +38,8 @@ class Permiso extends Model
         'fecha_creacion' => 'date',
         'desde' => 'datetime',
         'hasta' => 'datetime',
+        'fecha_vb' => 'datetime',
         'fecha_aprobacion' => 'datetime',
-        'fecha_aprobacion_unidad' => 'datetime',
     ];
 
     public function empleado()
