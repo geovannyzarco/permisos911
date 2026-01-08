@@ -11,7 +11,7 @@ class Unidad extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nombre', 'division_id'];
+    protected $fillable = ['nombre', 'division_id', 'limite_permisos'];
 
     protected $searchableFields = ['*'];
 

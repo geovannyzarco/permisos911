@@ -44,6 +44,7 @@ class UnidadSeeder extends Seeder
                     DB::table('unidades')->insert([
                         'nombre' => $nombre,
                         'division_id' => $divisionId,
+                        'limite_permisos' => 3,
                     ]);
                     $count++;
                 } else {

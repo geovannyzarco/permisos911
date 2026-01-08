@@ -24,7 +24,9 @@ class UnidadsTable
                     ->label('División')
                     ->sortable()
                     ->searchable(),
-
+                TextColumn::make('limite_permisos')
+                    ->label('Límite de Permisos')
+                    ->sortable(),
             ])
             ->filters([
                 //

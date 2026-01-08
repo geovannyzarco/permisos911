@@ -6,6 +6,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use App\Models\Division;
+use Dom\Text;
 
 class UnidadForm
 {
@@ -18,7 +19,11 @@ class UnidadForm
                 Select::make('division_id')
                     ->label('División')
                     ->options(Division::query()->pluck('nombre', 'id'))
-                    ->searchable()
+                    ->searchable(),
+                TextInput::make('limite_permisos')
+                    ->label('Límite de Permisos')
+                    ->numeric()
+                    ->required(),
             ]);
     }
 }

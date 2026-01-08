@@ -6,6 +6,7 @@ use App\Filament\Resources\GestionPermisos\Pages\CreateGestionPermiso;
 use App\Filament\Resources\GestionPermisos\Pages\EditGestionPermiso;
 use App\Filament\Resources\GestionPermisos\Pages\ListGestionPermisos;
 use App\Filament\Resources\GestionPermisos\Pages\ViewGestionPermiso;
+use App\Filament\Resources\GestionPermisos\RelationManagers\CompensadosRelationManager;
 use App\Filament\Resources\GestionPermisos\Schemas\GestionPermisoForm;
 use App\Filament\Resources\GestionPermisos\Schemas\GestionPermisoInfolist;
 use App\Filament\Resources\GestionPermisos\Tables\GestionPermisosTable;
@@ -51,7 +52,7 @@ class GestionPermisoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CompensadosRelationManager::class,
         ];
     }
 

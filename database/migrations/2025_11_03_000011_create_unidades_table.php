@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->bigIncrements('id');
             $table->string('nombre');
             $table->unsignedBigInteger('division_id');
-
+            $table->integer('limite_permisos');
             $table->timestampsTz();
         });
     }
