@@ -1,0 +1,45 @@
+id,departamento_id,nombre
+1,1,Ahuachapán Norte
+2,1,Ahuachapán Centro
+3,1,Ahuachapán Sur
+4,12,Santa Ana Norte
+5,12,Santa Ana Centro
+6,12,Santa Ana Este
+7,12,Santa Ana Oeste
+8,13,Sonsonate Norte
+9,13,Sonsonate Centro
+10,13,Sonsonate Este
+11,13,Sonsonate Oeste
+12,3,Chalatenango Norte
+13,3,Chalatenango Centro
+14,3,Chalatenango Sur
+15,5,La Libertad Norte
+16,5,La Libertad Centro
+17,5,La Libertad Oeste
+18,5,La Libertad Este
+19,5,La Libertad Costa
+20,5,La Libertad Sur
+21,10,San Salvador Norte
+22,10,San Salvador Oeste
+23,10,San Salvador Este
+24,10,San Salvador Centro
+25,10,San Salvador Sur
+26,4,Cuscatlán Norte
+27,4,Cuscatlán Sur
+28,6,La Paz Oeste
+29,6,La Paz Centro
+30,6,La Paz Este
+31,2,Cabañas Este
+32,2,Cabañas Oeste
+33,11,San Vicente Norte
+34,11,San Vicente Sur
+35,14,Usulután Norte
+36,14,Usulután Este
+37,14,Usulután Oeste
+38,9,San Miguel Norte
+39,9,San Miguel Centro
+40,9,San Miguel Oeste
+41,8,Morazán Norte
+42,8,Morazán Sur
+43,7,La Unión Norte
+44,7,La Unión Sur

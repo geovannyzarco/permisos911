@@ -16,15 +16,38 @@ class Empleado extends Model
         'nombre',
         'foto',
         'firma',
+        'fecha_ingreso',
+        'fecha_nacimiento',
+        'codigo_huella',
+        'estado_civil_id',
+        'nombre_conyuge',
+        'numero_hijos',
+        'email',
+        'telefono',
+        'direccion',
+        'genero',
         'grupo_id',
         'categoria_id',
         'horario_id',
         'unidad_id',
         'nivel_id',
         'estado_id',
+        'departamento_id',
+        'municipio_id',
+        'distrito_id',
     ];
 
     protected $searchableFields = ['*'];
+
+    public function estadoCivil()
+    {
+        return $this->belongsTo(EstadoCivil::class);
+    }
+
+    public function hijos()
+    {
+        return $this->hasMany(EmpleadoHijo::class);
+    }
 
     public function grupo()
     {
@@ -60,4 +83,19 @@ class Empleado extends Model
     {
         return $this->hasMany(Permiso::class);
     }
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class);
+    }
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class);
+    }
+
+    public function distrito()
+    {
+        return $this->belongsTo(Distrito::class);
+    }
+
 }
