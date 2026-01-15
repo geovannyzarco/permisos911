@@ -44,7 +44,7 @@ class EmpleadoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\HijosRelationManager::class,
         ];
     }
 

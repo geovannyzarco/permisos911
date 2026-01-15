@@ -8,11 +8,13 @@ use App\Models\Grupo;
 use App\Models\Horario;
 use App\Models\Nivel;
 use App\Models\Unidad;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Facades\Date;
 use Saade\FilamentAutograph\Forms\Components\SignaturePad;
 
 class EmpleadoForm
@@ -22,14 +24,47 @@ class EmpleadoForm
         return $schema
             ->components([
                 TextInput::make('oni')
-                    ->required(),
+                ->required(),
                 TextInput::make('nombre')
-                    ->required(),
+                ->required(),
+                DatePicker::make('fecha_ingreso')
+                ->label('Fecha de Ingreso'),
+                DatePicker::make('fecha_nacimiento')
+                ->label('Fecha de Nacimiento'),
+                TextInput::make('codigo_huella')
+                ->label('Código de Huella')
+                ->numeric()
+                ->required(),
+                Select::make('estado_civil_id')
+                ->label('Estado Civil')
+                ->relationship('estadoCivil','nombre'),
+                TextInput::make('nombre_conyuge')
+                ->label('Nombre del Cónyuge'),
+                TextInput::make('numero_hijos')
+                ->label('Número de Hijos')
+                ->numeric(),
+
+                TextInput::make('email')
+                ->label('Correo Electrónico')
+                ->email(),
+                TextInput::make('telefono')
+                ->label('Teléfono de Contacto'),
+                Textarea::make('direccion')
+                ->label('Dirección de Residencia'),
+                Select::make('genero')
+                ->label('Género')
+                ->required()
+                ->options([
+                    'M' => 'Masculino',
+                    'F' => 'Femenino',
+                ]),
+
+
+
                 Select::make('grupo_id')
                 ->required()
                 ->label('Grupo')
                 ->options(Grupo::query()->pluck('nombre', 'id')),
-
                 Select::make('categoria_id')
                     ->required()
                     ->label('Categoría')

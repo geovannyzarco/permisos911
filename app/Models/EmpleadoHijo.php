@@ -14,6 +14,10 @@ class EmpleadoHijo extends Model
         'fecha_nacimiento',
     ];
 
+   protected $casts = [
+        'fecha_nacimiento' => 'date',
+    ];
+
     public function empleado()
     {
         return $this->belongsTo(Empleado::class);
