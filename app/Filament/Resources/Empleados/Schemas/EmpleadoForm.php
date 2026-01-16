@@ -33,8 +33,7 @@ class EmpleadoForm
                 ->label('Fecha de Nacimiento'),
                 TextInput::make('codigo_huella')
                 ->label('Código de Huella')
-                ->numeric()
-                ->required(),
+                ->numeric(),
                 Select::make('estado_civil_id')
                 ->label('Estado Civil')
                 ->relationship('estadoCivil','nombre'),
