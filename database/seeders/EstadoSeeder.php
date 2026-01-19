@@ -20,6 +20,12 @@ class EstadoSeeder extends Seeder
             ['nombre' => 'ANULADO','entidad_id' => 2],
             ['nombre' => 'FUERA DE LIMITE','entidad_id' => 2],
             ['nombre' => 'INCOMPLETO (SIN COMPENSADOS)','entidad_id' => 2],
+            ['nombre' => 'ABANDONO','entidad_id' => 1],
+            ['nombre' => 'DETENIDO','entidad_id' => 1],
+            ['nombre' => 'COMISION DE SERVICIO','entidad_id' => 1],
+            ['nombre' => 'CON PERMISO SIN GOCE DE SUELDO','entidad_id' => 1],
+            ['nombre' => 'SUSPENDIDO','entidad_id' => 1],
+            ['nombre' => 'TRASLADADO','entidad_id' => 1],
         ];
 
         foreach ($estados as $estado) {
