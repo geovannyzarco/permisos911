@@ -76,7 +76,7 @@ class GestionPermisoForm
                  | COMPENSADOS (SOLO SI ES TIPO 2 Y EN EDICIÓN)
                  |-------------------------------------------------
                  */
-                Section::make('Compensados')
+          /*      Section::make('Compensados')
                     ->visible(fn ($record) => $record?->tipo_permiso_id == 2)
                     ->schema([
                         Repeater::make('compensados')
@@ -93,7 +93,7 @@ class GestionPermisoForm
                             ])
 
                             ->createItemButtonLabel('Agregar compensado'),
-                    ]),
+                    ]),*/
             ]);
     }
 }
