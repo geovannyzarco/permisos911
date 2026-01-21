@@ -8,7 +8,13 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
+use App\Filament\Exports\PermisoExporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Action;
+
+
 
 class GestionPermisosTable
 {
@@ -24,7 +30,8 @@ class GestionPermisosTable
                 TextColumn::make('desde')->label('Desde')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('hasta')->label('Hasta')->dateTime('d/m/y H:i')->sortable(),
                 TextColumn::make('duracion')
-                    ->label('Duración'),
+                    ->label('Duración')
+                    ->sortable(),
                 TextColumn::make('motivo')->label('Motivo')->limit(50)->sortable(),
                 TextColumn::make('estado.nombre')->label('VB')->sortable(),
                 TextColumn::make('fecha_aprobacion')->label('Fecha VB')->dateTime('d/m/Y h:m')->sortable(),
@@ -43,7 +50,20 @@ class GestionPermisosTable
                 ->openUrlInNewTab(),
             ])
             ->toolbarActions([
+                ExportAction::make()
+                    ->exporter(PermisoExporter::class)
+                    ->formats([
+                     ExportFormat::Csv,
+                     ExportFormat::Xlsx,])
+                    ->label('Exportar')
+                    ->fileName('permisos_export'.date('Y-m-d_H-i-s')),
+
                 BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->exporter(PermisoExporter::class)
+                        ->label('Exportar Selección')
+                        ->fileName('permisos_seleccion_export'.date('Y-m-d_H-i-s')),
+
                     DeleteBulkAction::make(),
                 ]),
             ]);
