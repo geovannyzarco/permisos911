@@ -13,8 +13,7 @@ use Filament\Actions\ExportBulkAction;
 use App\Filament\Exports\PermisoExporter;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Action;
-
-
+use Filament\Tables\Filters\SelectFilter;
 
 class GestionPermisosTable
 {
@@ -39,7 +38,15 @@ class GestionPermisosTable
                 TextColumn::make('fecha_aprobacion_unidad')->label('Fecha Aprobación')->dateTime('d/m/Y h:m')->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('tipo_permiso_id')
+                    ->label('Filtrar por Tipo de Permiso')
+                    ->relationship('tipoPermiso', 'nombre'),
+                SelectFilter::make('estado_id')
+                    ->label('Filtrar por VB')
+                    ->relationship('estado', 'nombre'),
+                SelectFilter::make('estado_unidad_id')
+                    ->label('Filtrar por Aprobación')
+                    ->relationship('estadoUnidad', 'nombre'),
             ])
             ->recordActions([
                 ViewAction::make(),
