@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use App\Models\Empleado;
+use App\Models\TipoPermiso;
 
 class PermisoSeeder extends Seeder
 {
@@ -13,65 +14,76 @@ class PermisoSeeder extends Seeder
         $path = database_path('seeders/datos/permisos.csv');
 
         if (!file_exists($path)) {
-            $this->command->error("No se encontró el archivo: $path");
+            $this->command->error("Archivo no encontrado: $path");
             return;
         }
 
-        // 🔥 Cargar todos los IDs válidos
-        $empleadosValidos = DB::table('empleados')->pluck('id')->toArray();
-        $tiposValidos = DB::table('tipo_permisos')->pluck('id')->toArray();
+        // Cargar IDs válidos como sets (memoria eficiente)
+        $empleadosValidos = array_flip(
+            Empleado::pluck('id')->toArray()
+        );
+
+        $tiposValidos = array_flip(
+            TipoPermiso::pluck('id')->toArray()
+        );
 
         $file = fopen($path, 'r');
-        $header = fgetcsv($file);
 
-        $invalidos = []; // Para reportar errores
+        // CSV con ; y comillas
+        $header = fgetcsv($file, 0, ';');
+        $header = array_map(fn ($h) => trim($h, "\" \t\n\r\0\x0B"), $header);
+
         $insertados = 0;
+        $saltados   = 0;
+        $linea      = 1;
 
-        while (($row = fgetcsv($file)) !== false) {
+        DB::disableQueryLog();
 
-            [
-                $id,
-                $id_empleado,
-                $id_tipo_permiso,
-                $fecha_creacion,
-                $desde,
-                $hasta,
-                $motivo,
-                $adjunto,
-                $comentarios,
-                $id_estado
-            ] = $row;
+        while (($row = fgetcsv($file, 0, ';')) !== false) {
+            $linea++;
 
-            // ❌ Validar empleado
-            if (!in_array($id_empleado, $empleadosValidos)) {
-                $invalidos[] = "Empleado inexistente: empleado_id=$id_empleado (permiso $id)";
+            if (count($row) !== count($header)) {
+                $this->command->warn("Línea $linea ignorada (columnas inconsistentes)");
+                $saltados++;
                 continue;
             }
 
-            // ❌ Validar tipo permiso
-            if (!in_array($id_tipo_permiso, $tiposValidos)) {
-                $invalidos[] = "TipoPermiso inexistente: tipo_permiso_id=$id_tipo_permiso (permiso $id)";
+            $data = array_combine($header, $row);
+
+            $empleadoId = $data['empleado_id'];
+            $tipoId     = $data['tipo_permiso_id'];
+
+            // Validaciones
+            if (!isset($empleadosValidos[$empleadoId])) {
+                $this->command->warn("Empleado inexistente (línea $linea): $empleadoId");
+                $saltados++;
                 continue;
             }
 
-            // ✔ Insertar solo si es válido
+            if (!isset($tiposValidos[$tipoId])) {
+                $this->command->warn("Tipo permiso inexistente (línea $linea): $tipoId");
+                $saltados++;
+                continue;
+            }
+
             DB::table('permisos')->insert([
-                'fecha_creacion' => $this->parseDate($fecha_creacion),
-                'desde' => $this->parseDate($desde),
-                'hasta' => $this->parseDate($hasta),
-                'motivo' => $motivo,
-                'adjunto' => $adjunto ?? '',
-                'comentarios' => $comentarios ?? '',
-                'empleado_id' => $id_empleado,
-                'tipo_permiso_id' => $id_tipo_permiso,
-                'id_estado_vb' => null,
-                'id_jefe_vb' => null,
-                'fecha_vb' => null,
-                'id_estado_aprobacion' => $id_estado,
-                'id_jefe_aprobacion' => null,
-                'fecha_aprobacion' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'                     => $data['id'],
+                'fecha_creacion'         => $data['fecha_creacion'] ?: null,
+                'desde'                  => $data['desde'] ?: null,
+                'hasta'                  => $data['hasta'] ?: null,
+                'motivo'                 => $data['motivo'],
+                'adjunto'                => $data['adjunto'],
+                'comentarios'            => $data['comentarios'],
+                'empleado_id'            => $empleadoId,
+                'tipo_permiso_id'        => $tipoId,
+                'id_estado_vb'           => $data['id_estado_vb'] ?: null,
+                'id_jefe_vb'             => $data['id_jefe_vb'] ?: null,
+                'fecha_vb'               => $data['fecha_vb'] ?: null,
+                'id_estado_aprobacion'   => $data['id_estado_aprobacion'] ?: null,
+                'id_jefe_aprobacion'     => $data['id_jefe_aprobacion'] ?: null,
+                'fecha_aprobacion'       => $data['fecha_aprobacion'] ?: null,
+                'created_at'             => $data['created_at'] ?: now(),
+                'updated_at'             => $data['updated_at'] ?: now(),
             ]);
 
             $insertados++;
@@ -79,32 +91,8 @@ class PermisoSeeder extends Seeder
 
         fclose($file);
 
-        // ✔ Reporte final
-        $this->command->info("Permisos insertados: $insertados");
-
-        if (!empty($invalidos)) {
-            $this->command->warn("Registros inválidos encontrados:");
-            foreach ($invalidos as $linea) {
-                $this->command->warn(" - $linea");
-            }
-        }
-    }
-
-    private function parseDate(?string $date): ?string
-    {
-        if (empty($date)) {
-            return null;
-        }
-
-        try {
-            if (str_contains($date, ':')) {
-                return Carbon::createFromFormat('d/m/Y H:i:s', $date)->format('Y-m-d H:i:s');
-            } else {
-                return Carbon::createFromFormat('d/m/Y', $date)->format('Y-m-d');
-            }
-        } catch (\Exception $e) {
-            return null;
-        }
+        $this->command->info("Seeder finalizado correctamente");
+        $this->command->info("Insertados: $insertados");
+        $this->command->info("Saltados: $saltados");
     }
 }
-
