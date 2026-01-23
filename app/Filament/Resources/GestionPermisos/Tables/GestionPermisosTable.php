@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ExportBulkAction;
 use App\Filament\Exports\PermisoExporter;
+use Dom\Text;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
@@ -36,7 +37,17 @@ class GestionPermisosTable
                 TextColumn::make('fecha_aprobacion')->label('Fecha VB')->dateTime('d/m/Y h:m')->sortable(),
                 TextColumn::make('estadoUnidad.nombre')->label('Aprobación')->sortable(),
                 TextColumn::make('fecha_aprobacion_unidad')->label('Fecha Aprobación')->dateTime('d/m/Y h:m')->sortable(),
-            ])
+                TextColumn::make('adjunto')
+                    ->label('Adjuntos')
+                    ->icon('heroicon-o-paper-clip')
+                     ->formatStateUsing(fn ($state) => filled($state) ? 'Descargar' : '')
+                    ->url(fn ($record) => $record?->adjunto
+                        ? route('descargar.archivo', $record->adjunto)
+                        : null
+                    )
+                    ->openUrlInNewTab()
+
+                            ])
             ->filters([
                 SelectFilter::make('tipo_permiso_id')
                     ->label('Filtrar por Tipo de Permiso')

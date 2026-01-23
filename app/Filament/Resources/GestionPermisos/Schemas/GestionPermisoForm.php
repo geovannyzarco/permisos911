@@ -10,6 +10,10 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Storage;
+use Filament\Forms\Components\Placeholder;
+use Illuminate\Support\HtmlString;
+use App\Models\Empleado;
 
 class GestionPermisoForm
 {
@@ -31,9 +35,26 @@ class GestionPermisoForm
 
                         Select::make('empleado_id')
                             ->label('Empleado')
-                            ->relationship('empleado', 'nombre')
+
                             ->searchable()
-                            ->required(),
+                            ->required()
+                            ->getSearchResultsUsing(function (string $search) {
+                                return Empleado::query()
+                                    ->where('nombre', 'like', "%{$search}%")
+                                    ->orWhere('oni', 'like', "%{$search}%")
+                                    ->limit(50)
+                                    ->get()
+                                    ->mapWithKeys(fn ($e) => [
+                                        $e->id => "{$e->oni} - {$e->nombre}",
+                                    ]);
+                            })
+                            ->getOptionLabelUsing(function ($value) {
+                                $empleado = Empleado::find($value);
+
+                                return $empleado
+                                    ? "{$empleado->oni} - {$empleado->nombre} "
+                                    : '';
+                            }),
 
                         Select::make('tipo_permiso_id')
                             ->label('Tipo de Permiso')
@@ -60,16 +81,25 @@ class GestionPermisoForm
                             ->label('Motivo')
                             ->required()
                             ->maxLength(255),
-
                         FileUpload::make('adjunto')
                             ->label('Adjunto')
-                            ->preserveFilenames()
-                            ->downloadable()
-                            ->maxSize(10240)
                             ->disk('public')
-                            ->directory('permisos/adjuntos')
+                            ->directory('permisos')
+                            //->downloadable()
+                            ->preserveFilenames()
+                            ->maxSize(10240)
                             ->nullable(),
-
+                        Placeholder::make('descarga')
+                            ->label('Archivo adjunto')
+                            ->icon('heroicon-o-paper-clip')
+                            ->visible(fn ($record) => filled($record?->adjunto))
+                            ->content(fn ($record) => new HtmlString(
+                                '<a href="' .
+                                route('descargar.archivo', $record->adjunto) .
+                                '" class="text-primary-600 underline" target="_blank">
+                                    DESCARGAR ARCHIVO ADJUNTO
+                                </a>'
+                            )),
 
                 /*
                  |-------------------------------------------------
