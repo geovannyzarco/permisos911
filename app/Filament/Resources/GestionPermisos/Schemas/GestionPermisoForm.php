@@ -81,6 +81,30 @@ class GestionPermisoForm
                             ->label('Motivo')
                             ->required()
                             ->maxLength(255),
+                        Select::make('id_estado_vb')
+                            ->label('Estado de Vo.Bo.')
+                            ->relationship(
+                                name: 'estadoVB',
+                                titleAttribute: 'nombre',
+                                modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                            )
+                            ->required(),
+                        Select::make('id_estado_aprobacion')
+                            ->label('Estado de Aprobación')
+                            ->relationship(
+                                name: 'estadoAprobado',
+                                titleAttribute: 'nombre',
+                                modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2))
+                            ->required(),
+                        TextInput::make('comentarios')
+                            ->label('Comentarios')
+                            ->maxLength(500)
+                            ->nullable(),
+
+
+
+
+
                         FileUpload::make('adjunto')
                             ->label('Adjunto')
                             ->disk('public')
