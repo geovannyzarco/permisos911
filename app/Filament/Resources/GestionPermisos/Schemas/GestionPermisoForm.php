@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\HtmlString;
 use App\Models\Empleado;
+use App\Models\TipoPermiso;
+
+
+
+
 
 class GestionPermisoForm
 {
@@ -28,6 +33,50 @@ class GestionPermisoForm
                  |-------------------------------------------------
                  */
 
+                Section::make('Horas personales del empleado')
+                    ->schema([
+                        Placeholder::make('horas_info')
+                            ->reactive()
+                            ->content(function ($get) {
+
+                                $empleadoId = $get('empleado_id');
+
+                                if (!$empleadoId) {
+                                    return 'Seleccione un empleado para ver la información.';
+                                }
+
+                                $empleado = Empleado::find($empleadoId);
+
+                                if (!$empleado) {
+                                    return 'Empleado no encontrado.';
+                                }
+
+                                $asignadas = $empleado->horario?->horas_personales ?? 0;
+
+                                $minutosUsados = $empleado->permisos()
+                                    ->whereYear('desde', Carbon::now()->year)
+                                    ->where('tipo_permiso_id', 2)
+                                    ->whereNotNull('desde')
+                                    ->whereNotNull('hasta')
+                                    ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, `desde`, `hasta`)) as total')
+                                    ->value('total') ?? 0;
+
+                                $usadas = round($minutosUsados / 60, 2);
+
+                                $disponibles = max($asignadas - $usadas, 0);
+
+
+                                return <<<TEXT
+                                Horas asignadas: {$asignadas}
+                                Horas utilizadas: {$usadas}
+                                Horas disponibles: {$disponibles}
+                                TEXT;
+                            }),
+    ])
+    ->columns(1)
+    ->visible(fn ($get) => filled($get('empleado_id'))),
+
+
                         DatePicker::make('fecha_creacion')
                             ->label('Fecha de Creación')
                             ->default(Carbon::now())
@@ -35,7 +84,7 @@ class GestionPermisoForm
 
                         Select::make('empleado_id')
                             ->label('Empleado')
-
+                            ->reactive()
                             ->searchable()
                             ->required()
                             ->getSearchResultsUsing(function (string $search) {
@@ -55,6 +104,8 @@ class GestionPermisoForm
                                     ? "{$empleado->oni} - {$empleado->nombre} "
                                     : '';
                             }),
+
+
 
                         Select::make('tipo_permiso_id')
                             ->label('Tipo de Permiso')

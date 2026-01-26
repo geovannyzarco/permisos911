@@ -54,10 +54,10 @@ class GestionPermisosTable
                     ->relationship('tipoPermiso', 'nombre'),
                 SelectFilter::make('estado_id')
                     ->label('Filtrar por VB')
-                    ->relationship('estado', 'nombre'),
+                    ->relationship('estadoVB', 'nombre'),
                 SelectFilter::make('estado_unidad_id')
                     ->label('Filtrar por Aprobación')
-                    ->relationship('estadoUnidad', 'nombre'),
+                    ->relationship('estadoAprobado', 'nombre'),
             ])
             ->recordActions([
                 ViewAction::make(),
