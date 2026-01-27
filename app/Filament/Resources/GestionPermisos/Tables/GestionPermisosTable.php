@@ -70,17 +70,15 @@ class GestionPermisosTable
             ->toolbarActions([
                 ExportAction::make()
                     ->exporter(PermisoExporter::class)
-                    ->formats([
-                     ExportFormat::Csv,
-                     ExportFormat::Xlsx,])
+
                     ->label('Exportar')
                     ->fileName('permisos_export'.date('Y-m-d_H-i-s')),
 
                 BulkActionGroup::make([
-                    ExportBulkAction::make()
+                    /*ExportBulkAction::make()
                         ->exporter(PermisoExporter::class)
                         ->label('Exportar Selección')
-                        ->fileName('permisos_seleccion_export'.date('Y-m-d_H-i-s')),
+                        ->fileName('permisos_seleccion_export'.date('Y-m-d_H-i-s')),*/
 
                     DeleteBulkAction::make(),
                 ]),

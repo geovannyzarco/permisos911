@@ -25,9 +25,10 @@ class GestionPermisoForm
 {
     public static function configure(Schema $schema): Schema
     {
+        //Mostrar de las horas personales y permisos del empleado seleccionado
         return $schema
             ->components([
-                 //DATOS DEL PERMISO
+                 //informacion de las horas personales
                         Section::make('Informacion del empleado')
                             ->schema([
                                 Placeholder::make('Horas_personales')
@@ -71,8 +72,8 @@ class GestionPermisoForm
                                 ])
                             ->columns(1)
                             ->visible(fn ($get) => filled($get('empleado_id'))),
-                        //DATOS DE LOS PERMISOS
 
+                        //Resumen de la cantidad permisos del empleado en el año en curso
                         Section::make('Permisos del año en curso')
                             ->schema([
                                 Placeholder::make('Permisos')
@@ -125,6 +126,7 @@ class GestionPermisoForm
                             ->reactive()
                             ->searchable()
                             ->required()
+                            //Para buscar por nombre y oni en el select
                             ->getSearchResultsUsing(function (string $search) {
                                 return Empleado::query()
                                     ->where('nombre', 'like', "%{$search}%")
@@ -190,10 +192,7 @@ class GestionPermisoForm
                             ->maxLength(500)
                             ->nullable(),
 
-
-
-
-
+                        //Subir archivo adjunto usando FileUpload de Filament y rutas
                         FileUpload::make('adjunto')
                             ->label('Adjunto')
                             ->disk('public')
@@ -214,29 +213,6 @@ class GestionPermisoForm
                                 </a>'
                             )),
 
-                /*
-                 |-------------------------------------------------
-                 | COMPENSADOS (SOLO SI ES TIPO 2 Y EN EDICIÓN)
-                 |-------------------------------------------------
-                 */
-          /*      Section::make('Compensados')
-                    ->visible(fn ($record) => $record?->tipo_permiso_id == 2)
-                    ->schema([
-                        Repeater::make('compensados')
-                            ->relationship()
-                            ->schema([
-                                DatePicker::make('fecha')
-                                    ->label('Fecha')
-                                    ->required(),
-
-                                TextInput::make('horas')
-                                    ->label('Horas')
-                                    ->numeric()
-                                    ->required(),
-                            ])
-
-                            ->createItemButtonLabel('Agregar compensado'),
-                    ]),*/
             ]);
     }
 }

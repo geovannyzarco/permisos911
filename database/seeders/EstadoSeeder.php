@@ -26,6 +26,7 @@ class EstadoSeeder extends Seeder
             ['nombre' => 'CON PERMISO SIN GOCE DE SUELDO','entidad_id' => 1],
             ['nombre' => 'SUSPENDIDO','entidad_id' => 1],
             ['nombre' => 'TRASLADADO','entidad_id' => 1],
+            ['nombre' => 'RENUNCIA','entidad_id' => 1],
         ];
 
         foreach ($estados as $estado) {
