@@ -2,25 +2,24 @@
 
 namespace App\Filament\Resources\GestionPermisos\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
+
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Actions\ExportAction;
-use Filament\Actions\ExportBulkAction;
-use App\Filament\Exports\PermisoExporter;
-use Dom\Text;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
+use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
+
+
+
 
 class GestionPermisosTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->paginated([10,25,50,100,'all'])
             ->columns([
                 TextColumn::make('id')->label('ID')->sortable(),
                 TextColumn::make('fecha_creacion')->label('Fecha de Creación')->date('d/m/Y')->sortable(),
@@ -47,7 +46,9 @@ class GestionPermisosTable
                     )
                     ->openUrlInNewTab()
 
-                            ])
+            ])
+
+
             ->filters([
                 SelectFilter::make('tipo_permiso_id')
                     ->label('Filtrar por Tipo de Permiso')
@@ -67,21 +68,15 @@ class GestionPermisosTable
                 ->url(fn ($record) => route('permiso.pdf', ['id' => $record->id]))
                 ->openUrlInNewTab(),
             ])
+
             ->toolbarActions([
-                ExportAction::make()
-                    ->exporter(PermisoExporter::class)
 
-                    ->label('Exportar')
-                    ->fileName('permisos_export'.date('Y-m-d_H-i-s')),
-
-                BulkActionGroup::make([
-                    /*ExportBulkAction::make()
-                        ->exporter(PermisoExporter::class)
-                        ->label('Exportar Selección')
-                        ->fileName('permisos_seleccion_export'.date('Y-m-d_H-i-s')),*/
-
-                    DeleteBulkAction::make(),
-                ]),
+            ])
+            //Exportar a excel la tabla
+            ->bulkActions([
+                ExportBulkAction::make()
             ]);
     }
+
+
 }
