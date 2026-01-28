@@ -65,4 +65,7 @@ class GestionPermisoResource extends Resource
             'edit' => EditGestionPermiso::route('/{record}/edit'),
         ];
     }
+
+
+
 }

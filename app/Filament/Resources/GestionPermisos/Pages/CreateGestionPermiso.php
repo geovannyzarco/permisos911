@@ -19,4 +19,17 @@ class CreateGestionPermiso extends CreateRecord
 
         return parent::getRedirectUrl();
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (!empty($data['id_estado_vb'])) {
+            $data['fecha_vb'] = now();
+        }
+
+        if (!empty($data['id_estado_aprobacion'])) {
+            $data['fecha_aprobacion'] = now();
+        }
+
+        return $data;
+    }
 }

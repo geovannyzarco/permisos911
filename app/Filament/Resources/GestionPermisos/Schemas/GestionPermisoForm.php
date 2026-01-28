@@ -180,6 +180,29 @@ class GestionPermisoForm
                                 modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
                             )
                             ->required(),
+                        Select::make('id_jefe_vb')
+                        ->label('Jefe Vo.Bo.')
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->getSearchResultsUsing(function (string $search) {
+                            return Empleado::query()
+                                ->where('nombre', 'like', "%{$search}%")
+                                ->orWhere('oni', 'like', "%{$search}%")
+                                ->limit(50)
+                                ->get()
+                                ->mapWithKeys(fn ($e) => [
+                                    $e->id => "{$e->oni} - {$e->nombre}",
+                                ]);
+                        })
+                        ->getOptionLabelUsing(function ($value) {
+                            $empleado = Empleado::find($value);
+                            return $empleado
+                                ? "{$empleado->oni} - {$empleado->nombre}"
+                                : '';
+                        }),
+
+
                         Select::make('id_estado_aprobacion')
                             ->label('Estado de Aprobación')
                             ->relationship(
@@ -187,6 +210,27 @@ class GestionPermisoForm
                                 titleAttribute: 'nombre',
                                 modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2))
                             ->required(),
+                        Select::make('id_jefe_aprobacion')
+                            ->label('Jefe Aprobador')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->getSearchResultsUsing(function (string $search) {
+                                return Empleado::query()
+                                    ->where('nombre', 'like', "%{$search}%")
+                                    ->orWhere('oni', 'like', "%{$search}%")
+                                    ->limit(50)
+                                    ->get()
+                                    ->mapWithKeys(fn ($e) => [
+                                        $e->id => "{$e->oni} - {$e->nombre}",
+                                    ]);
+                            })
+                            ->getOptionLabelUsing(function ($value) {
+                                $empleado = Empleado::find($value);
+                                return $empleado
+                                    ? "{$empleado->oni} - {$empleado->nombre}"
+                                    : '';
+                            }),
                         TextInput::make('comentarios')
                             ->label('Comentarios')
                             ->maxLength(500)

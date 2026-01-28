@@ -42,6 +42,17 @@ class Permiso extends Model
         'fecha_aprobacion' => 'datetime',
     ];
 
+    public function jefeVb()
+    {
+        return $this->belongsTo(Empleado::class, 'id_jefe_vb');
+    }
+
+    public function jefeAprobacion()
+    {
+        return $this->belongsTo(Empleado::class, 'id_jefe_aprobacion');
+    }
+
+
     public function empleado()
     {
         return $this->belongsTo(Empleado::class);
