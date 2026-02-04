@@ -21,7 +21,7 @@ class UnidadResource extends Resource
     protected static ?string $model = Unidad::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
-    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'Unidades';

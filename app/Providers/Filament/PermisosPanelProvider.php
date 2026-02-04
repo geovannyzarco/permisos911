@@ -31,6 +31,9 @@ class PermisosPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->favicon('image/favicon.ico')
+            ->brandLogo('image/logo.png')
+            ->brandName('Gestor de Permisos')
             ->id('permisos')
             ->path('permisos')
             ->login(CustomLogin::class)

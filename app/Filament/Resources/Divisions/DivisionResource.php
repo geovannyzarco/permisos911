@@ -24,7 +24,7 @@ class DivisionResource extends Resource
     protected static ?string $navigationLabel = 'Divisiones';
     protected static ?string $pluralModelLabel = 'Divisiones';
     protected static ?string $modelLabel = 'Division';
-    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'Divisiones';
 

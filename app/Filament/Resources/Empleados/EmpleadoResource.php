@@ -22,7 +22,7 @@ class EmpleadoResource extends Resource
     protected static ?string $model = Empleado::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
-    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'Empeados';
 

@@ -28,7 +28,7 @@ class GestionPermisoResource extends Resource
     protected static ?string $recordTitleAttribute = 'Permisos';
     protected static ?string $navigationLabel = 'Gestión de Permisos';
     protected static ?string $pluralModelLabel = 'Gestión de Permisos';
-    protected static string | UnitEnum | null $navigationGroup = 'Aministración';
+    protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
 
 

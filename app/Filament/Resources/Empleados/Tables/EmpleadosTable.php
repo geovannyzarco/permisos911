@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Empleados\Tables;
 
+use Dom\Text;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -43,6 +44,9 @@ class EmpleadosTable
                     ->sortable(),
                 TextColumn::make('estado.nombre')
                     ->label('Estado')
+                    ->sortable(),
+                TextColumn::make('codigo_huella')
+                    ->label('Código de Huella')
                     ->sortable(),
 
             ])
