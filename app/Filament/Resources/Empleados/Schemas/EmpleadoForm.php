@@ -97,7 +97,6 @@ class EmpleadoForm
                 SignaturePad::make('firma')
                     ->label('Firma del empleado')
                     ->backgroundColor('#f2efef')
-                    ->required()
                     ->dehydrateStateUsing(fn($state) => $state)
                      ->columnSpanFull(),
                     //https://filamentphp.com/plugins/saade-autograph
