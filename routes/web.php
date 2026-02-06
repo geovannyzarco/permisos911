@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PermisoPdfController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\MarcacionImportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,3 +18,6 @@ Route::get('/descargar/{path}', function ($path) {
     }
     return Storage::disk('public')->download($path);
 })->where('path', '.*')->name('descargar.archivo');
+
+Route::post('/marcaciones/import', [MarcacionImportController::class, 'import'])
+    ->name('marcaciones.import');

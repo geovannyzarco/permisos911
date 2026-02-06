@@ -2,45 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Marcacion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\MarcacionImportService;
 
 class MarcacionImportController extends Controller
 {
-    function import(Request $request)
+    public function import(Request $request, MarcacionImportService $service)
     {
+        dd($request->file('file'));
         $request->validate([
-            'file' => 'required|file|mimes:txt,csv',
+            'file' => ['required', 'file', 'mimes:txt'],
         ]);
 
-        $path = $request->file('file')->getRealPath();
-        $file = fopen($path, 'r');
+        $result = $service->importFromTxt(
+            $request->file('file')->getRealPath()
+        );
 
-        //leer el encabezado
-        $header = fgetcsv($file, 0, "\t");
-
-        while(($row = fgetcsv($file, 0, "\t")) !== false) {
-
-                if(count($row)!== count($header)) {
-                    // Manejar error de formato
-                    continue;
-                }
-
-                $data = array_combine($header, $row);
-
-                if(empty($data['EnNo']) || empty($data['DateTime']))
-                    continue;
-
-
-                $codigo = (int) trim($data['EnNo']);
-
-              // Procesar cada fila de datos
-            // Por ejemplo, guardar en la base de datos
-            // Marcacion::create([
-            //     'empleado_id' => $data['empleado_id'],
-            //     'fecha_hora' => $data['fecha_hora'],
-            //     'tipo' => $data['tipo'],
-            // ]);
-        }
+        return back()->with('success', $result);
     }
 }
