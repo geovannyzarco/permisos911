@@ -91,23 +91,30 @@ class EmpleadoForm
                         ->where('entidad_id',1)
                         ->pluck('nombre','id')),
                 FileUpload::make('Foto')
-                    ->label('Foto')
-                    ->image(),
+                    ->label('Fotografía')
+                    ->image()
+                    ->imageEditor()
+                    ->directory('empleados')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->imagePreviewHeight('150')
+                    ->maxSize(2048)
+                    ->nullable(),
 
                 SignaturePad::make('firma')
                     ->label('Firma del empleado')
                     ->backgroundColor('#f2efef')
                     ->dehydrateStateUsing(fn($state) => $state)
-                     ->columnSpanFull(),
+                    ->columnSpanFull()
                     //https://filamentphp.com/plugins/saade-autograph
-                    //->dotSize(2.0)
-                   // ->lineMinWidth(0.5)
-                   // ->lineMaxWidth(2.5)
-                   // ->throttle(16)
-                   // ->minDistance(5)
-                   // ->velocityFilterWeight(0.7)
+                    ->dotSize(2.0)
+                    ->lineMinWidth(0.5)
+                    ->lineMaxWidth(2.5)
+                    ->throttle(16)
+                    ->minDistance(5)
+                    ->velocityFilterWeight(0.7)
                    //->backgroundColorOnDark('#f0a'),     // Background color on dark mode (defaults to backgroundColor)
-                   // ->exportBackgroundColor('#f00')     // Background color on export (defaults to backgroundColor)
+                    ->exportBackgroundColor('#fff'),     // Background color on export (defaults to backgroundColor)
                    // ->penColor('#000')                  // Pen color on light mode
                    // ->penColorOnDark('#fff')            // Pen color on dark mode (defaults to penColor)
                    // ->exportPenColor('#0f0')            // Pen color on export (defaults to penColor)

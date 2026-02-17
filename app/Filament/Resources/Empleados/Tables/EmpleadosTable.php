@@ -8,9 +8,11 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Image;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Columns\ImageColumn;
 
 class EmpleadosTable
 {
@@ -22,6 +24,9 @@ class EmpleadosTable
                     ->label('ID')
                     ->numeric()
                     ->sortable(),
+                ImageColumn::make('foto')
+                    ->label('Foto')
+                    ->circular(),
                 TextColumn::make('oni')
                     ->label('ONI')
                     ->searchable(),

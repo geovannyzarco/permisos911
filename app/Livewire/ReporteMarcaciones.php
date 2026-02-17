@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 
 class ReporteMarcaciones extends Component implements HasActions, HasSchemas, HasTable
 {
@@ -29,36 +30,113 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
     return $table
         ->query(
             Marcacion::query()
-                ->join('empleados as e', 'e.codigo_huella', 'marcaciones.codigo')
+                ->join('empleados as e', 'e.codigo_huella', '=', 'marcaciones.codigo')
+                ->join('horarios as h', 'h.id', '=', 'e.horario_id')
                 ->selectRaw('
                     MIN(marcaciones.id) as id,
                     e.oni,
                     e.nombre,
+                    h.nombre as nombre_horario,
+                    h.horas_jornada,
+                    h.hora_entrada as hora_entrada_esperada,
+                    h.hora_salida as hora_salida_esperada,
                     DATE(marcaciones.marcacion) as fecha,
-                    TIME(MIN(marcaciones.marcacion)) as hora_entrada,
-                    TIME(MAX(marcaciones.marcacion)) as hora_salida
+                    MIN(marcaciones.marcacion) as entrada_marcada,
+                    MAX(marcaciones.marcacion) as salida_marcada,
+                    TIMESTAMPDIFF(MINUTE,
+                        MIN(marcaciones.marcacion),
+                        MAX(marcaciones.marcacion)
+                    ) as minutos_trabajados
                 ')
-                ->groupBy('e.oni', 'e.nombre', DB::raw('DATE(marcaciones.marcacion)'))
+                ->groupBy(
+                    'e.oni',
+                    'e.nombre',
+                    'h.nombre',
+                    'h.horas_jornada',
+                    'h.hora_entrada',
+                    'h.hora_salida',
+                    DB::raw('DATE(marcaciones.marcacion)')
+                )
         )
         ->columns([
             TextColumn::make('oni')
-            ->label('Oni')
-            ->searchable(),
+                ->label('Oni')
+                ->searchable(),
             TextColumn::make('nombre')
-            ->label('Nombre')
-            ->searchable(),
+                ->label('Nombre')
+                ->searchable(),
+            TextColumn::make('nombre_horario')
+                ->label('Horario')
+                ->searchable(),
             TextColumn::make('fecha')
-            ->label('Fecha')
-            ->date('d/m/Y')
-            ->sortable(),
-            TextColumn::make('hora_entrada')->label('Hora Entrada'),
-            TextColumn::make('hora_salida')->label('Hora Salida'),
+                ->label('Fecha')
+                ->date('d/m/Y')
+                ->sortable(),
+            TextColumn::make('horas_jornada')
+                ->label('Horas Jornada')
+                ->alignCenter(),
+            TextColumn::make('hora_entrada_esperada')
+                ->label('Entrada Esperada')
+                ->time('H:i'),
+            TextColumn::make('hora_salida_esperada')
+                ->label('Salida Esperada')
+                ->time('H:i'),
+            TextColumn::make('entrada_marcada')
+                ->label('Entrada Marcada')
+                ->dateTime('d/m/Y H:i'),
+            TextColumn::make('salida_marcada')
+                ->label('Salida Marcada')
+                ->dateTime('d/m/Y H:i'),
+            TextColumn::make('minutos_trabajados')
+                ->label('Horas Trabajadas')
+                ->formatStateUsing(fn ($state) => round($state / 60, 2) . ' h')
+                ->alignCenter(),
+            TextColumn::make('horas_jornada')
+                ->label('Horas Jornada')
+                ->alignCenter(),
+            TextColumn::make('diferencia')
+                ->label('Diferencia')
+                ->getStateUsing(function ($record) {
+                    $horasTrabajadas = $record->minutos_trabajados / 60;
+                    return round($horasTrabajadas - $record->horas_jornada, 2);
+                })
+                ->alignCenter(),
+
+            TextColumn::make('estado')
+                ->label('Estado')
+                ->getStateUsing(function ($record) {
+
+                    $horasTrabajadas = $record->minutos_trabajados / 60;
+                    $diferencia = $horasTrabajadas - $record->horas_jornada;
+
+                    if ($diferencia > 0) {
+                        return 'salida tarde';
+                    }
+
+                    if ($diferencia < 0) {
+                        return 'Incompleto';
+                    }
+
+                    return 'Cumplido';
+                })
+                ->badge()
+                ->color(function ($record) {
+
+                    $horasTrabajadas = $record->minutos_trabajados / 60;
+                    $diferencia = $horasTrabajadas - $record->horas_jornada;
+
+                    if ($diferencia > 0) return 'info';
+                    if ($diferencia < 0) return 'danger';
+
+                    return 'success';
+                }),
         ])
         ->filters([
             Filter::make('fecha')
                 ->form([
                     DatePicker::make('fecha_inicio')->label('Fecha Inicio'),
                     DatePicker::make('fecha_fin')->label('Fecha Fin'),
+
                 ])
                 ->query(function ($query, $data) {
                     if ($data['fecha_inicio']) {
@@ -68,7 +146,13 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                         $query->whereDate('marcaciones.marcacion', '<=', $data['fecha_fin']);
                     }
                 }),
+                SelectFilter::make('h.nombre')
+                ->label('Horario')
+                ->options(function () {
+                    return DB::table('horarios')->pluck('nombre', 'nombre');
+                })
         ]);
+
     }
 
 

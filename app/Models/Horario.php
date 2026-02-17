@@ -11,7 +11,14 @@ class Horario extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nombre', 'horas_jornada', 'horas_personales'];
+    protected $fillable = [
+        'nombre',
+        'horas_jornada',
+        'horas_personales',
+        'hora_entrada',
+        'hora_salida',
+        'cruza_medianoche',
+        ];
 
     protected $searchableFields = ['*'];
 
