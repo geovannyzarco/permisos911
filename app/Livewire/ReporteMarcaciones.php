@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Marcacion;
 use Dom\Text;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Illuminate\Support\Facades\DB;
 use Filament\Actions\Contracts\HasActions;
@@ -18,6 +19,8 @@ use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Exp;
+use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
 
 class ReporteMarcaciones extends Component implements HasActions, HasSchemas, HasTable
 {
@@ -151,7 +154,12 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                 ->options(function () {
                     return DB::table('horarios')->pluck('nombre', 'nombre');
                 })
-        ]);
+        ])
+         ->toolbarActions([
+            BulkActionGroup::make([
+                ExportBulkAction::make()
+            ])
+         ]);
 
     }
 
