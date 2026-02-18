@@ -113,7 +113,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                     $diferencia = $horasTrabajadas - $record->horas_jornada;
 
                     if ($diferencia > 0) {
-                        return 'salida tarde';
+                        return 'Compensado';
                     }
 
                     if ($diferencia < 0) {
