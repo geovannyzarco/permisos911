@@ -31,7 +31,7 @@ class ListMarcacions extends ListRecords
                     FileUpload::make('archivo')
                         ->label('Archivo TXT')
                         ->required()
-                        ->acceptedFileTypes(['text/plain'])
+                        ->acceptedFileTypes(['text/plain', '.txt', '.csv'])
                         ->storeFile(false),
                 ])
                 ->action(function (array $data, MarcacionImportService $service) {

@@ -31,7 +31,7 @@ class MarcacionImportService
             $codigo = (int) trim($data['EnNo']);
 
             $marcacion = Carbon::createFromFormat(
-                'Y/m/d H:i:s',
+                'd/m/Y H:i',
                 trim($data['DateTime'])
             );
 
