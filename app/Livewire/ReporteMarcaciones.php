@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Horario;
 use App\Models\Marcacion;
 use Dom\Text;
 use Filament\Actions\BulkActionGroup;
@@ -38,7 +39,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                 ->selectRaw('
                     MIN(marcaciones.id) as id,
                     e.oni,
-                    e.nombre,
+                    e.nombre as nombre_empleado,
                     h.nombre as nombre_horario,
                     h.horas_jornada,
                     h.hora_entrada as hora_entrada_esperada,
@@ -64,13 +65,16 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
         ->columns([
             TextColumn::make('oni')
                 ->label('Oni')
-                ->searchable(),
-            TextColumn::make('nombre')
+                ->searchable(query: function ($query, $search) {
+                        $query->where('e.oni', 'like', "%{$search}%");
+                    }),
+            TextColumn::make('nombre_empleado')
                 ->label('Nombre')
-                ->searchable(),
+                ->searchable(query: function ($query, $search) {
+                    $query->where('e.nombre', 'like', "%{$search}%");
+                }),
             TextColumn::make('nombre_horario')
-                ->label('Horario')
-                ->searchable(),
+                ->label('Horario'),
             TextColumn::make('fecha')
                 ->label('Fecha')
                 ->date('d/m/Y')
@@ -149,10 +153,15 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                         $query->whereDate('marcaciones.marcacion', '<=', $data['fecha_fin']);
                     }
                 }),
-                SelectFilter::make('h.nombre')
+                SelectFilter::make('nombre_horario')
                 ->label('Horario')
                 ->options(function () {
-                    return DB::table('horarios')->pluck('nombre', 'nombre');
+                    return Horario::pluck('nombre','id');
+                })
+                ->query(function($query,$data){
+                    if ($data['value']) {
+                        $query->where('h.id', $data['value']);
+                    }
                 })
         ])
          ->toolbarActions([
