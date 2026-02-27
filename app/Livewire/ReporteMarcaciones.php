@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Horario;
 use App\Models\Marcacion;
 use Dom\Text;
+use Dompdf\FrameDecorator\Image;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Exp;
 use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
@@ -38,6 +40,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                 ->join('horarios as h', 'h.id', '=', 'e.horario_id')
                 ->selectRaw('
                     MIN(marcaciones.id) as id,
+                    e.foto,
                     e.oni,
                     e.nombre as nombre_empleado,
                     h.nombre as nombre_horario,
@@ -54,6 +57,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                 ')
                 ->groupBy(
                     'e.oni',
+                    'e.foto',
                     'e.nombre',
                     'h.nombre',
                     'h.horas_jornada',
@@ -68,6 +72,9 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                 ->searchable(query: function ($query, $search) {
                         $query->where('e.oni', 'like', "%{$search}%");
                     }),
+            ImageColumn::make('foto')
+                ->circular()
+                ->label('Foto'),
             TextColumn::make('nombre_empleado')
                 ->label('Nombre')
                 ->searchable(query: function ($query, $search) {

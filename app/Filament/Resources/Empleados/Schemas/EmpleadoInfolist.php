@@ -15,8 +15,6 @@ class EmpleadoInfolist
             ->components([
                 ImageEntry::make('foto'),
 
-
-
                 TextEntry::make('oni')
                 ->label('ONI'),
                 TextEntry::make('nombre'),
