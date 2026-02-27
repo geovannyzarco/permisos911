@@ -13,9 +13,10 @@ class EmpleadoInfolist
     {
         return $schema
             ->components([
-                ImageEntry::make('foto')
-                        ->label('Foto')
-                        ->circular(),
+                ImageEntry::make('foto'),
+
+
+
                 TextEntry::make('oni')
                 ->label('ONI'),
                 TextEntry::make('nombre'),

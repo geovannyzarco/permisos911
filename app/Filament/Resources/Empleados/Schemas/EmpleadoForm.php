@@ -23,6 +23,10 @@ class EmpleadoForm
     {
         return $schema
             ->components([
+                FileUpload::make('foto')
+                    ->image(),
+                /*FileUpload::make('foto')
+                    ->avatar(),*/
                 TextInput::make('oni')
                 ->required(),
                 TextInput::make('nombre')
@@ -90,16 +94,7 @@ class EmpleadoForm
                     ->options(Estado::query()
                         ->where('entidad_id',1)
                         ->pluck('nombre','id')),
-                FileUpload::make('Foto')
-                    ->label('Fotografía')
-                    ->image()
-                    ->imageEditor()
-                    ->directory('empleados')
-                    ->disk('public')
-                    ->visibility('public')
-                    ->imagePreviewHeight('150')
-                    ->maxSize(2048)
-                    ->nullable(),
+
 
                 SignaturePad::make('firma')
                     ->label('Firma del empleado')

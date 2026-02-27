@@ -26,6 +26,7 @@ class EmpleadosTable
                     ->sortable(),
                 ImageColumn::make('foto')
                     ->label('Foto')
+
                     ->circular(),
                 TextColumn::make('oni')
                     ->label('ONI')
