@@ -21,3 +21,15 @@ Route::get('/descargar/{path}', function ($path) {
 
 Route::post('/marcaciones/import', [MarcacionImportController::class, 'import'])
     ->name('marcaciones.import');
+
+Route::get('/foto-empleado/{filename}', function ($filename) {
+
+    $path = storage_path('app/private/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+
+})->where('filename', '.*')->name('foto.empleado');

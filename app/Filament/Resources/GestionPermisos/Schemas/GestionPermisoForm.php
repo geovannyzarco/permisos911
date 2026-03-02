@@ -16,6 +16,7 @@ use Illuminate\Support\HtmlString;
 use App\Models\Empleado;
 use App\Models\TipoPermiso;
 use App\Models\Permiso;
+use Filament\Schemas\Components\Image;
 
 
 
@@ -116,6 +117,20 @@ class GestionPermisoForm
                             ->columns(1)
                             ->visible(fn ($get) => filled($get('empleado_id'))),
 
+
+                               Image::make(
+    url: fn ($get) => route('foto.empleado', [
+        'filename' => optional(
+            Empleado::find($get('empleado_id'))
+        )->foto ?? 'dummy.jpg' // nunca null
+    ]),
+    alt: 'Foto del empleado',
+)
+->visible(function ($get) {
+    $empleado = Empleado::find($get('empleado_id'));
+    return filled($empleado?->foto);
+}),
+
                         DatePicker::make('fecha_creacion')
                             ->label('Fecha de Creación')
                             ->default(Carbon::now())
@@ -144,6 +159,7 @@ class GestionPermisoForm
                                     ? "{$empleado->oni} - {$empleado->nombre} "
                                     : '';
                             }),
+
 
 
 
