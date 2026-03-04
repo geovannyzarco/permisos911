@@ -16,6 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmpleadoResource extends Resource
 {
@@ -25,6 +26,19 @@ class EmpleadoResource extends Resource
     protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'Empeados';
+
+public static function getEloquentQuery(): Builder
+{
+    $query = parent::getEloquentQuery();
+
+    if (auth()->check() && auth()->user()->hasRole('Empleados')) {
+        $query->where('oni', auth()->user()->oni);
+    }
+
+    return $query;
+}
+
+
 
     public static function form(Schema $schema): Schema
     {

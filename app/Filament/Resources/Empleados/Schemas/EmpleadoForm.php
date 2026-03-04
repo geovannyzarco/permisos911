@@ -21,14 +21,17 @@ class EmpleadoForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $isEmpleado = auth()->user()?->hasRole('Empleados') ?? false;
         return $schema
             ->components([
                 FileUpload::make('foto')
-                    ->image(),
+                    ->image()
+                    ->disabled($isEmpleado),
                 /*FileUpload::make('foto')
                     ->avatar(),*/
                 TextInput::make('oni')
-                ->required(),
+                ->required()
+                ->disabled($isEmpleado),
                 TextInput::make('nombre')
                 ->required(),
                 DatePicker::make('fecha_ingreso')
@@ -37,7 +40,8 @@ class EmpleadoForm
                 ->label('Fecha de Nacimiento'),
                 TextInput::make('codigo_huella')
                 ->label('Código de Huella')
-                ->numeric(),
+                ->numeric()
+                ->disabled($isEmpleado),
                 Select::make('estado_civil_id')
                 ->label('Estado Civil')
                 ->relationship('estadoCivil','nombre'),
@@ -67,33 +71,40 @@ class EmpleadoForm
                 Select::make('grupo_id')
                 ->required()
                 ->label('Grupo')
-                ->options(Grupo::query()->pluck('nombre', 'id')),
+                ->options(Grupo::query()->pluck('nombre', 'id'))
+                ->disabled($isEmpleado),
+
                 Select::make('categoria_id')
                     ->required()
                     ->label('Categoría')
-                    ->options(Categoria::query()->pluck('nombre','id')),
+                    ->options(Categoria::query()->pluck('nombre','id'))
+                    ->disabled($isEmpleado),
 
                 Select::make('horario_id')
                     ->required()
                     ->label('Horario')
-                    ->options(Horario::query()->pluck('nombre','id')),
+                    ->options(Horario::query()->pluck('nombre','id'))
+                    ->disabled($isEmpleado),
 
                 Select::make('unidad_id')
                     ->required()
                     ->label('Unidad')
-                    ->options(Unidad::query()->pluck('nombre','id')),
+                    ->options(Unidad::query()->pluck('nombre','id'))
+                    ->disabled($isEmpleado),
 
                 Select::make('nivel_id')
                     ->required()
                     ->label('Nivel')
-                    ->options(Nivel::query()->pluck('nivel','id')),
+                    ->options(Nivel::query()->pluck('nivel','id'))
+                    ->disabled($isEmpleado),
 
                 Select::make('estado_id')
                     ->required()
                     ->label('Estado')
                     ->options(Estado::query()
                         ->where('entidad_id',1)
-                        ->pluck('nombre','id')),
+                        ->pluck('nombre','id'))
+                    ->disabled($isEmpleado),
 
 
                 SignaturePad::make('firma')
@@ -109,10 +120,11 @@ class EmpleadoForm
                     ->minDistance(5)
                     ->velocityFilterWeight(0.7)
                    //->backgroundColorOnDark('#f0a'),     // Background color on dark mode (defaults to backgroundColor)
-                    ->exportBackgroundColor('#fff'),     // Background color on export (defaults to backgroundColor)
+                    ->exportBackgroundColor('#fff')     // Background color on export (defaults to backgroundColor)
                    // ->penColor('#000')                  // Pen color on light mode
                    // ->penColorOnDark('#fff')            // Pen color on dark mode (defaults to penColor)
                    // ->exportPenColor('#0f0')            // Pen color on export (defaults to penColor)
+
             ]);
     }
 }

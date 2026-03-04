@@ -16,11 +16,13 @@ use UnitEnum;
 use Filament\Tables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 
 class ReporteMarcaciones extends Page implements HasTable
 {
     use InteractsWithTable;
+    use HasPageShield;
 
     protected string $view = 'filament::filament.pages.reporte-marcaciones';
 

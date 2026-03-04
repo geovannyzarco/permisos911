@@ -11,8 +11,8 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use App\Services\MarcacionImportService;
-//use App\Filament\Imports\MarcacionImporter;
-//use Filament\Actions\ImportAction;
+use App\Filament\Imports\MarcacionImporter;
+use Filament\Actions\ImportAction;
 
 class ListMarcacions extends ListRecords
 {
@@ -22,7 +22,7 @@ class ListMarcacions extends ListRecords
     {
        return [
          //importacion usando controlador y servicio
-            Action::make('Importar')
+          /*  Action::make('Importar')
                 ->label('Importar Marcaciones')
 
                 ->modalHeading('Imporar Archivo TXT')
@@ -45,7 +45,7 @@ class ListMarcacions extends ListRecords
                     )
                     ->success()
                     ->send();
-                })
+                })*/
 /*
                  ExcelImportAction::make()
                     ->label('Importar Marcaciones')
@@ -82,9 +82,12 @@ class ListMarcacions extends ListRecords
                         ];
                     })*/
 
-                /*ImportAction::make()
+                ImportAction::make()
                 ->importer(MarcacionImporter::class)
-                ->csvDelimiter(";")*/
+                ->csvDelimiter("\t")
+                ->label('Importar Marcaciones')
+                ->color('primary')
+                ->modalHeading('Importar Marcaciones desde Archivo TXT')
 
        ];
     }

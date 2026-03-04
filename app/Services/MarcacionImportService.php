@@ -11,29 +11,36 @@ class MarcacionImportService
     {
         $file = fopen($path, 'r');
 
-        $header = fgetcsv($file, 0, ";");
+        // Leer encabezado (TAB como delimitador)
+        fgetcsv($file, 0, "\t");
 
         $importadas = 0;
         $duplicadas = 0;
 
-        while (($row = fgetcsv($file, 0, ";")) !== false) {
+        while (($row = fgetcsv($file, 0, "\t")) !== false) {
 
-            if (count($row) !== count($header)) {
+            // Validar que existan las columnas necesarias
+            if (!isset($row[2]) || !isset($row[7])) {
                 continue;
             }
 
-            $data = array_combine($header, $row);
+            $codigo = (int) trim($row[2]);
 
-            if (empty($data['EnNo']) || empty($data['DateTime'])) {
+            if (empty($codigo) || empty($row[7])) {
                 continue;
             }
 
-            $codigo = (int) trim($data['EnNo']);
+            // Normalizar espacios múltiples en la fecha
+            $fechaRaw = preg_replace('/\s+/', ' ', trim($row[7]));
 
-            $marcacion = Carbon::createFromFormat(
-                'd/m/Y H:i',
-                trim($data['DateTime'])
-            );
+            try {
+                $marcacion = Carbon::createFromFormat(
+                    'Y/m/d H:i:s',
+                    $fechaRaw
+                );
+            } catch (\Exception $e) {
+                continue;
+            }
 
             $exists = Marcacion::where('codigo', $codigo)
                 ->where('marcacion', $marcacion)

@@ -67,7 +67,7 @@ class PermisoSeeder extends Seeder
             }
 
             DB::table('permisos')->insert([
-                'id'                     => $data['id'],
+               // 'id'                     => $data['id'],
                 'fecha_creacion'         => $data['fecha_creacion'] ?: null,
                 'desde'                  => $data['desde'] ?: null,
                 'hasta'                  => $data['hasta'] ?: null,

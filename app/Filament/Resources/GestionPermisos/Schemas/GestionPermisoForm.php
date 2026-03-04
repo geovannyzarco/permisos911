@@ -56,7 +56,7 @@ class GestionPermisoForm
                                             ->where('id_estado_aprobacion', 3) // Solo permisos aprobados
                                             ->whereNotNull('desde')
                                             ->whereNotNull('hasta')
-                                            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, `desde`, `hasta`)) as total')
+                                            ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
                                             ->value('total') ?? 0;
 
                                         $usadas = round($minutosUsados / 60, 2);

@@ -34,38 +34,42 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
     public function table( Table $table): Table
     {
     return $table
-        ->query(
-            Marcacion::query()
-                ->join('empleados as e', 'e.codigo_huella', '=', 'marcaciones.codigo')
-                ->join('horarios as h', 'h.id', '=', 'e.horario_id')
-                ->selectRaw('
-                    MIN(marcaciones.id) as id,
-                    e.foto,
-                    e.oni,
-                    e.nombre as nombre_empleado,
-                    h.nombre as nombre_horario,
-                    h.horas_jornada,
-                    h.hora_entrada as hora_entrada_esperada,
-                    h.hora_salida as hora_salida_esperada,
-                    DATE(marcaciones.marcacion) as fecha,
-                    MIN(marcaciones.marcacion) as entrada_marcada,
-                    MAX(marcaciones.marcacion) as salida_marcada,
-                    TIMESTAMPDIFF(MINUTE,
-                        MIN(marcaciones.marcacion),
-                        MAX(marcaciones.marcacion)
-                    ) as minutos_trabajados
-                ')
-                ->groupBy(
-                    'e.oni',
-                    'e.foto',
-                    'e.nombre',
-                    'h.nombre',
-                    'h.horas_jornada',
-                    'h.hora_entrada',
-                    'h.hora_salida',
-                    DB::raw('DATE(marcaciones.marcacion)')
-                )
-        )
+            ->query(
+                Marcacion::query()
+                    ->join('empleados as e', 'e.codigo_huella', '=', 'marcaciones.codigo')
+                    ->join('horarios as h', 'h.id', '=', 'e.horario_id')
+                    ->selectRaw('
+                        MIN(marcaciones.id) as id,
+                        e.foto,
+                        e.oni,
+                        e.nombre as nombre_empleado,
+                        h.nombre as nombre_horario,
+                        h.horas_jornada,
+                        h.hora_entrada as hora_entrada_esperada,
+                        h.hora_salida as hora_salida_esperada,
+
+                        CAST(marcaciones.marcacion AS DATE) as fecha,
+
+                        MIN(marcaciones.marcacion) as entrada_marcada,
+                        MAX(marcaciones.marcacion) as salida_marcada,
+
+                        DATEDIFF(
+                            MINUTE,
+                            MIN(marcaciones.marcacion),
+                            MAX(marcaciones.marcacion)
+                        ) as minutos_trabajados
+                    ')
+                    ->groupBy(
+                        'e.oni',
+                        'e.foto',
+                        'e.nombre',
+                        'h.nombre',
+                        'h.horas_jornada',
+                        'h.hora_entrada',
+                        'h.hora_salida',
+                        DB::raw('CAST(marcaciones.marcacion AS DATE)')
+                    )
+            )
         ->columns([
             TextColumn::make('oni')
                 ->label('Oni')
