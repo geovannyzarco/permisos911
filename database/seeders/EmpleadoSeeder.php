@@ -2,97 +2,95 @@
 
 namespace Database\Seeders;
 
-use App\Models\Empleado;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class EmpleadoSeeder extends Seeder
 {
     public function run(): void
     {
+
         $path = database_path('seeders/datos/empleados.csv');
 
         if (!file_exists($path)) {
-            $this->command->error("No se encontró el archivo: {$path}");
+            $this->command->error("No existe el archivo: ".$path);
             return;
         }
 
-        // 🔥 Cargar valores válidos
-        $gruposValidos = DB::table('grupos')->pluck('id')->toArray();
-        $categoriasValidos = DB::table('categorias')->pluck('id')->toArray();
-        $horariosValidos = DB::table('horarios')->pluck('id')->toArray();
-        $unidadesValidos = DB::table('unidades')->pluck('id')->toArray();
-        $estadosValidos = DB::table('estados')->pluck('id')->toArray();
+        $file = fopen($path, 'r');
 
-        // 🔥 Valores por defecto si no existen
-        $DEFAULT_CATEGORIA = 29;
-        $DEFAULT_GRUPO = 22;
-        $DEFAULT_HORARIO = 6;
-        $DEFAULT_UNIDAD = 19;
+        // leer encabezado
+        $header = fgetcsv($file);
 
-        $csv = fopen($path, 'r');
-        $headers = fgetcsv($csv);
+        while (($row = fgetcsv($file)) !== false) {
 
-        $insertados = 0;
-        $invalidos = [];
+            $data = array_combine($header, $row);
 
-        //DB::statement('ALTER TABLE empleados NOCHECK CONSTRAINT ALL;');
-
-        while (($data = fgetcsv($csv)) !== false) {
-
-            $row = array_combine($headers, $data);
-
-            // 📌 Verificar y asignar valores por defecto si no existen
-            $grupo = in_array($row['id_grupo'], $gruposValidos)
-                        ? $row['id_grupo']
-                        : $DEFAULT_GRUPO;
-
-            $categoria = in_array($row['id_categoria'], $categoriasValidos)
-                        ? $row['id_categoria']
-                        : $DEFAULT_CATEGORIA;
-
-            $horario = in_array($row['id_horario'], $horariosValidos)
-                        ? $row['id_horario']
-                        : $DEFAULT_HORARIO;
-
-            $unidad = in_array($row['id_unidad'], $unidadesValidos)
-                        ? $row['id_unidad']
-                        : $DEFAULT_UNIDAD;
-
-            // Estado sí es obligatorio, si no existe, se reporta pero se usa NULL
-            if (!in_array($row['id_estado'], $estadosValidos)) {
-                $invalidos[] = "Estado inválido '{$row['id_estado']}' para empleado {$row['oni']}.";
-                $row['id_estado'] = null;
+            // convertir vacíos a null
+            foreach ($data as $k => $v) {
+                if ($v === '') {
+                    $data[$k] = null;
+                }
             }
 
-            // Insertar registro
-            Empleado::create([
-                'oni' => $row['oni'],
-                'nombre' => $row['nombre'],
-                'foto' => '',
-                'firma' => '',
-                'grupo_id' => $grupo,
-                'categoria_id' => $categoria,
-                'horario_id' => $horario,
-                'unidad_id' => $unidad,
-                'nivel_id' => 1,
-                'estado_id' => $row['id_estado'],
+            DB::table('empleados')->insert([
+                'id' => $data['id'],
+                'estado_civil_id' => $data['estado_civil_id'],
+                'departamento_id' => $data['departamento_id'],
+                'municipio_id' => $data['municipio_id'],
+                'distrito_id' => $data['distrito_id'],
+                'oni' => $data['oni'],
+                'nombre' => trim($data['nombre']),
+                'foto' => $data['foto'],
+                'firma' => $data['firma'],
+                'fecha_ingreso' => $this->parseDate($data['fecha_ingreso']),
+                'fecha_nacimiento' => $this->parseDate($data['fecha_nacimiento']),
+                'codigo_huella' => $data['codigo_huella'],
+                'nombre_conyuge' => $data['nombre_conyuge'],
+                'numero_hijos' => $data['numero_hijos'],
+                'email' => $data['email'],
+                'telefono' => $data['telefono'],
+                'direccion' => $data['direccion'],
+                'genero' => $data['genero'],
+                'grupo_id' => $data['grupo_id'],
+                'categoria_id' => $data['categoria_id'],
+                'horario_id' => $data['horario_id'],
+                'unidad_id' => $data['unidad_id'],
+                'nivel_id' => $data['nivel_id'],
+                'estado_id' => $data['estado_id'],
+                'nota' => $data['nota'],
+                'created_at' => $this->parseDateTime($data['created_at']),
+                'updated_at' => $this->parseDateTime($data['updated_at']),
             ]);
-
-            $insertados++;
         }
 
-        fclose($csv);
+        fclose($file);
+    }
 
-       // DB::statement('ALTER TABLE empleados WITH CHECK CHECK CONSTRAINT ALL;');
+    private function parseDate($value)
+    {
+        if (!$value) {
+            return null;
+        }
 
-        $this->command->info("Empleados insertados: $insertados");
+        try {
+            return Carbon::parse($value)->format('Y-m-d');
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
-        if (!empty($invalidos)) {
-            $this->command->warn("Advertencias durante la importación:");
-            foreach ($invalidos as $msg) {
-                $this->command->warn(" - $msg");
-            }
+    private function parseDateTime($value)
+    {
+        if (!$value) {
+            return now();
+        }
+
+        try {
+            return Carbon::parse($value);
+        } catch (\Exception $e) {
+            return now();
         }
     }
 }

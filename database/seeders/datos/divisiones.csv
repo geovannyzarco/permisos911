@@ -1,2 +1,2 @@
-"id","name","ubicacion","telefono","email","id_jefe"
-"1","Division de Emergencias 911","Autopista Norte, Mejicanos, El Salvador","2222-2222","contacto@empresa.com","1"
+"id","nombre","ubicacion","telefono","email","created_at","updated_at"
+"1","Division de Emergencias 911","Final Autopista Norte, Col. El Refugio, Edificio No. 3, División de Tránsito Terrestre, San Salvador, El Salvador","2222-0000","secretaria911@pnc.gob.com","19/1/2026 21:13:39","19/1/2026 21:13:39"

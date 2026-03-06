@@ -60,6 +60,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                         ) as minutos_trabajados
                     ')
                     ->groupBy(
+                        'marcaciones.id',
                         'e.oni',
                         'e.foto',
                         'e.nombre',
