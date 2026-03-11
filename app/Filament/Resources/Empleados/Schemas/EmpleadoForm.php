@@ -170,6 +170,7 @@ class EmpleadoForm
                                 1 => 'Sí',
                                 0 => 'No',
                             ])
+                            ->required()
                             ->default(0),
 
 
@@ -183,6 +184,7 @@ class EmpleadoForm
                                 1 => 'Sí',
                                 0 => 'No',
                             ])
+                            ->required()
                             ->default(0),
 
 
@@ -204,6 +206,7 @@ class EmpleadoForm
                                 1 => 'Sí',
                                 0 => 'No',
                             ])
+                            ->required()
                             ->default(0),
 
 
@@ -216,6 +219,7 @@ class EmpleadoForm
                                 1 => 'Sí',
                                 0 => 'No',
                             ])
+                            ->required()
                             ->default(0),
 
                     ])

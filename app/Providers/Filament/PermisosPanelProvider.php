@@ -31,6 +31,7 @@ class PermisosPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->profile(isSimple: false)
             ->globalSearch(false)
             ->favicon('image/favicon.ico')
             ->brandLogo('image/logo.png')
