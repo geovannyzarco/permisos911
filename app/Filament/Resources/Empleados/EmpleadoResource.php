@@ -58,7 +58,7 @@ public static function getEloquentQuery(): Builder
     public static function getRelations(): array
     {
         return [
-            RelationManagers\HijosRelationManager::class,
+           // RelationManagers\HijosRelationManager::class,
         ];
     }
 

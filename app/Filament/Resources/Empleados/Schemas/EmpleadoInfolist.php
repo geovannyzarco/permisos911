@@ -6,6 +6,9 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Saade\FilamentAutograph\Forms\Components\SignaturePad;
 use Filament\Schemas\Schema;
+use Filament\Infolists\Components\IconEntry;
+
+use Filament\Schemas\Components\Section;
 
 class EmpleadoInfolist
 {
@@ -35,14 +38,39 @@ class EmpleadoInfolist
                 TextEntry::make('estado.nombre')
                     ->label('Estado'),
 
+                Section::make('Licencias y permisos')
+                ->schema([
 
+                    IconEntry::make('permiso_portacion_arma')
+                        ->label('Portación de arma')
+                        ->boolean(),
 
-                TextEntry::make('created_at')
-                    ->label('Creado')
-                    ->dateTime(),
-                TextEntry::make('updated_at')
-                    ->label('Actualizado')
-                    ->dateTime(),
+                    TextEntry::make('numero_permiso_arma')
+                        ->label('Número permiso arma'),
+
+                    IconEntry::make('licencia_conducir')
+                        ->label('Licencia de conducir')
+                        ->boolean(),
+
+                    TextEntry::make('tipo_licencia')
+                        ->label('Tipo licencia'),
+
+                    TextEntry::make('numero_licencia')
+                        ->label('Número licencia'),
+
+                    IconEntry::make('licencia_moto')
+                        ->label('Licencia moto')
+                        ->boolean(),
+
+                    TextEntry::make('numero_licencia_moto')
+                        ->label('Número licencia moto'),
+
+                    IconEntry::make('permiso_estudio')
+                        ->label('Permiso para estudiar')
+                        ->boolean(),
+
+                ])->columns(2)
+                 ->columnSpanFull(),
             ]);
     }
 }
