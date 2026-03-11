@@ -164,17 +164,27 @@ class EmpleadoForm
                 Section::make('Licencias y permisos')
                     ->schema([
 
-                        Toggle::make('permiso_portacion_arma')
+                        Select::make('permiso_portacion_arma')
                             ->label('Permiso de portación de arma')
-                            ->live(),
+                            ->options([
+                                1 => 'Sí',
+                                0 => 'No',
+                            ])
+                            ->default(0),
+
 
                         TextInput::make('numero_permiso_arma')
-                            ->label('Número permiso arma')
-                            ->visible(fn ($get) => $get('permiso_portacion_arma')),
+                            ->label('Número permiso arma'),
 
-                        Toggle::make('licencia_conducir')
+
+                        Select::make('licencia_conducir')
                             ->label('Licencia de conducir')
-                            ->live(),
+                            ->options([
+                                1 => 'Sí',
+                                0 => 'No',
+                            ])
+                            ->default(0),
+
 
                         Select::make('tipo_licencia')
                             ->label('Tipo de licencia')
@@ -182,26 +192,34 @@ class EmpleadoForm
                                 'liviana' => 'Liviana',
                                 'pesada' => 'Pesada',
                                 'particular' => 'Particular',
-                            ])
-                            ->visible(fn ($get) => $get('licencia_conducir')),
+                            ]),
 
                         TextInput::make('numero_licencia')
-                            ->label('Número de licencia')
-                            ->visible(fn ($get) => $get('licencia_conducir')),
+                            ->label('Número de licencia'),
 
-                        Toggle::make('licencia_moto')
+
+                        Select::make('licencia_moto')
                             ->label('Licencia para motocicleta')
-                            ->live(),
+                            ->options([
+                                1 => 'Sí',
+                                0 => 'No',
+                            ])
+                            ->default(0),
+
 
                         TextInput::make('numero_licencia_moto')
-                            ->label('Número licencia moto')
-                            ->visible(fn ($get) => $get('licencia_moto')),
+                            ->label('Número licencia moto'),
 
-                        Toggle::make('permiso_estudio')
-                            ->label('Permiso para estudiar'),
+                        Select::make('permiso_estudio')
+                            ->label('Permiso para estudiar')
+                            ->options([
+                                1 => 'Sí',
+                                0 => 'No',
+                            ])
+                            ->default(0),
 
                     ])
-                    ->columns(1)
+                    ->columns(2)
                     ->columnSpanFull(),
 
                 // Información familiar

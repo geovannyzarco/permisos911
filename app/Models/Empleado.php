@@ -35,6 +35,14 @@ class Empleado extends Model
         'departamento_id',
         'municipio_id',
         'distrito_id',
+        'permiso_portacion_arma',
+        'numero_permiso_arma',
+        'licencia_conducir',
+        'tipo_licencia',
+        'numero_licencia',
+        'licencia_moto',
+        'numero_licencia_moto',
+        'permiso_estudio',
     ];
 
     protected $searchableFields = ['*'];
