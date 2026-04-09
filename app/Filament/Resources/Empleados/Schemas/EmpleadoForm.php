@@ -3,27 +3,23 @@
 namespace App\Filament\Resources\Empleados\Schemas;
 
 use App\Models\Categoria;
+use App\Models\Departamento;
+use App\Models\Distrito;
 use App\Models\Estado;
 use App\Models\Grupo;
 use App\Models\Horario;
+use App\Models\Municipio;
 use App\Models\Nivel;
 use App\Models\Unidad;
-use Dom\Text;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Illuminate\Support\Facades\Date;
-use Saade\FilamentAutograph\Forms\Components\SignaturePad;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
-use App\Models\Departamento;
-use App\Models\Municipio;
-use App\Models\Distrito;
+use Filament\Schemas\Schema;
+use Saade\FilamentAutograph\Forms\Components\SignaturePad;
 
 class EmpleadoForm
 {
@@ -81,10 +77,9 @@ class EmpleadoForm
 
                         Select::make('municipio_id')
                             ->label('Municipio')
-                            ->options(fn (Get $get) =>
-                                Municipio::query()
-                                    ->where('departamento_id', $get('departamento_id'))
-                                    ->pluck('nombre', 'id')
+                            ->options(fn (Get $get) => Municipio::query()
+                                ->where('departamento_id', $get('departamento_id'))
+                                ->pluck('nombre', 'id')
                             )
                             ->live()
                             ->afterStateUpdated(fn ($state, callable $set) => $set('distrito_id', null))
@@ -92,10 +87,9 @@ class EmpleadoForm
 
                         Select::make('distrito_id')
                             ->label('Distrito')
-                            ->options(fn (Get $get) =>
-                                Distrito::query()
-                                    ->where('municipio_id', $get('municipio_id'))
-                                    ->pluck('nombre', 'id')
+                            ->options(fn (Get $get) => Distrito::query()
+                                ->where('municipio_id', $get('municipio_id'))
+                                ->pluck('nombre', 'id')
                             )
                             ->required(),
 
@@ -120,25 +114,25 @@ class EmpleadoForm
                         Select::make('categoria_id')
                             ->required()
                             ->label('Categoría')
-                            ->options(Categoria::query()->pluck('nombre','id'))
-                            ->disabled($isEmpleado),
+                            ->options(Categoria::query()->pluck('nombre', 'id')),
+                        // ->disabled($isEmpleado),
 
                         Select::make('horario_id')
                             ->required()
                             ->label('Horario')
-                            ->options(Horario::query()->pluck('nombre','id'))
+                            ->options(Horario::query()->pluck('nombre', 'id'))
                             ->disabled($isEmpleado),
 
                         Select::make('unidad_id')
                             ->required()
                             ->label('Unidad')
-                            ->options(Unidad::query()->pluck('nombre','id'))
+                            ->options(Unidad::query()->pluck('nombre', 'id'))
                             ->disabled($isEmpleado),
 
                         Select::make('nivel_id')
                             ->required()
                             ->label('Nivel')
-                            ->options(Nivel::query()->pluck('nivel','id'))
+                            ->options(Nivel::query()->pluck('nivel', 'id'))
                             ->disabled($isEmpleado),
 
                         Select::make('estado_id')
@@ -146,8 +140,8 @@ class EmpleadoForm
                             ->label('Estado')
                             ->options(
                                 Estado::query()
-                                    ->where('entidad_id',1)
-                                    ->pluck('nombre','id')
+                                    ->where('entidad_id', 1)
+                                    ->pluck('nombre', 'id')
                             )
                             ->disabled($isEmpleado),
 
@@ -173,10 +167,8 @@ class EmpleadoForm
                             ->required()
                             ->default(0),
 
-
                         TextInput::make('numero_permiso_arma')
                             ->label('Número permiso arma'),
-
 
                         Select::make('licencia_conducir')
                             ->label('Licencia de conducir')
@@ -186,7 +178,6 @@ class EmpleadoForm
                             ])
                             ->required()
                             ->default(0),
-
 
                         Select::make('tipo_licencia')
                             ->label('Tipo de licencia')
@@ -199,7 +190,6 @@ class EmpleadoForm
                         TextInput::make('numero_licencia')
                             ->label('Número de licencia'),
 
-
                         Select::make('licencia_moto')
                             ->label('Licencia para motocicleta')
                             ->options([
@@ -208,7 +198,6 @@ class EmpleadoForm
                             ])
                             ->required()
                             ->default(0),
-
 
                         TextInput::make('numero_licencia_moto')
                             ->label('Número licencia moto'),
@@ -231,7 +220,7 @@ class EmpleadoForm
                     ->schema([
                         Select::make('estado_civil_id')
                             ->label('Estado Civil')
-                            ->relationship('estadoCivil','nombre'),
+                            ->relationship('estadoCivil', 'nombre'),
 
                         TextInput::make('nombre_conyuge')
                             ->label('Nombre del Cónyuge'),
@@ -244,7 +233,7 @@ class EmpleadoForm
                             ->schema([
                                 TextInput::make('nombre'),
                                 DatePicker::make('fecha_nacimiento'),
-                            ])->columnSpanFull()
+                            ])->columnSpanFull(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
@@ -263,7 +252,7 @@ class EmpleadoForm
                             ->throttle(16)
                             ->minDistance(5)
                             ->velocityFilterWeight(0.7)
-                            ->exportBackgroundColor('#fff')
+                            ->exportBackgroundColor('#fff'),
                     ])
                     ->columnSpanFull(),
 

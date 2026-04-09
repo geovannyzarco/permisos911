@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\GestionPermisos\Tables;
 
 use App\Models\Empleado;
-use App\Models\Estado;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -16,6 +15,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 
 class GestionPermisosTable
 {
@@ -88,7 +89,6 @@ class GestionPermisosTable
                     ->label('Jefe VB')
                     ->sortable(),
 
-
                 TextColumn::make('estadoAprobado.nombre')
                     ->label('Aprobación')
                     ->sortable(),
@@ -127,6 +127,7 @@ class GestionPermisosTable
                 SelectFilter::make('estado_aprobacion')
                     ->label('Aprobación')
                     ->relationship('estadoAprobado', 'nombre'),
+                    
             ])
 
             /* =======================
@@ -159,44 +160,41 @@ class GestionPermisosTable
                                 ->relationship(
                                     name: 'estadoVB',
                                     titleAttribute: 'nombre',
-                                    modifyQueryUsing: fn ($query) =>
-                                        $query->where('entidad_id', 2)
+                                    modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
                                 )
                                 ->required(),
 
-
-                                Select::make('jefe_vb')
+                            Select::make('jefe_vb')
                                 ->label('Jefe Vo.Bo.')
                                 ->relationship('jefeVB', 'nombre') // ajusta el nombre del campo visible
                                 ->searchable()
                                 ->preload()
                                 ->required()
-                                 ->getSearchResultsUsing(function (string $search) {
-                                return Empleado::query()
-                                    ->where('nombre', 'like', "%{$search}%")
-                                    ->orWhere('oni', 'like', "%{$search}%")
-                                    ->limit(50)
-                                    ->get()
-                                    ->mapWithKeys(fn ($e) => [
-                                        $e->id => "{$e->oni} - {$e->nombre}",
-                                    ]);
-                            })
+                                ->getSearchResultsUsing(function (string $search) {
+                                    return Empleado::query()
+                                        ->where('nombre', 'like', "%{$search}%")
+                                        ->orWhere('oni', 'like', "%{$search}%")
+                                        ->limit(50)
+                                        ->get()
+                                        ->mapWithKeys(fn ($e) => [
+                                            $e->id => "{$e->oni} - {$e->nombre}",
+                                        ]);
+                                })
                                 ->getOptionLabelUsing(function ($value) {
-                                $empleado = Empleado::find($value);
+                                    $empleado = Empleado::find($value);
 
-                                return $empleado
-                                    ? "{$empleado->oni} - {$empleado->nombre} "
-                                    : '';
-                            }),
+                                    return $empleado
+                                        ? "{$empleado->oni} - {$empleado->nombre} "
+                                        : '';
+                                }),
                         ])
-
 
                         ->action(function (Collection $records, array $data): void {
                             foreach ($records as $record) {
                                 $record->update([
                                     'id_estado_vb' => $data['estado_vb'],
-                                    'fecha_vb'     => now(),
-                                    'id_jefe_vb'   => $data['jefe_vb'],
+                                    'fecha_vb' => now(),
+                                    'id_jefe_vb' => $data['jefe_vb'],
                                 ]);
                             }
                         }),
@@ -211,40 +209,39 @@ class GestionPermisosTable
                                 ->relationship(
                                     name: 'estadoAprobado',
                                     titleAttribute: 'nombre',
-                                    modifyQueryUsing: fn ($query) =>
-                                        $query->where('entidad_id', 2)
+                                    modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
                                 )
                                 ->required(),
                             Select::make('jefe_aprobacion')
-                               ->label('Jefe Aprobador')
+                                ->label('Jefe Aprobador')
                                 ->relationship('jefeAprobacion', 'nombre')
                                 ->searchable()
                                 ->preload()
                                 ->required()
                                 ->getSearchResultsUsing(function (string $search) {
-                                return Empleado::query()
-                                    ->where('nombre', 'like', "%{$search}%")
-                                    ->orWhere('oni', 'like', "%{$search}%")
-                                    ->limit(50)
-                                    ->get()
-                                    ->mapWithKeys(fn ($e) => [
-                                        $e->id => "{$e->oni} - {$e->nombre}",
-                                    ]);
-                            })
+                                    return Empleado::query()
+                                        ->where('nombre', 'like', "%{$search}%")
+                                        ->orWhere('oni', 'like', "%{$search}%")
+                                        ->limit(50)
+                                        ->get()
+                                        ->mapWithKeys(fn ($e) => [
+                                            $e->id => "{$e->oni} - {$e->nombre}",
+                                        ]);
+                                })
                                 ->getOptionLabelUsing(function ($value) {
-                                $empleado = Empleado::find($value);
+                                    $empleado = Empleado::find($value);
 
-                                return $empleado
-                                    ? "{$empleado->oni} - {$empleado->nombre} "
-                                    : '';
-                            }),
+                                    return $empleado
+                                        ? "{$empleado->oni} - {$empleado->nombre} "
+                                        : '';
+                                }),
                         ])
                         ->action(function (Collection $records, array $data): void {
                             foreach ($records as $record) {
                                 $record->update([
                                     'id_estado_aprobacion' => $data['estado_aprobacion'],
-                                    'fecha_aprobacion'    => now(),
-                                    'id_jefe_aprobacion'  => $data['jefe_aprobacion'],
+                                    'fecha_aprobacion' => now(),
+                                    'id_jefe_aprobacion' => $data['jefe_aprobacion'],
                                 ]);
                             }
                         }),
