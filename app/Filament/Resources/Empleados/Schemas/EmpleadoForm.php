@@ -114,8 +114,8 @@ class EmpleadoForm
                         Select::make('categoria_id')
                             ->required()
                             ->label('Categoría')
-                            ->options(Categoria::query()->pluck('nombre', 'id')),
-                        // ->disabled($isEmpleado),
+                            ->options(Categoria::query()->pluck('nombre', 'id'))
+                            ->disabled($isEmpleado),
 
                         Select::make('horario_id')
                             ->required()
