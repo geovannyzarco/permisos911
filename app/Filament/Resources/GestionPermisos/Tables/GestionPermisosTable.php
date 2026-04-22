@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\GestionPermisos\Tables;
 
 use App\Models\Empleado;
+use App\Models\Grupo;
+use App\Models\Unidad;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -11,12 +13,12 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
-use Filament\Tables\Filters\Filter;
-use Illuminate\Database\Eloquent\Builder;
 
 class GestionPermisosTable
 {
@@ -101,6 +103,7 @@ class GestionPermisosTable
                 TextColumn::make('jefeAprobacion.oni')
                     ->label('Jefe Aprobación')
                     ->sortable(),
+
                 TextColumn::make('adjunto')
                     ->label('Adjunto')
                     ->icon('heroicon-o-paper-clip')
@@ -127,7 +130,37 @@ class GestionPermisosTable
                 SelectFilter::make('estado_aprobacion')
                     ->label('Aprobación')
                     ->relationship('estadoAprobado', 'nombre'),
-                    
+
+                Filter::make('filtros_dependientes')
+                    ->form([
+                        Select::make('unidad_id')
+                            ->label('Unidad')
+                            ->options(Unidad::pluck('nombre', 'id'))
+                            ->reactive(),
+
+                        Select::make('grupo_id')
+                            ->label('Grupo')
+                            ->options(function (callable $get) {
+                                $unidadId = $get('unidad_id');
+
+                                return Grupo::query()
+                                    ->when($unidadId, fn ($query) => $query->where('unidad_id', $unidadId)
+                                    )
+                                    ->pluck('nombre', 'id');
+                            })
+                            ->disabled(fn (callable $get) => ! $get('unidad_id')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['unidad_id'] ?? null, function ($query, $unidadId) {
+                                $query->whereHas('empleado', fn ($q) => $q->where('unidad_id', $unidadId)
+                                );
+                            })
+                            ->when($data['grupo_id'] ?? null, function ($query, $grupoId) {
+                                $query->whereHas('empleado', fn ($q) => $q->where('grupo_id', $grupoId)
+                                );
+                            });
+                    }),
             ])
 
             /* =======================
@@ -150,7 +183,6 @@ class GestionPermisosTable
                 BulkActionGroup::make([
                     ExportBulkAction::make(),
 
-                    /* ----- Cambiar Vo.Bo. ----- */
                     BulkAction::make('cambiar_estado_vb')
                         ->label('Cambiar Vo.Bo.')
                         ->icon('heroicon-o-check-circle')
@@ -166,7 +198,7 @@ class GestionPermisosTable
 
                             Select::make('jefe_vb')
                                 ->label('Jefe Vo.Bo.')
-                                ->relationship('jefeVB', 'nombre') // ajusta el nombre del campo visible
+                                ->relationship('jefeVB', 'nombre')
                                 ->searchable()
                                 ->preload()
                                 ->required()
@@ -184,11 +216,10 @@ class GestionPermisosTable
                                     $empleado = Empleado::find($value);
 
                                     return $empleado
-                                        ? "{$empleado->oni} - {$empleado->nombre} "
+                                        ? "{$empleado->oni} - {$empleado->nombre}"
                                         : '';
                                 }),
                         ])
-
                         ->action(function (Collection $records, array $data): void {
                             foreach ($records as $record) {
                                 $record->update([
@@ -199,7 +230,6 @@ class GestionPermisosTable
                             }
                         }),
 
-                    /* ----- Cambiar Aprobación ----- */
                     BulkAction::make('cambiar_estado_aprobacion')
                         ->label('Cambiar Aprobación')
                         ->icon('heroicon-o-shield-check')
@@ -212,6 +242,7 @@ class GestionPermisosTable
                                     modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
                                 )
                                 ->required(),
+
                             Select::make('jefe_aprobacion')
                                 ->label('Jefe Aprobador')
                                 ->relationship('jefeAprobacion', 'nombre')
@@ -232,7 +263,7 @@ class GestionPermisosTable
                                     $empleado = Empleado::find($value);
 
                                     return $empleado
-                                        ? "{$empleado->oni} - {$empleado->nombre} "
+                                        ? "{$empleado->oni} - {$empleado->nombre}"
                                         : '';
                                 }),
                         ])

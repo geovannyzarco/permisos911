@@ -2,11 +2,15 @@
 
 namespace App\Filament\Resources\Grupos\Tables;
 
+use App\Models\Unidad;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class GruposTable
 {
@@ -20,6 +24,7 @@ class GruposTable
                     ->sortable(),
                 TextColumn::make('nombre')
                     ->searchable(),
+                TextColumn::make('unidad.nombre'),
             ])
             ->filters([
                 //
@@ -29,7 +34,25 @@ class GruposTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    // DeleteBulkAction::make(),
+                    BulkAction::make('asignar_unidad')
+                        ->label('Asignar Unidad')
+                        ->icon('heroicon-o-building-office')
+                        ->form([
+                            Select::make('unidad_id')
+                                ->label('Unidad')
+                                ->options(Unidad::pluck('nombre', 'id'))
+                                ->searchable()
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'unidad_id' => $data['unidad_id'],
+                                ]);
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }

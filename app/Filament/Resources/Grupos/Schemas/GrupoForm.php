@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Grupos\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -12,6 +13,10 @@ class GrupoForm
         return $schema
             ->components([
                 TextInput::make('nombre')
+                    ->required(),
+                Select::make('unidad_id')
+                    ->label('Unidad')
+                    ->relationship('unidad', 'nombre')
                     ->required(),
             ]);
     }
