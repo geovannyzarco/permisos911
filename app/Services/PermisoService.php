@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Models\Permiso;
 use App\Models\Empleado;
+use App\Models\User;
 use Carbon\Carbon;
 use DomainException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 
 class PermisoService
 {
@@ -76,5 +79,31 @@ class PermisoService
             ->sum('cantidad_horas');
 
         return ($horasUsadas + $horasSolicitadas) <= $horasAsignadas;
+    }
+
+    public function aprobarVB(Permiso $permiso, int $estadoId, User $user): void
+    {
+        if (!$user->can('aprobarVB', $permiso)){
+            throw new AuthorizationException();
+        }
+
+        $permiso->update([
+            'id_estado_vb' => $estadoId,
+            'fecha_vb' => now(),
+            'id_jefe_vb' => $user->empleado->id,
+        ]);
+    }
+
+    public function aprobarFinal(Permiso $permiso, int $estadoId, User $user): void
+    {
+        if (!$user->can('aprobarFinal', $permiso)){
+            throw new AuthorizationException();
+        }
+
+        $permiso->update([
+            'id_estado_aprobacion' => $estadoId,
+            'fecha_aprobacion' => now(),
+            'id_jefe_aprobacion' => $user->empleado->id,
+        ]);
     }
 }

@@ -245,7 +245,7 @@ class EmpleadoForm
 
                             ->backgroundColor('#f2efef')
                             ->dehydrateStateUsing(fn ($state) => $state)
-                            ->columnSpanFull()
+                            //->columnSpanFull()
                             ->dotSize(2.0)
                             ->lineMinWidth(0.5)
                             ->lineMaxWidth(2.5)

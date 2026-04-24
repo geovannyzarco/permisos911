@@ -32,6 +32,16 @@ class AprobacionPermisoResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Aprobar Permisos';
 
+    public static function getModelLabel(): string
+    {
+        return 'Aprobacion de permisos';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Aprobacion de permisos';
+    }
+
     public static function canCreate(): bool
     {
         return false;
@@ -39,65 +49,20 @@ class AprobacionPermisoResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $empleado = auth()->user()->empleado;
-        $query = parent::getEloquentQuery();
-        // JEFE DE GRUPO
-        if ($empleado->nivel_id == 2) {
-            $query->whereNull('id_estado_vb')
-                ->whereHas('empleado', function ($q) use ($empleado) {
-                    $q->where('grupo_id', $empleado->grupo_id);
-                });
-        }
-        // JEFE DE UNIDAD
-        if ($empleado->nivel_id == 3) {
-            $query->whereNotNull('id_estado_vb')
-                ->whereNull('id_estado_aprobacion')
-                ->whereHas('empleado', function ($q) use ($empleado) {
-                    $q->where('unidad_id', $empleado->unidad_id);
-                });
-        }
+        // Personalizar la consulta para mostrar solo los permisos que el usuario puede aprobar
+        $emp = auth()->user()->empleado;
+        return parent::getEloquentQuery()
+            ->when($emp->nivel_id == 2,
+                fn ($q)=>$q->whereHas('empleado',
+                    fn ($q) => $q->where('grupo_id', $emp->grupo_id)))
+            ->when($emp->nivel_id == 3,
+                fn ($q)=>$q->whereHas('empleado',
+                    fn ($q) => $q->where('unidad_id', $emp->unidad_id)));
 
-        // JEFE DE DIVISION
-        if ($empleado->nivel_id == 4) {
-            $query->whereNull('id_estado_aprobacion')
-                ->whereHas('empleado', function ($q) use ($empleado) {
-                    $q->where('unidad_id', $empleado->unidad_id);
-                });
-        }
-
-        return $query;
 
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        $empleado = auth()->user()->empleado;
 
-        $query = static::getModel()::query();
-
-        // JEFE DE GRUPO
-        if ($empleado->nivel_id == 2) {
-
-            $query->whereNull('id_estado_vb')
-                ->whereHas('empleado', function ($q) use ($empleado) {
-                    $q->where('grupo_id', $empleado->grupo_id);
-                });
-        }
-
-        // JEFE DE UNIDAD
-        elseif ($empleado->nivel_id == 3) {
-
-            $query->whereNotNull('id_estado_vb')
-                ->whereNull('id_estado_aprobacion')
-                ->whereHas('empleado', function ($q) use ($empleado) {
-                    $q->where('unidad_id', $empleado->unidad_id);
-                });
-        } else {
-            return null; // empleados normales no ven badge
-        }
-
-        return (string) $query->count();
-    }
 
     public static function form(Schema $schema): Schema
     {

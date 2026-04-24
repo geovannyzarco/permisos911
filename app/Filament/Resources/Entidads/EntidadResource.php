@@ -28,6 +28,16 @@ class EntidadResource extends Resource
     protected static ?string $pluralModelLabel = 'Entidades';
     protected static ?string $modelLabel = 'Entidad';
 
+    public static function getModelLabel(): string
+    {
+        return 'Entidades';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Entidades';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return EntidadForm::configure($schema);

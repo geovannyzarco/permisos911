@@ -31,6 +31,15 @@ class GestionPermisoResource extends Resource
     protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
 
+    public static function getModelLabel(): string
+    {
+        return 'Gestion de permisos';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Gestion de permisos';
+    }
 
 
     public static function form(Schema $schema): Schema

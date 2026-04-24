@@ -15,6 +15,8 @@ class Estado extends Model
 
     protected $searchableFields = ['*'];
 
+
+
     public function empleados()
     {
         return $this->hasMany(Empleado::class);

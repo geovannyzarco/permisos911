@@ -34,6 +34,16 @@ class PermisosResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Mis Permisos';
 
+        public static function getModelLabel(): string
+    {
+        return 'Permisos de empleado';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Permisos de empleado';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return PermisosForm::configure($schema);

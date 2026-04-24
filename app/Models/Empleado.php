@@ -11,6 +11,11 @@ class Empleado extends Model
     use HasFactory;
     use Searchable;
 
+    const NIVEL_EMPLEADO     = 1;
+    const NIVEL_JEFE_GRUPO   = 2;
+    const NIVEL_JEFE_UNIDAD  = 3;
+    const NIVEL_JEFE_DIV     = 4;
+
     protected $fillable = [
         'oni',
         'nombre',

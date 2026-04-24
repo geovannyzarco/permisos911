@@ -28,6 +28,17 @@ class EstadoResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Estados';
 
+    public static function getModelLabel(): string
+    {
+        return 'Estados';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Estados';
+    }
+
+
     public static function form(Schema $schema): Schema
     {
         return EstadoForm::configure($schema);
