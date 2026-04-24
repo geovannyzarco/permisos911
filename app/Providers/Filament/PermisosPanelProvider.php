@@ -23,6 +23,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Symfony\Polyfill\Intl\Idn\Info;
+use Illuminate\Support\Facades\Blade;
 
 
 class PermisosPanelProvider extends PanelProvider
@@ -71,6 +72,41 @@ class PermisosPanelProvider extends PanelProvider
             ])
             ->plugins([
             FilamentShieldPlugin::make(),
-        ]);
+            ])
+            ->renderHook(
+                'panels::body.end',
+                fn () => Blade::render("
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Esperamos un momento a que el DOM y el plugin carguen
+                            setTimeout(() => {
+                                const canvases = document.querySelectorAll('canvas');
+
+                                canvases.forEach(canvas => {
+                                    // 1. Corregir el desplazamiento táctil
+                                    canvas.style.touchAction = 'none';
+
+                                    // 2. Función para ajustar coordenadas
+                                    const adjustCanvas = () => {
+                                        const rect = canvas.getBoundingClientRect();
+                                        const ratio = window.devicePixelRatio || 1;
+
+                                        // Esto resetea el buffer interno para que coincida con el tamaño visual
+                                        if (canvas.width !== canvas.offsetWidth * ratio) {
+                                            canvas.width = canvas.offsetWidth * ratio;
+                                            canvas.height = canvas.offsetHeight * ratio;
+                                            canvas.getContext('2d').scale(ratio, ratio);
+                                        }
+                                    };
+
+                                    // Ajustar al cargar y al rotar la pantalla
+                                    adjustCanvas();
+                                    window.addEventListener('resize', adjustCanvas);
+                                });
+                            }, 500);
+                        });
+                    </script>
+                ")
+            );
     }
 }
