@@ -73,6 +73,7 @@ class AprobacionPermisosTable
                 // Aprobar Permiso
                 Action::make('Aprobar')
                     ->label('Aprobar Permiso')
+                    ->icon('heroicon-o-check-badge')
                     ->visible(fn ($record) => auth()->user()->can('aprobarPermiso', $record))
                     ->form([
                         Select::make('id_estado_aprobacion')

@@ -100,4 +100,9 @@ class Permiso extends Model
         return "{$dias} días {$horas} horas {$minutos} minutos";
     }
 
+public function historial()
+{
+    return $this->hasMany(PermisoHistorial::class, 'permiso_id');
+}
+
 }
