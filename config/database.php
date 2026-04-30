@@ -114,10 +114,7 @@ return [
                 'encrypt' => 'no', // ⚠️ string, no boolean
                 'trust_server_certificate' => true,
 
-            'options' => [
-                PDO::SQLSRV_ATTR_ENCRYPT => false,
-                PDO::SQLSRV_ATTR_TRUST_SERVER_CERTIFICATE => true,
-            ],
+
         ],
 
     ],
