@@ -25,6 +25,9 @@ class GruposTable
                 TextColumn::make('nombre')
                     ->searchable(),
                 TextColumn::make('unidad.nombre'),
+                TextColumn::make('permisos_diarios')
+                    ->label('Permisos Diarios')
+                    ->sortable(),
             ])
             ->filters([
                 //

@@ -9,17 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('grupos', function (Blueprint $table) {
-            // Agregar columna
-            $table->unsignedBigInteger('unidad_id')->nullable()->after('id');
 
-            // Índice (importante para rendimiento)
-            $table->index('unidad_id');
+            if (! Schema::hasColumn('grupos', 'unidad_id')) {
 
-            // Foreign key
-            $table->foreign('unidad_id')
-                ->references('id')
-                ->on('unidades')
-                ->noActionOnDelete();
+                $table->unsignedBigInteger('unidad_id')->nullable()->after('id');
+
+                $table->index('unidad_id');
+
+                $table->foreign('unidad_id')
+                    ->references('id')
+                    ->on('unidades')
+                    ->noActionOnDelete();
+            }
         });
     }
 

@@ -18,6 +18,9 @@ class GrupoForm
                     ->label('Unidad')
                     ->relationship('unidad', 'nombre')
                     ->required(),
+                TextInput::make('permisos_diarios')
+                    ->label('Permisos Diarios')
+                    ->numeric(),
             ]);
     }
 }
