@@ -7,7 +7,7 @@ use App\Filament\Resources\Permisos\Pages\EditPermisos;
 use App\Filament\Resources\Permisos\Pages\ListPermisos;
 use App\Filament\Resources\Permisos\Pages\UserDashboard;
 use App\Filament\Resources\Permisos\Pages\ViewPermisos;
-use App\Filament\Resources\Permisos\RelationManagers\CompensadosRelationManager;
+
 use App\Filament\Resources\Permisos\Schemas\PermisosForm;
 use App\Filament\Resources\Permisos\Schemas\PermisosInfolist;
 use App\Filament\Resources\Permisos\Tables\PermisosTable;
@@ -62,7 +62,7 @@ class PermisosResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CompensadosRelationManager::class,
+            //
         ];
     }
 

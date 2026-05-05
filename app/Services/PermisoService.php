@@ -95,6 +95,61 @@ class PermisoService
     }
 
     /**
+     * Calcula la disponibilidad diaria de cupos para el grupo del empleado
+     * en el rango de fechas proporcionado, útil para mostrar en la interfaz.
+     */
+    public function obtenerDisponibilidadDiaria(
+        Empleado $empleado, 
+        string $desde, 
+        string $hasta, 
+        ?Permiso $permisoActual = null
+    ): array {
+        $resultado = [];
+        $grupo = $empleado->grupo;
+
+        if (!$grupo || empty($grupo->permisos_diarios) || empty($desde) || empty($hasta)) {
+            return $resultado;
+        }
+
+        $limite = $grupo->permisos_diarios;
+        $fechaDesde = Carbon::parse($desde)->startOfDay();
+        $fechaHasta = Carbon::parse($hasta)->startOfDay();
+
+        if ($fechaHasta->lessThan($fechaDesde)) {
+            return $resultado;
+        }
+
+        $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
+        
+        // Limitamos a 31 días máximo para evitar consultas inmensas en caso de errores de usuario
+        if ($periodo->count() > 31) {
+            return ['error' => 'El rango de fechas es muy amplio.'];
+        }
+
+        foreach ($periodo as $fecha) {
+            $permisosEnEsteDia = Permiso::query()
+                ->whereHas('empleado', function ($query) use ($grupo) {
+                    $query->where('grupo_id', $grupo->id);
+                })
+                ->whereDate('desde', '<=', $fecha)
+                ->whereDate('hasta', '>=', $fecha)
+                ->when($permisoActual, function ($query) use ($permisoActual) {
+                    $query->where('id', '!=', $permisoActual->id);
+                })
+                ->count();
+
+            $resultado[] = [
+                'fecha' => $fecha->format('d/m/Y'),
+                'ocupados' => $permisosEnEsteDia,
+                'limite' => $limite,
+                'disponible' => $permisosEnEsteDia < $limite
+            ];
+        }
+
+        return $resultado;
+    }
+
+    /**
      * Valida y calcula las horas de un permiso personal.
      * Devuelve las horas calculadas si todo es válido.
      * Lanza excepciones de dominio si algo falla.
