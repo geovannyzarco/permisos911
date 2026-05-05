@@ -34,7 +34,7 @@ class GestionPermisoForm
                             ->schema([
                                 Placeholder::make('Horas_personales')
                                     ->reactive()
-                                    ->content(function ($get) {
+                                    ->content(function ($get, ?\App\Models\Permiso $record) {
 
                                         $empleadoId = $get('empleado_id');
 
@@ -48,21 +48,12 @@ class GestionPermisoForm
                                             return 'Empleado no encontrado.';
                                         }
 
-                                        $asignadas = $empleado->horario?->horas_personales ?? 0;
+                                        $permisoService = app(\App\Services\PermisoService::class);
+                                        $resumen = $permisoService->obtenerResumenHorasPersonales($empleado, $record);
 
-                                        $minutosUsados = $empleado->permisos()
-                                            ->whereYear('desde', Carbon::now()->year)
-                                            ->where('tipo_permiso_id', 1)
-                                            ->where('id_estado_aprobacion', 3) // Solo permisos aprobados
-                                            ->whereNotNull('desde')
-                                            ->whereNotNull('hasta')
-                                            ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
-                                            ->value('total') ?? 0;
-
-                                        $usadas = round($minutosUsados / 60, 2);
-
-                                        $disponibles = max($asignadas - $usadas, 0);
-
+                                        $asignadas = $resumen['asignadas'];
+                                        $usadas = $resumen['usadas'];
+                                        $disponibles = $resumen['disponibles'];
 
                                         return new HtmlString(
                                             "<strong>Horas asignadas:</strong> {$asignadas}<br>
@@ -182,7 +173,44 @@ class GestionPermisoForm
                             ->displayFormat('d/m/Y H:i')
                             ->format('Y-m-d H:i')
                             ->withoutSeconds()
-                            ->required(),
+                            ->required()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get, ?\App\Models\Permiso $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    $desde = $get('desde');
+                                    $empleadoId = $get('empleado_id');
+                                    $tipoPermisoId = $get('tipo_permiso_id');
+
+                                    if (!$desde || !$value || !$empleadoId) {
+                                        return;
+                                    }
+
+                                    $empleado = \App\Models\Empleado::find($empleadoId);
+                                    if (!$empleado) {
+                                        return;
+                                    }
+
+                                    $service = app(\App\Services\PermisoService::class);
+
+                                    try {
+                                        if (!$service->validarRangoFechas($desde, $value)) {
+                                            $fail('La fecha "hasta" debe ser mayor o igual que "desde".');
+                                            return;
+                                        }
+
+                                        $service->validarLimitePermisosDiarios($empleado, $desde, $value, $record);
+
+                                        if ($tipoPermisoId == 1) {
+                                            $horasSolicitadas = \Carbon\Carbon::parse($desde)->diffInMinutes(\Carbon\Carbon::parse($value)) / 60;
+                                            if (!$service->puedeGuardarPermisoPersonal($empleado, $horasSolicitadas, $record)) {
+                                                $fail('El tiempo solicitado excede el saldo de horas personales disponibles según tu horario.');
+                                            }
+                                        }
+
+                                    } catch (\DomainException $e) {
+                                        $fail($e->getMessage());
+                                    }
+                                },
+                            ]),
 
                         TextInput::make('motivo')
                             ->label('Motivo')

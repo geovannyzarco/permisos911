@@ -24,41 +24,5 @@ class EditPermisos extends EditRecord
         ];
     }
 
-    protected function beforeSave(): void
-     {
-          if (($this->data['id_tipo_permiso'] ?? null) != 1) {
-        return;
-    }
 
-    $empleado = $this->record->empleado;
-
-    $desde = Carbon::parse($this->data['desde']);
-    $hasta = Carbon::parse($this->data['hasta']);
-
-
-
-    dump($desde);
-    // VALIDAR RANGO
-    if ($hasta->lessThanOrEqualTo($desde)) {
-        throw ValidationException::withMessages([
-            'hasta' => 'La fecha/hora "hasta" debe ser mayor que "desde".',
-        ]);
-    }
-
-    $horasSolicitadas = $desde->diffInMinutes($hasta) / 60;
-
-    $service = app(PermisoService::class);
-
-    if (! $service->puedeGuardarPermisoPersonal(
-        $empleado,
-        $horasSolicitadas,
-        $this->record
-    )) {
-        throw ValidationException::withMessages([
-            'hasta' => 'El tiempo solicitado excede el saldo de horas personales disponibles.',
-        ]);
-    }
-
-    $this->data['cantidad_horas'] = $horasSolicitadas;
-    }
 }

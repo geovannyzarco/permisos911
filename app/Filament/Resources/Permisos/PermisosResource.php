@@ -79,19 +79,19 @@ class PermisosResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
+        // Obtenemos el usuario autenticado actualmente
         $user = auth()->user();
 
+        // Si el usuario no tiene un empleado asociado (perfil incompleto o administrador sin empleado),
+        // no debe ver ningún registro. Retornamos una consulta que siempre es falsa (1 = 0).
         if (! $user->empleado) {
             return parent::getEloquentQuery()->whereRaw('1 = 0');
         }
 
-        $query = parent::getEloquentQuery()
-            ->where('empleado_id', $user->empleado->id);
-
+        // Retornamos la consulta original pero la filtramos para que solo muestre
+        // los permisos que pertenezcan al ID del empleado asociado al usuario actual.
         return parent::getEloquentQuery()
-        ->where('empleado_id', $user->empleado->id);
-
-
+            ->where('empleado_id', $user->empleado->id);
     }
 
     /**
@@ -99,15 +99,21 @@ class PermisosResource extends Resource
      */
     public static function mutateFormDataBeforeCreate(array $data): array
     {
+        // Obtenemos el usuario autenticado
         $user = auth()->user();
 
+        // Si el usuario tiene un empleado asociado, forzamos que el permiso
+        // quede registrado a nombre de ese empleado (evita que un usuario cree permisos para otros)
         if ($user && $user->empleado) {
             $data['empleado_id'] = $user->empleado->id;
         }
 
-        $data[''] = 4;
-        $data['id_aprobacion_unidad'] = 4;
+        // Asignamos el estado 4 (Pendiente) por defecto al crear un permiso nuevo.
+        // Esto se aplica tanto para el estado de visto bueno del jefe como para la aprobación de RRHH.
+        $data['id_estado_vb'] = 4;
+        $data['id_estado_aprobacion'] = 4;
 
+        // Retornamos los datos modificados para que se guarden en la base de datos
         return $data;
     }
 

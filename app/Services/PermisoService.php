@@ -17,6 +17,84 @@ use Illuminate\Support\Facades\DB;
 class PermisoService
 {
     /**
+     * Valida que la fecha "desde" no sea mayor que la fecha "hasta".
+     * Devuelve true si el rango es válido (desde <= hasta), de lo contrario false.
+     * Útil para usarlo en las reglas de validación de los formularios de Filament.
+     *
+     * @param string|Carbon|null $desde
+     * @param string|Carbon|null $hasta
+     * @return bool
+     */
+    public function validarRangoFechas($desde, $hasta): bool
+    {
+        if (!$desde || !$hasta) {
+            return false;
+        }
+
+        $fechaDesde = Carbon::parse($desde);
+        $fechaHasta = Carbon::parse($hasta);
+
+        return $fechaDesde->lessThanOrEqualTo($fechaHasta);
+    }
+
+    /**
+     * Valida que no se exceda el límite de permisos diarios configurado para el grupo del empleado.
+     * Si en alguno de los días del rango solicitado ya se alcanzó el límite, lanza una excepción.
+     *
+     * @param Empleado $empleado
+     * @param string|Carbon $desde
+     * @param string|Carbon $hasta
+     * @param Permiso|null $permisoActual Para no contarlo si se está editando
+     * @return bool
+     * @throws DomainException
+     */
+    public function validarLimitePermisosDiarios(
+        Empleado $empleado,
+        $desde,
+        $hasta,
+        ?Permiso $permisoActual = null
+    ): bool {
+        $grupo = $empleado->grupo;
+
+        // Si el empleado no tiene grupo o el grupo no tiene límite configurado, la validación pasa
+        if (!$grupo || empty($grupo->permisos_diarios)) {
+            return true;
+        }
+
+        $limite = $grupo->permisos_diarios;
+
+        $fechaDesde = Carbon::parse($desde)->startOfDay();
+        $fechaHasta = Carbon::parse($hasta)->startOfDay();
+
+        // Generamos el periodo de días que abarca el permiso solicitado
+        $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
+
+        foreach ($periodo as $fecha) {
+            // Contar cuántos permisos activos/existentes hay en este día para este grupo
+            $permisosEnEsteDia = Permiso::query()
+                ->whereHas('empleado', function ($query) use ($grupo) {
+                    $query->where('grupo_id', $grupo->id);
+                })
+                ->whereDate('desde', '<=', $fecha)
+                ->whereDate('hasta', '>=', $fecha)
+                ->when($permisoActual, function ($query) use ($permisoActual) {
+                    $query->where('id', '!=', $permisoActual->id);
+                })
+                // Aquí podrías agregar un filtro adicional si tienes un estado "Rechazado" o "Cancelado"
+                // para que esos no sumen al límite. Ejemplo: ->whereNotIn('id_estado_aprobacion', [ESTADO_RECHAZADO])
+                ->count();
+
+            if ($permisosEnEsteDia >= $limite) {
+                throw new DomainException(
+                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} permisos diarios permitidos para el grupo '{$grupo->nombre}'."
+                );
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Valida y calcula las horas de un permiso personal.
      * Devuelve las horas calculadas si todo es válido.
      * Lanza excepciones de dominio si algo falla.
@@ -27,9 +105,9 @@ class PermisoService
         Carbon $hasta
     ): float {
         // 1. Validar rango horario
-        if ($hasta->lessThanOrEqualTo($desde)) {
+        if (!$this->validarRangoFechas($desde, $hasta)) {
             throw new DomainException(
-                'La fecha/hora "hasta" debe ser mayor que "desde".'
+                'La fecha/hora "hasta" debe ser mayor o igual que "desde".'
             );
         }
 
@@ -37,7 +115,7 @@ class PermisoService
         $horasSolicitadas = $desde->diffInMinutes($hasta) / 60;
 
         // 3. Validar saldo disponible
-        if (! $this->puedeCrearPermisoPersonal($empleado, $horasSolicitadas)) {
+        if (! $this->puedeGuardarPermisoPersonal($empleado, $horasSolicitadas)) {
             throw new DomainException(
                 'El tiempo solicitado excede el saldo de horas personales disponibles.'
             );
@@ -46,43 +124,54 @@ class PermisoService
         return $horasSolicitadas;
     }
 
+
     /**
-     * Valida si el empleado tiene saldo suficiente.
+     * Obtiene el resumen de horas personales (asignadas, usadas y disponibles) de un empleado.
      */
-    public function puedeCrearPermisoPersonal(
-        Empleado $empleado,
-        float $horasSolicitadas
-    ): bool {
-        $horasAsignadas = $empleado->horas_personales;
+    public function obtenerResumenHorasPersonales(Empleado $empleado, ?Permiso $permisoActual = null): array
+    {
+        // 1. Obtenemos las horas personales configuradas en el horario del empleado.
+        $horasAsignadas = $empleado->horario?->horas_personales ?? 0;
 
-        $horasUsadas = Permiso::query()
+        // 2. Calculamos los minutos que el empleado ya ha utilizado en otros permisos.
+        $minutosUsados = Permiso::query()
             ->where('empleado_id', $empleado->id)
-            ->where('id_tipo_permiso', 1)
-            ->whereYear('desde', now()->year)
-            ->sum('cantidad_horas');
-
-        return ($horasUsadas + $horasSolicitadas) <= $horasAsignadas;
-    }
-
-
-    public function puedeGuardarPermisoPersonal(
-        Empleado $empleado,
-        float $horasSolicitadas,
-        ?Permiso $permisoActual = null
-    ): bool {
-        $horasAsignadas = $empleado->horas_personales;
-
-        $horasUsadas = Permiso::query()
-            ->where('empleado_id', $empleado->id)
-            ->where('id_tipo_permiso', 1)
+            ->where('tipo_permiso_id', 1)
             ->whereYear('desde', now()->year)
             ->when(
                 $permisoActual,
                 fn ($q) => $q->where('id', '!=', $permisoActual->id)
             )
-            ->sum('cantidad_horas');
+            ->whereNotNull('desde')
+            ->whereNotNull('hasta')
+            ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
+            ->value('total') ?? 0;
 
-        return ($horasUsadas + $horasSolicitadas) <= $horasAsignadas;
+        // 3. Convertimos los minutos utilizados a horas
+        $horasUsadas = $minutosUsados / 60;
+        
+        // 4. Calculamos las horas disponibles
+        $horasDisponibles = max(0, $horasAsignadas - $horasUsadas);
+
+        return [
+            'asignadas' => $horasAsignadas,
+            'usadas' => round($horasUsadas, 2),
+            'disponibles' => round($horasDisponibles, 2),
+        ];
+    }
+
+    /**
+     * Valida si el empleado tiene saldo suficiente de horas personales para solicitar/guardar un permiso.
+     */
+    public function puedeGuardarPermisoPersonal(
+        Empleado $empleado,
+        float $horasSolicitadas,
+        ?Permiso $permisoActual = null
+    ): bool {
+        $resumen = $this->obtenerResumenHorasPersonales($empleado, $permisoActual);
+
+        // Verificamos si las horas solicitadas son menores o iguales a las disponibles
+        return $horasSolicitadas <= $resumen['disponibles'];
     }
 
     public function aprobarVB(Permiso $permiso, int $estadoId, User $user): void
@@ -105,14 +194,13 @@ class PermisoService
             throw new AuthorizationException();
         }
 
-
         DB::transaction(function () use ($permiso, $estadoId, $user, $comentario, $request) {
             //actualizar estado del permiso
             $permiso->update([
-            'id_estado_aprobacion' => $estadoId,
-            'fecha_aprobacion' => now(),
-            'id_jefe_aprobacion' => $user->empleado->id,
-        ]);
+                'id_estado_aprobacion' => $estadoId,
+                'fecha_aprobacion' => now(),
+                'id_jefe_aprobacion' => $user->empleado->id,
+            ]);
 
             // SOLO estados finales
             if(in_array($estadoId, [3,5])){
@@ -154,9 +242,6 @@ class PermisoService
                     'user_agent' => $request?->userAgent(),
                 ]);
             }
-
         });
-
-
     }
 }
