@@ -56,8 +56,9 @@ class PermisoService
     ): bool {
         $grupo = $empleado->grupo;
 
-        // Si el empleado no tiene grupo o el grupo no tiene límite configurado, la validación pasa
-        if (!$grupo || empty($grupo->permisos_diarios)) {
+        // Si el empleado no tiene grupo, pertenece al grupo especial "Sin Grupo" (ID 12)
+        // o el grupo no tiene límite configurado, la validación pasa automáticamente.
+        if (!$grupo || $grupo->id == 12 || empty($grupo->permisos_diarios)) {
             return true;
         }
 
@@ -107,7 +108,8 @@ class PermisoService
         $resultado = [];
         $grupo = $empleado->grupo;
 
-        if (!$grupo || empty($grupo->permisos_diarios) || empty($desde) || empty($hasta)) {
+        // Omitimos la verificación si no hay grupo, es el grupo "Sin Grupo" (ID 12) o faltan datos
+        if (!$grupo || $grupo->id == 12 || empty($grupo->permisos_diarios) || empty($desde) || empty($hasta)) {
             return $resultado;
         }
 
