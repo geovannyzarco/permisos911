@@ -18,6 +18,7 @@ class EditAprobacionPermiso extends EditRecord
             DeleteAction::make(),
         ];
     }
+
     protected function authorizeAccess(): void
     {
         $record = $this->record;

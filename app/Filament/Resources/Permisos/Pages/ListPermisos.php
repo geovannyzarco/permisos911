@@ -13,7 +13,9 @@ class ListPermisos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Nuevo Permiso')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

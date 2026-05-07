@@ -13,7 +13,9 @@ class ListDivisions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Nueva División')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }
