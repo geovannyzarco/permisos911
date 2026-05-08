@@ -191,14 +191,12 @@ class PermisoService
         $horasAsignadas = $empleado->horario?->horas_personales ?? 0;
 
         // 2. Calculamos los minutos que el empleado ya ha utilizado en otros permisos.
+        // MODIFICACIÓN: Usamos DATEDIFF (Sintaxis de SQL Server 2012) y filtramos solo por permisos aprobados (ID 3)
         $minutosUsados = Permiso::query()
             ->where('empleado_id', $empleado->id)
             ->where('tipo_permiso_id', 1)
+            ->where('id_estado_aprobacion', 3) // Solo permisos ya aprobados restan del saldo
             ->whereYear('desde', now()->year)
-            ->when(
-                $permisoActual,
-                fn ($q) => $q->where('id', '!=', $permisoActual->id)
-            )
             ->whereNotNull('desde')
             ->whereNotNull('hasta')
             ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
