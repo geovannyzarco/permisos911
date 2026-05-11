@@ -19,9 +19,9 @@ class UserForm
                 TextInput::make('oni')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
-                    ->email()
-                    ->required(),
+                    ->label('Email address'),
+                    //->email(),
+                    //->required(),
                 TextInput::make('password')
                     ->password()
                     ->required()

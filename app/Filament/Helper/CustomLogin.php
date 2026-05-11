@@ -5,6 +5,7 @@ namespace App\Filament\Helper;
 use Filament\Auth\Pages\Login;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\ValidationException;
 
 class CustomLogin extends Login
 {
@@ -28,5 +29,22 @@ class CustomLogin extends Login
             'oni' => $data['oni'],
             'password' => $data['password'],
         ];
+    }
+
+    protected function throwFailureValidationException(): never
+    {
+        throw ValidationException::withMessages([
+            'data.password' => 'Usuario o contraseña incorrectos.',
+        ]);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()->route('filament.auth.login');
     }
 }
