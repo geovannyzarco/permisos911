@@ -5,16 +5,18 @@
             Mi Información de Empleado
         </x-slot>
 
-    <p><strong>Nombre:</strong> {{ $empleado->nombre }}</p>
-    <p><strong>Unidad:</strong> {{ $empleado->unidad->nombre ?? 'N/A' }}</p>
-    <p><strong>Grupo:</strong> {{ $empleado->grupo->nombre ?? 'N/A' }}</p>
-    <p><strong>Horario:</strong> {{ $empleado->horario->nombre ?? 'N/A' }}</p>
-    <p><strong>Categoria:</strong> {{ $empleado->categoria->nombre ?? 'N/A' }}</p>
-    <p><strong>Nivel:</strong> {{ $empleado->nivel->nivel ?? 'N/A' }}</p>
-    <p><strong>Horas Personales Asignadas:</strong> {{ $empleado->horario->horas_personales ?? 'N/A' }}</p>
-    <p><strong>Horas personales Disponibles</strong> {{ $horasDisponibles ?? 'N/A' }}</p>
-
-
+    @if($empleado)
+        <p><strong>Nombre:</strong> {{ $empleado->nombre }}</p>
+        <p><strong>Unidad:</strong> {{ $empleado->unidad->nombre ?? 'N/A' }}</p>
+        <p><strong>Grupo:</strong> {{ $empleado->grupo->nombre ?? 'N/A' }}</p>
+        <p><strong>Horario:</strong> {{ $empleado->horario->nombre ?? 'N/A' }}</p>
+        <p><strong>Categoria:</strong> {{ $empleado->categoria->nombre ?? 'N/A' }}</p>
+        <p><strong>Nivel:</strong> {{ $empleado->nivel->nivel ?? 'N/A' }}</p>
+        <p><strong>Horas Personales Asignadas:</strong> {{ $empleado->horario->horas_personales ?? 'N/A' }}</p>
+        <p><strong>Horas personales Disponibles</strong> {{ $horasDisponibles ?? 'N/A' }}</p>
+    @else
+        <p class="text-danger-600">No se encontró información de empleado asociada a su usuario.</p>
+    @endif
 
     </div>
     </x-filament::section>
