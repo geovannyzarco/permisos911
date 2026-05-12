@@ -1,4 +1,5 @@
 <?php
+require_once 'auth_check.php';
 require_once 'db.php';
 
 header('Content-Type: application/json');
@@ -17,31 +18,11 @@ if (empty($oni) || empty($base64_image)) {
 }
 
 try {
-    // 1. Procesar la imagen base64
-    // Remover el encabezado data:image/png;base64,
-    $image_parts = explode(";base64,", $base64_image);
-    $image_type_aux = explode("image/", $image_parts[0]);
-    $image_type = $image_type_aux[1];
-    $image_base64 = base64_decode($image_parts[1]);
-
-    // 2. Definir ruta y nombre del archivo
-    $folderPath = "firmas/";
-    if (!file_exists($folderPath)) {
-        mkdir($folderPath, 0777, true);
-    }
-    
-    $fileName = $oni . ".png";
-    $filePath = $folderPath . $fileName;
-
-    // 3. Guardar el archivo físicamente
-    file_put_contents($filePath, $image_base64);
-
-    // 4. Actualizar la base de datos
-    // Valor a guardar: firma/oni.png (según requerimiento exacto)
-    $dbPathValue = "firma/" . $fileName;
+    // 1. Guardar directamente la cadena Base64 en la base de datos
+    // Esto es compatible con FilamentAutograph y generadores de PDF
     
     $sql = "UPDATE empleados SET firma = ? WHERE oni = ?";
-    $params = array($dbPathValue, $oni);
+    $params = array($base64_image, $oni); // $base64_image ya contiene el DataURL completo
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {

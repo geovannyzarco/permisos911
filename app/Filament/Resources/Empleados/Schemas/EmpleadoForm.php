@@ -242,16 +242,9 @@ class EmpleadoForm
                 Section::make('Firma del Empleado')
                     ->schema([
                         SignaturePad::make('firma')
-
+                            ->disabled()
                             ->backgroundColor('#f2efef')
-                            ->dehydrateStateUsing(fn ($state) => $state)
                             ->columnSpanFull()
-                            ->dotSize(2.0)
-                            ->lineMinWidth(0.5)
-                            ->lineMaxWidth(2.5)
-                            ->throttle(16)
-                            ->minDistance(5)
-                            ->velocityFilterWeight(0.7)
                             ->exportBackgroundColor('#fff'),
                     ])
                     ->columnSpanFull(),

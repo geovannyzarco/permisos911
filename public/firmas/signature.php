@@ -1,4 +1,5 @@
 <?php
+require_once 'auth_check.php';
 require_once 'db.php';
 
 $oni = isset($_GET['oni']) ? $_GET['oni'] : '';
