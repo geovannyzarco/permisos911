@@ -32,6 +32,11 @@ class AprobacionPermisoResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Aprobar Permisos';
 
+    public static function getPermissionPrefix(): string
+    {
+        return 'aprobacion_permiso';
+    }
+
     public static function getModelLabel(): string
     {
         return 'Aprobacion de permisos';
@@ -40,6 +45,26 @@ class AprobacionPermisoResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return 'Aprobacion de permisos';
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('ViewAny:AprobacionPermisoResource');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->can('View:AprobacionPermisoResource');
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->can('Update:AprobacionPermisoResource');
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->can('Delete:AprobacionPermisoResource');
     }
 
     public static function canCreate(): bool

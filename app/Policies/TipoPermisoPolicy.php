@@ -14,57 +14,57 @@ class TipoPermisoPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:TipoPermiso');
+        return $authUser->can('ViewAny:TipoPermisoResource');
     }
 
     public function view(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('View:TipoPermiso');
+        return $authUser->can('View:TipoPermisoResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:TipoPermiso');
+        return $authUser->can('Create:TipoPermisoResource');
     }
 
     public function update(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('Update:TipoPermiso');
+        return $authUser->can('Update:TipoPermisoResource');
     }
 
     public function delete(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('Delete:TipoPermiso');
+        return $authUser->can('Delete:TipoPermisoResource');
     }
 
     public function restore(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('Restore:TipoPermiso');
+        return $authUser->can('Restore:TipoPermisoResource');
     }
 
     public function forceDelete(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('ForceDelete:TipoPermiso');
+        return $authUser->can('ForceDelete:TipoPermisoResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:TipoPermiso');
+        return $authUser->can('ForceDeleteAny:TipoPermisoResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:TipoPermiso');
+        return $authUser->can('RestoreAny:TipoPermisoResource');
     }
 
     public function replicate(AuthUser $authUser, TipoPermiso $tipoPermiso): bool
     {
-        return $authUser->can('Replicate:TipoPermiso');
+        return $authUser->can('Replicate:TipoPermisoResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:TipoPermiso');
+        return $authUser->can('Reorder:TipoPermisoResource');
     }
 
 }

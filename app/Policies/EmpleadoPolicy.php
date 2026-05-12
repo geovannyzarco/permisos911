@@ -14,57 +14,57 @@ class EmpleadoPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Empleado');
+        return $authUser->can('ViewAny:EmpleadoResource');
     }
 
     public function view(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('View:Empleado');
+        return $authUser->can('View:EmpleadoResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Empleado');
+        return $authUser->can('Create:EmpleadoResource');
     }
 
     public function update(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('Update:Empleado');
+        return $authUser->can('Update:EmpleadoResource');
     }
 
     public function delete(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('Delete:Empleado');
+        return $authUser->can('Delete:EmpleadoResource');
     }
 
     public function restore(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('Restore:Empleado');
+        return $authUser->can('Restore:EmpleadoResource');
     }
 
     public function forceDelete(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('ForceDelete:Empleado');
+        return $authUser->can('ForceDelete:EmpleadoResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Empleado');
+        return $authUser->can('ForceDeleteAny:EmpleadoResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Empleado');
+        return $authUser->can('RestoreAny:EmpleadoResource');
     }
 
     public function replicate(AuthUser $authUser, Empleado $empleado): bool
     {
-        return $authUser->can('Replicate:Empleado');
+        return $authUser->can('Replicate:EmpleadoResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Empleado');
+        return $authUser->can('Reorder:EmpleadoResource');
     }
 
 }

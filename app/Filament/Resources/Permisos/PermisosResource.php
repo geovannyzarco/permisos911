@@ -34,9 +34,39 @@ class PermisosResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Mis Permisos';
 
-        public static function getModelLabel(): string
+    public static function getPermissionPrefix(): string
+    {
+        return 'permisos_empleado';
+    }
+
+    public static function getModelLabel(): string
     {
         return 'Permisos de empleado';
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('ViewAny:PermisosResource');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->can('View:PermisosResource');
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can('Create:PermisosResource');
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->can('Update:PermisosResource');
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->can('Delete:PermisosResource');
     }
 
     public static function getPluralModelLabel(): string

@@ -14,57 +14,57 @@ class MarcacionPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Marcacion');
+        return $authUser->can('ViewAny:MarcacionResource');
     }
 
     public function view(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('View:Marcacion');
+        return $authUser->can('View:MarcacionResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Marcacion');
+        return $authUser->can('Create:MarcacionResource');
     }
 
     public function update(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('Update:Marcacion');
+        return $authUser->can('Update:MarcacionResource');
     }
 
     public function delete(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('Delete:Marcacion');
+        return $authUser->can('Delete:MarcacionResource');
     }
 
     public function restore(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('Restore:Marcacion');
+        return $authUser->can('Restore:MarcacionResource');
     }
 
     public function forceDelete(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('ForceDelete:Marcacion');
+        return $authUser->can('ForceDelete:MarcacionResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Marcacion');
+        return $authUser->can('ForceDeleteAny:MarcacionResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Marcacion');
+        return $authUser->can('RestoreAny:MarcacionResource');
     }
 
     public function replicate(AuthUser $authUser, Marcacion $marcacion): bool
     {
-        return $authUser->can('Replicate:Marcacion');
+        return $authUser->can('Replicate:MarcacionResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Marcacion');
+        return $authUser->can('Reorder:MarcacionResource');
     }
 
 }

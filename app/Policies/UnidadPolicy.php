@@ -14,57 +14,57 @@ class UnidadPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Unidad');
+        return $authUser->can('ViewAny:UnidadResource');
     }
 
     public function view(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('View:Unidad');
+        return $authUser->can('View:UnidadResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Unidad');
+        return $authUser->can('Create:UnidadResource');
     }
 
     public function update(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('Update:Unidad');
+        return $authUser->can('Update:UnidadResource');
     }
 
     public function delete(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('Delete:Unidad');
+        return $authUser->can('Delete:UnidadResource');
     }
 
     public function restore(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('Restore:Unidad');
+        return $authUser->can('Restore:UnidadResource');
     }
 
     public function forceDelete(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('ForceDelete:Unidad');
+        return $authUser->can('ForceDelete:UnidadResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Unidad');
+        return $authUser->can('ForceDeleteAny:UnidadResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Unidad');
+        return $authUser->can('RestoreAny:UnidadResource');
     }
 
     public function replicate(AuthUser $authUser, Unidad $unidad): bool
     {
-        return $authUser->can('Replicate:Unidad');
+        return $authUser->can('Replicate:UnidadResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Unidad');
+        return $authUser->can('Reorder:UnidadResource');
     }
 
 }

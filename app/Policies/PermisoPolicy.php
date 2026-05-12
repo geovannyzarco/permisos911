@@ -14,57 +14,57 @@ class PermisoPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Permiso');
+        return $authUser->can('ViewAny:PermisosResource');
     }
 
     public function view(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('View:Permiso');
+        return $authUser->can('View:PermisosResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Permiso');
+        return $authUser->can('Create:PermisosResource');
     }
 
     public function update(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('Update:Permiso');
+        return $authUser->can('Update:PermisosResource');
     }
 
     public function delete(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('Delete:Permiso');
+        return $authUser->can('Delete:PermisosResource');
     }
 
     public function restore(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('Restore:Permiso');
+        return $authUser->can('Restore:PermisosResource');
     }
 
     public function forceDelete(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('ForceDelete:Permiso');
+        return $authUser->can('ForceDelete:PermisosResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Permiso');
+        return $authUser->can('ForceDeleteAny:PermisosResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Permiso');
+        return $authUser->can('RestoreAny:PermisosResource');
     }
 
     public function replicate(AuthUser $authUser, Permiso $permiso): bool
     {
-        return $authUser->can('Replicate:Permiso');
+        return $authUser->can('Replicate:PermisosResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Permiso');
+        return $authUser->can('Reorder:PermisosResource');
     }
 
 }

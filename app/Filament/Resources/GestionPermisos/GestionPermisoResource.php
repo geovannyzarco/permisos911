@@ -31,6 +31,36 @@ class GestionPermisoResource extends Resource
     protected static string | UnitEnum | null $navigationGroup = 'Administración';
     protected static ?int $navigationSort = 3;
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('ViewAny:GestionPermisoResource');
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->can('View:GestionPermisoResource');
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can('Create:GestionPermisoResource');
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->can('Update:GestionPermisoResource');
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->can('Delete:GestionPermisoResource');
+    }
+
+    public static function getPermissionPrefix(): string
+    {
+        return 'gestion_permiso';
+    }
+
     public static function getModelLabel(): string
     {
         return 'Gestion de permisos';

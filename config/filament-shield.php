@@ -163,7 +163,7 @@ return [
     */
 
     'resources' => [
-        'subject' => 'model',
+        'subject' => 'slug',
         'manage' => [
             \BezhanSalleh\FilamentShield\Resources\Roles\RoleResource::class => [
                 'viewAny',

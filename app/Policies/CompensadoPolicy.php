@@ -14,57 +14,57 @@ class CompensadoPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Compensado');
+        return $authUser->can('ViewAny:CompensadoResource');
     }
 
     public function view(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('View:Compensado');
+        return $authUser->can('View:CompensadoResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Compensado');
+        return $authUser->can('Create:CompensadoResource');
     }
 
     public function update(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('Update:Compensado');
+        return $authUser->can('Update:CompensadoResource');
     }
 
     public function delete(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('Delete:Compensado');
+        return $authUser->can('Delete:CompensadoResource');
     }
 
     public function restore(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('Restore:Compensado');
+        return $authUser->can('Restore:CompensadoResource');
     }
 
     public function forceDelete(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('ForceDelete:Compensado');
+        return $authUser->can('ForceDelete:CompensadoResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Compensado');
+        return $authUser->can('ForceDeleteAny:CompensadoResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Compensado');
+        return $authUser->can('RestoreAny:CompensadoResource');
     }
 
     public function replicate(AuthUser $authUser, Compensado $compensado): bool
     {
-        return $authUser->can('Replicate:Compensado');
+        return $authUser->can('Replicate:CompensadoResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Compensado');
+        return $authUser->can('Reorder:CompensadoResource');
     }
 
 }

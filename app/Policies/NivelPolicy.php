@@ -14,57 +14,57 @@ class NivelPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Nivel');
+        return $authUser->can('ViewAny:NivelResource');
     }
 
     public function view(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('View:Nivel');
+        return $authUser->can('View:NivelResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Nivel');
+        return $authUser->can('Create:NivelResource');
     }
 
     public function update(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('Update:Nivel');
+        return $authUser->can('Update:NivelResource');
     }
 
     public function delete(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('Delete:Nivel');
+        return $authUser->can('Delete:NivelResource');
     }
 
     public function restore(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('Restore:Nivel');
+        return $authUser->can('Restore:NivelResource');
     }
 
     public function forceDelete(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('ForceDelete:Nivel');
+        return $authUser->can('ForceDelete:NivelResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Nivel');
+        return $authUser->can('ForceDeleteAny:NivelResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Nivel');
+        return $authUser->can('RestoreAny:NivelResource');
     }
 
     public function replicate(AuthUser $authUser, Nivel $nivel): bool
     {
-        return $authUser->can('Replicate:Nivel');
+        return $authUser->can('Replicate:NivelResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Nivel');
+        return $authUser->can('Reorder:NivelResource');
     }
 
 }

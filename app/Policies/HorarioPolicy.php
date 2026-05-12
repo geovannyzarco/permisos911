@@ -14,57 +14,57 @@ class HorarioPolicy
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:Horario');
+        return $authUser->can('ViewAny:HorarioResource');
     }
 
     public function view(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('View:Horario');
+        return $authUser->can('View:HorarioResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:Horario');
+        return $authUser->can('Create:HorarioResource');
     }
 
     public function update(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('Update:Horario');
+        return $authUser->can('Update:HorarioResource');
     }
 
     public function delete(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('Delete:Horario');
+        return $authUser->can('Delete:HorarioResource');
     }
 
     public function restore(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('Restore:Horario');
+        return $authUser->can('Restore:HorarioResource');
     }
 
     public function forceDelete(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('ForceDelete:Horario');
+        return $authUser->can('ForceDelete:HorarioResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Horario');
+        return $authUser->can('ForceDeleteAny:HorarioResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:Horario');
+        return $authUser->can('RestoreAny:HorarioResource');
     }
 
     public function replicate(AuthUser $authUser, Horario $horario): bool
     {
-        return $authUser->can('Replicate:Horario');
+        return $authUser->can('Replicate:HorarioResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:Horario');
+        return $authUser->can('Reorder:HorarioResource');
     }
 
 }
