@@ -2,17 +2,18 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
 use App\Models\Permiso;
-use Illuminate\Support\Facades\DB;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
 
 class PermisosPorTipoChart extends ChartWidget
 {
     use HasWidgetShield;
 
-    protected  ?string $heading = 'Permisos por Tipo (Año actual)';
-    protected static ?int $sort = 4;
+    protected ?string $heading = 'Permisos por Tipo (Año actual)';
+
+    protected static ?int $sort = 6;
 
     protected function getData(): array
     {

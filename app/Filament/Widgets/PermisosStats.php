@@ -2,31 +2,33 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\StatsOverviewWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Empleado;
 use App\Models\Permiso;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Carbon\Carbon;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class PermisosStats extends StatsOverviewWidget
 {
     use HasWidgetShield;
+
     protected ?string $heading = 'Resumen de mis permisos';
-    protected static ?int $sort = 1;
-   // protected static bool $isDiscovered = false;
+
+    protected static ?int $sort = 3;
+
+    // protected static bool $isDiscovered = false;
     protected function getStats(): array
     {
 
         $user = auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return [];
         }
 
         $empleado = Empleado::where('oni', $user->oni)->first();
 
-        if (!$empleado) {
+        if (! $empleado) {
             return [];
         }
 
@@ -39,12 +41,12 @@ class PermisosStats extends StatsOverviewWidget
 
         $pendientes = Permiso::where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', 4)
-             ->whereYear('desde', $year)
+            ->whereYear('desde', $year)
             ->count();
 
         $denegados = Permiso::where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', 5)
-             ->whereYear('desde', $year)
+            ->whereYear('desde', $year)
             ->count();
 
         return [

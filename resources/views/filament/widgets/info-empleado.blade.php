@@ -12,8 +12,6 @@
         <p><strong>Horario:</strong> {{ $empleado->horario->nombre ?? 'N/A' }}</p>
         <p><strong>Categoria:</strong> {{ $empleado->categoria->nombre ?? 'N/A' }}</p>
         <p><strong>Nivel:</strong> {{ $empleado->nivel->nivel ?? 'N/A' }}</p>
-        <p><strong>Horas Personales Asignadas:</strong> {{ $empleado->horario->horas_personales ?? 'N/A' }}</p>
-        <p><strong>Horas personales Disponibles</strong> {{ $horasDisponibles ?? 'N/A' }}</p>
     @else
         <p class="text-danger-600">No se encontró información de empleado asociada a su usuario.</p>
     @endif

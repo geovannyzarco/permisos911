@@ -2,16 +2,16 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
 use App\Models\Permiso;
-use Illuminate\Support\Carbon;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\ChartWidget;
 
 class PermisosPorUnidadChart extends ChartWidget
 {
-
     use HasWidgetShield;
-    protected static ?int $sort = 4;
+
+    protected static ?int $sort = 6;
+
     protected ?string $heading = 'Permisos por Unidad (Año actual)';
 
     protected function getData(): array
@@ -28,19 +28,19 @@ class PermisosPorUnidadChart extends ChartWidget
             ->get();
 
         $labels = $result->pluck('unidad')->toArray();
-        $data   = $result->pluck('total')->toArray();
+        $data = $result->pluck('total')->toArray();
 
         // ---- COLORES FIJOS (uno por unidad) ----
         // Puedes agregar más si tienes más unidades
         $fixedColors = [
-                        '#1E88E5',
-                        '#43A047',
-                        '#FB8C00',
-                        '#E53935',
-                        '#8E24AA',
-                        '#00ACC1',
-                        '#6D4C41',
-                        '#3949AB',
+            '#1E88E5',
+            '#43A047',
+            '#FB8C00',
+            '#E53935',
+            '#8E24AA',
+            '#00ACC1',
+            '#6D4C41',
+            '#3949AB',
         ];
 
         // Ajustar colores según la cantidad de unidades
@@ -76,6 +76,4 @@ class PermisosPorUnidadChart extends ChartWidget
             ],
         ];
     }
-
-
 }

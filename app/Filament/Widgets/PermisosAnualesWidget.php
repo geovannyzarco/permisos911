@@ -3,17 +3,19 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Permiso;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PermisosAnualesWidget extends BaseWidget
 {
-        use HasWidgetShield;
+    use HasWidgetShield;
 
     protected ?string $heading = 'Resumen Permisos Empleados (Año actual)';
-    protected static ?int $sort = 3;
+
+    protected static ?int $sort = 6;
+
     protected function getStats(): array
     {
         $year = Carbon::now()->year;

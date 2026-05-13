@@ -3,18 +3,21 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Empleado;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TotalEmpleadosWidget extends BaseWidget
 {
     use HasWidgetShield;
+
     protected ?string $heading = 'Estados de los empleados';
-    protected static ?int $sort = 2;
+
+    protected static ?int $sort = 5;
+
     protected function getStats(): array
     {
- $totalActivos = Empleado::where('estado_id',1)->count();
+        $totalActivos = Empleado::where('estado_id', 1)->count();
         $totalInactivos = Empleado::where('estado_id', 2)->count();
         $totalEmpleados = Empleado::count();
 
@@ -36,4 +39,3 @@ class TotalEmpleadosWidget extends BaseWidget
         ];
     }
 }
-

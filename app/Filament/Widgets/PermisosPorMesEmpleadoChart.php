@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Permiso;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class PermisosPorMesChart extends ChartWidget
 {
@@ -13,7 +13,7 @@ class PermisosPorMesChart extends ChartWidget
 
     protected ?string $heading = 'Mis permisos solicitados por mes (Año actual)';
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 4;
 
     public static function getShieldPermissions(): array
     {
@@ -21,6 +21,7 @@ class PermisosPorMesChart extends ChartWidget
             'view',
         ];
     }
+
     protected function getData(): array
     {
 
@@ -68,6 +69,4 @@ class PermisosPorMesChart extends ChartWidget
     {
         return 'bar';
     }
-
-
 }
