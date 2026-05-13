@@ -1,5 +1,4 @@
 <?php
-require_once 'auth_check.php';
 require_once 'db.php';
 
 $oni = isset($_GET['oni']) ? $_GET['oni'] : '';
@@ -74,7 +73,7 @@ if (!$empleado) {
 
     <!-- Cargar Signature Pad Localmente -->
     <script src="js/signature_pad.umd.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=2"></script>
     <script>
         // Pasar variables de PHP a JS
         const employeeONI = "<?php echo $empleado['oni']; ?>";

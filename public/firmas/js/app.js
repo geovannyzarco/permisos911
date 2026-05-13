@@ -53,7 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: `oni=${employeeONI}&image=${encodeURIComponent(dataURL)}`
         })
-        .then(response => response.json())
+        .then(async response => {
+            const text = await response.text();
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                throw new Error("Respuesta no válida del servidor: " + text);
+            }
+        })
         .then(data => {
             if (data.success) {
                 showAlert('Firma guardada correctamente.', 'success');
@@ -61,14 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = 'index.php';
                 }, 2000);
             } else {
-                showAlert('Error: ' + data.message, 'error');
+                showAlert('Error del Servidor: ' + data.message, 'error');
                 saveBtn.disabled = false;
                 saveBtn.innerText = 'Guardar Firma';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showAlert('Ocurrió un error al procesar la solicitud.', 'error');
+            showAlert('ERROR CRÍTICO: ' + error.message, 'error');
             saveBtn.disabled = false;
             saveBtn.innerText = 'Guardar Firma';
         });
