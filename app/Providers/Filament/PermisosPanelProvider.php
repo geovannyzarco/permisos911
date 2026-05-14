@@ -41,6 +41,10 @@ class PermisosPanelProvider extends PanelProvider
             ->id('permisos')
             ->path('permisos')
             ->login(CustomLogin::class)
+            ->userMenuItems([
+                'profile' => \Filament\Navigation\MenuItem::make()->label('Perfil'),
+                'logout' => \Filament\Navigation\MenuItem::make()->label('Cerrar sesión'),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
