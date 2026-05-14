@@ -15,6 +15,8 @@ class PermisosPorMesChart extends ChartWidget
 
     protected static ?int $sort = 4;
 
+    // protected int | string | array $columnSpan = 1;
+
     public static function getShieldPermissions(): array
     {
         return [

@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Helper\CustomLogin;
 use App\Filament\Widgets\PermisosPorMesChart;
+use App\Filament\Widgets\PermisosUsuarioPorTipoChart;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -59,6 +60,7 @@ class PermisosPanelProvider extends PanelProvider
                 // AccountWidget::class,
                 // FilamentInfoWidget::class,
                 PermisosPorMesChart::class,
+                PermisosUsuarioPorTipoChart::class,
 
             ])
             ->middleware([
