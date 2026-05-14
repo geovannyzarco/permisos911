@@ -38,10 +38,13 @@ class PermisosPanelProvider extends PanelProvider
             ->id('permisos')
             ->path('permisos')
             ->login(CustomLogin::class)
-            ->userMenuItems([
-                'profile' => \Filament\Navigation\MenuItem::make()->label('Perfil'),
-                'logout' => \Filament\Navigation\MenuItem::make()->label('Salir'),
-            ])
+            /*->userMenuItems([
+                'profile' => \Filament\Navigation\MenuItem::make()
+                    ->label('Perfil')
+                    ->url(fn (): string => \Filament\Auth\Pages\EditProfile::getUrl()),
+                'logout' => \Filament\Navigation\MenuItem::make()
+                    ->label('Salir'),
+            ])*/
             ->colors([
                 'primary' => Color::Amber,
             ])

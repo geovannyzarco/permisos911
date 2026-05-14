@@ -50,14 +50,4 @@ class CustomLogin extends Login
             'data.password' => 'Usuario o contraseña incorrectos.',
         ]);
     }
-
-    public function logout()
-    {
-        auth()->logout();
-
-        session()->invalidate();
-        session()->regenerateToken();
-
-        return redirect()->route('filament.auth.login');
-    }
 }
