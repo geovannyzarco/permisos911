@@ -13,7 +13,9 @@ class ViewEmpleado extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            EditAction::make()
+                ->label('Editar Información')
+                ->icon('heroicon-o-pencil'),
         ];
     }
 }
