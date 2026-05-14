@@ -9,6 +9,17 @@ use Illuminate\Validation\ValidationException;
 
 class CustomLogin extends Login
 {
+    public function getAuthenticateFormAction(): \Filament\Actions\Action
+    {
+        return parent::getAuthenticateFormAction()
+            ->label('Entrar');
+    }
+
+    public function getHeading(): \Illuminate\Contracts\Support\Htmlable|string
+    {
+        return 'Entre a su cuenta';
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -18,8 +29,10 @@ class CustomLogin extends Login
                     ->required()
                     ->maxLength(50)
                     ->placeholder('Ingrese su ONI'),
-                $this->getPasswordFormComponent(),
-                $this->getRememberFormComponent(),
+                $this->getPasswordFormComponent()
+                    ->label('Contraseña'),
+                $this->getRememberFormComponent()
+                    ->label('Recordarme'),
             ]);
     }
 
