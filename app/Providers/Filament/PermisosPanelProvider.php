@@ -3,8 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Helper\CustomLogin;
-use App\Filament\Pages\Perfil;
 use App\Filament\Widgets\PermisosPorMesChart;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,11 +20,8 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Symfony\Polyfill\Intl\Idn\Info;
 use Illuminate\Support\Facades\Blade;
-
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class PermisosPanelProvider extends PanelProvider
 {
@@ -43,7 +40,7 @@ class PermisosPanelProvider extends PanelProvider
             ->login(CustomLogin::class)
             ->userMenuItems([
                 'profile' => \Filament\Navigation\MenuItem::make()->label('Perfil'),
-                'logout' => \Filament\Navigation\MenuItem::make()->label('Cerrar sesión'),
+                'logout' => \Filament\Navigation\MenuItem::make()->label('Salir'),
             ])
             ->colors([
                 'primary' => Color::Amber,
@@ -56,8 +53,8 @@ class PermisosPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                //AccountWidget::class,
-                //FilamentInfoWidget::class,
+                // AccountWidget::class,
+                // FilamentInfoWidget::class,
                 PermisosPorMesChart::class,
 
             ])
@@ -76,7 +73,7 @@ class PermisosPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-            FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make(),
             ])
             ->renderHook(
                 'panels::body.end',
