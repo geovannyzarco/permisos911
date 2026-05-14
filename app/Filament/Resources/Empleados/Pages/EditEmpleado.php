@@ -18,4 +18,9 @@ class EditEmpleado extends EditRecord
             DeleteAction::make(),
         ];
     }
+    protected function getSaveFormAction(): \Filament\Actions\Action
+    {
+        return parent::getSaveFormAction()
+            ->label('Guardar Información');
+    }
 }
