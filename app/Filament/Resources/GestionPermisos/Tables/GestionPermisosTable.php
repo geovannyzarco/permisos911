@@ -172,9 +172,10 @@ class GestionPermisosTable
                 EditAction::make(),
 
                 Action::make('pdf')
-                    ->label('Hoja de Permiso')
+                    ->label('Ver Hoja de Permiso')
                     ->url(fn ($record) => route('permiso.pdf', ['id' => $record->id]))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->visible(fn ($record) => $record->id_estado_aprobacion == 3),
             ])
 
             /* =======================

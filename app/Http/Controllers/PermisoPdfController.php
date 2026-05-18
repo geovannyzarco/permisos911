@@ -10,7 +10,7 @@ class PermisoPdfController extends Controller
 {
     public function generar($id)
 {
-        $permiso = Permiso::with(['empleado', 'tipoPermiso', 'estado', 'estadoUnidad'])
+        $permiso = Permiso::with(['empleado.categoria', 'empleado.unidad.division', 'tipoPermiso', 'estadoVB', 'estadoAprobado', 'jefeVb', 'jefeAprobacion'])
         ->findOrFail($id);
 
     $pdf = PDF::loadView('pdf.permiso', compact('permiso'))

@@ -15,30 +15,31 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class EmpleadoResource extends Resource
 {
     protected static ?string $model = Empleado::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
-    protected static string | UnitEnum | null $navigationGroup = 'Administración';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Administración';
+
     protected static ?int $navigationSort = 3;
-    protected static ?string $recordTitleAttribute = 'Empeados';
 
-public static function getEloquentQuery(): Builder
-{
-    $query = parent::getEloquentQuery();
+    protected static ?string $recordTitleAttribute = 'Empleados';
 
-    if (auth()->check() && auth()->user()->hasRole('Empleados')) {
-        $query->where('oni', auth()->user()->oni);
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->check() && auth()->user()->hasRole('Empleados')) {
+            $query->where('oni', auth()->user()->oni);
+        }
+
+        return $query;
     }
-
-    return $query;
-}
-
-
 
     public static function form(Schema $schema): Schema
     {
@@ -58,7 +59,7 @@ public static function getEloquentQuery(): Builder
     public static function getRelations(): array
     {
         return [
-           // RelationManagers\HijosRelationManager::class,
+            // RelationManagers\HijosRelationManager::class,
         ];
     }
 
