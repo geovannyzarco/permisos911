@@ -104,6 +104,82 @@ class GestionPermisoForm
                     ->columns(1)
                     ->visible(fn ($get) => filled($get('empleado_id'))),
 
+                // Sección para mostrar alertas de cupos bloqueados y permisos que interfieren
+                Section::make('Permisos en Conflicto (Bloqueos de Cupo)')
+                    ->schema([
+                        Placeholder::make('permisos_conflictivos')
+                            ->reactive()
+                            ->content(function ($get, ?\App\Models\Permiso $record) {
+                                $empleadoId = $get('empleado_id');
+                                $desde = $get('desde');
+                                $hasta = $get('hasta');
+
+                                if (! $empleadoId || ! $desde || ! $hasta) {
+                                    return 'Seleccione fechas para evaluar posibles conflictos.';
+                                }
+
+                                $empleado = Empleado::find($empleadoId);
+                                if (! $empleado || ! $empleado->grupo || $empleado->grupo->id == 12 || empty($empleado->grupo->permisos_diarios)) {
+                                    return 'El empleado no pertenece a un grupo con límite diario.';
+                                }
+
+                                $grupo = $empleado->grupo;
+                                $limite = $grupo->permisos_diarios;
+
+                                $fechaDesde = Carbon::parse($desde)->startOfDay();
+                                $fechaHasta = Carbon::parse($hasta)->startOfDay();
+
+                                if ($fechaHasta->lessThan($fechaDesde)) {
+                                    return 'Rango de fechas inválido.';
+                                }
+
+                                $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
+
+                                if ($periodo->count() > 31) {
+                                    return 'El rango de fechas es demasiado amplio para evaluar.';
+                                }
+
+                                $html = '';
+                                $hayBloqueo = false;
+
+                                foreach ($periodo as $fecha) {
+                                    $permisosEnEsteDia = Permiso::query()
+                                        ->whereHas('empleado', function ($query) use ($grupo) {
+                                            $query->where('grupo_id', $grupo->id);
+                                        })
+                                        ->whereDate('desde', '<=', $fecha)
+                                        ->whereDate('hasta', '>=', $fecha)
+                                        ->when($record, function ($query) use ($record) {
+                                            $query->where('id', '!=', $record->id);
+                                        })
+                                        ->with('empleado')
+                                        ->get();
+
+                                    if ($permisosEnEsteDia->count() >= $limite) {
+                                        $hayBloqueo = true;
+                                        $html .= "<div style='margin-bottom: 12px;'>";
+                                        $html .= "<strong style='color: #e53e3e;'>⚠️ El día {$fecha->format('d/m/Y')} está bloqueado (Límite: {$limite} permisos, Ocupados: " . $permisosEnEsteDia->count() . "):</strong>";
+                                        $html .= "<ul style='list-style-type: disc; margin-left: 20px; color: #4a5568;'>";
+                                        foreach ($permisosEnEsteDia as $p) {
+                                            $desdeStr = Carbon::parse($p->desde)->format('d/m/Y H:i');
+                                            $hastaStr = Carbon::parse($p->hasta)->format('d/m/Y H:i');
+                                            $html .= "<li>Permiso #{$p->id}: <strong>{$p->empleado->nombre}</strong> (ONI: {$p->empleado->oni}) - Desde: {$desdeStr} Hasta: {$hastaStr}</li>";
+                                        }
+                                        $html .= "</ul>";
+                                        $html .= "</div>";
+                                    }
+                                }
+
+                                if (! $hayBloqueo) {
+                                    return new HtmlString("<span style='color: #38a169; font-weight: bold;'>🟢 No hay bloqueos. Hay cupo disponible para el rango seleccionado.</span>");
+                                }
+
+                                return new HtmlString($html);
+                            })
+                    ])
+                    ->columns(1)
+                    ->visible(fn ($get) => filled($get('empleado_id')) && filled($get('desde')) && filled($get('hasta'))),
+
                 Image::make(
                     url: fn ($get) => route('foto.empleado', [
                         'filename' => optional(
