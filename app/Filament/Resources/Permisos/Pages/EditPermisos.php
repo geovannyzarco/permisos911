@@ -16,13 +16,36 @@ class EditPermisos extends EditRecord
 {
     protected static string $resource = PermisosResource::class;
 
+    // Personalizar el título de la página de edición a español
+    public function getTitle(): string
+    {
+        return 'Editar Permiso';
+    }
+
+    // Personalizar las acciones de cabecera (Ver y Eliminar)
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
+            ViewAction::make()
+                ->label('Ver')
+                ->icon('heroicon-o-eye'),
+            DeleteAction::make()
+                ->label('Eliminar')
+                ->icon('heroicon-o-trash'),
         ];
     }
 
+    // Personalizar el botón de guardar cambios del formulario
+    protected function getSaveFormAction(): \Filament\Actions\Action
+    {
+        return parent::getSaveFormAction()
+            ->label('Guardar Cambios');
+    }
 
+    // Personalizar el botón de cancelación a español
+    protected function getCancelFormAction(): \Filament\Actions\Action
+    {
+        return parent::getCancelFormAction()
+            ->label('Cancelar');
+    }
 }

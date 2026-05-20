@@ -74,7 +74,8 @@ class AprobacionPermisosTable
                 Action::make('Aprobar')
                     ->label('Aprobar Permiso')
                     ->icon('heroicon-o-check-badge')
-                    ->visible(fn ($record) => auth()->user()->can('aprobarPermiso', $record))
+                    // CORRECCIÓN: Se cambió 'aprobarPermiso' por 'aprobarFinal' para alinearlo con el Gate definido en AppServiceProvider y el método en AprobacionPermisoPolicy.
+                    ->visible(fn ($record) => auth()->user()->can('aprobarFinal', $record))
                     ->form([
                         Select::make('id_estado_aprobacion')
                             ->label('Aprobación')
