@@ -2,13 +2,18 @@
 
 namespace App\Filament\Resources\Permisos\Schemas;
 
+use App\Models\Empleado;
+use App\Models\Permiso;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 
 class PermisosForm
 {
@@ -16,6 +21,167 @@ class PermisosForm
     {
         return $schema
             ->components([
+
+                // INICIO MODIFICACIÓN: Paneles informativos y alertas de bloqueo/conflictos de cupos del empleado logueado
+                
+                // 1. Sección para mostrar la información del empleado autenticado (resumen de horas personales)
+                Section::make('Información del empleado')
+                    ->schema([
+                        Placeholder::make('Horas_personales')
+                            ->reactive()
+                            ->content(function (?Permiso $record) {
+                                // Obtenemos el empleado asociado al usuario que está logueado actualmente
+                                $empleado = auth()->user()->empleado;
+
+                                if (! $empleado) {
+                                    return 'No se encontró un empleado asociado a tu usuario.';
+                                }
+
+                                // Instanciamos el servicio y obtenemos el resumen de sus horas personales
+                                $permisoService = app(\App\Services\PermisoService::class);
+                                $resumen = $permisoService->obtenerResumenHorasPersonales($empleado, $record);
+
+                                $asignadas = $resumen['asignadas'];
+                                $usadas = $resumen['usadas'];
+                                $disponibles = $resumen['disponibles'];
+
+                                // Retornamos el resumen en HTML amigable
+                                return new HtmlString(
+                                    "<strong>Horas asignadas:</strong> {$asignadas}<br>
+                                     <strong>Horas utilizadas:</strong> {$usadas}<br>
+                                     <strong>Horas disponibles:</strong> {$disponibles}"
+                                );
+                            }),
+                    ])
+                    ->columns(1)
+                    // Visible solo si el usuario autenticado tiene un empleado asignado
+                    ->visible(fn () => filled(auth()->user()->empleado)),
+
+                // 2. Resumen de la cantidad de permisos aprobados del empleado en el año en curso
+                Section::make('Permisos del año en curso')
+                    ->schema([
+                        Placeholder::make('Permisos')
+                            ->reactive()
+                            ->content(function () {
+                                // Obtenemos el empleado asociado al usuario logueado
+                                $empleado = auth()->user()->empleado;
+
+                                if (! $empleado) {
+                                    return 'No se encontró un empleado asociado a tu usuario.';
+                                }
+                                $anio = Carbon::now()->year;
+
+                                // Consultamos la base de datos agrupando permisos aprobados del empleado en el año actual por tipo
+                                $resumen = Permiso::query()
+                                    ->selectRaw('tipo_permiso_id, COUNT(*) as total')
+                                    ->where('empleado_id', $empleado->id)
+                                    ->where('id_estado_aprobacion', 3) // ID 3 representa permisos con estado "Aprobado"
+                                    ->whereYear('desde', $anio)
+                                    ->groupBy('tipo_permiso_id')
+                                    ->with('tipoPermiso:id,nombre')
+                                    ->get();
+
+                                if ($resumen->isEmpty()) {
+                                    return 'No tienes permisos aprobados registrados en el año en curso.';
+                                }
+
+                                // Construimos la lista para mostrarla en el panel
+                                $html = "<strong>Año {$anio}</strong><br><br>";
+                                foreach ($resumen as $fila) {
+                                    $tipo = $fila->tipoPermiso->nombre ?? 'Sin tipo';
+                                    $html .= "• {$tipo}: {$fila->total}<br>";
+                                }
+
+                                return new HtmlString($html);
+                            }),
+                    ])
+                    ->columns(1)
+                    // Visible solo si el usuario autenticado tiene un empleado asignado
+                    ->visible(fn () => filled(auth()->user()->empleado)),
+
+                // 3. Sección de alertas de cupos bloqueados y permisos de otros miembros del grupo que interfieren en el rango
+                Section::make('Permisos en Conflicto (Bloqueos de Cupo)')
+                    ->schema([
+                        Placeholder::make('permisos_conflictivos')
+                            ->reactive()
+                            ->content(function ($get, ?Permiso $record) {
+                                $desde = $get('desde');
+                                $hasta = $get('hasta');
+
+                                // Requerimos que las fechas estén seleccionadas antes de hacer la validación
+                                if (! $desde || ! $hasta) {
+                                    return 'Seleccione fechas para evaluar posibles conflictos.';
+                                }
+
+                                // Obtenemos el empleado del usuario logueado y validamos que pertenezca a un grupo con límite
+                                $empleado = auth()->user()->empleado;
+                                if (! $empleado || ! $empleado->grupo || $empleado->grupo->id == 12 || empty($empleado->grupo->permisos_diarios)) {
+                                    return 'No perteneces a un grupo con límite diario.';
+                                }
+
+                                $grupo = $empleado->grupo;
+                                $limite = $grupo->permisos_diarios;
+
+                                $fechaDesde = Carbon::parse($desde)->startOfDay();
+                                $fechaHasta = Carbon::parse($hasta)->startOfDay();
+
+                                if ($fechaHasta->lessThan($fechaDesde)) {
+                                    return 'Rango de fechas inválido.';
+                                }
+
+                                $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
+
+                                if ($periodo->count() > 31) {
+                                    return 'El rango de fechas es demasiado amplio para evaluar.';
+                                }
+
+                                $html = '';
+                                $hayBloqueo = false;
+
+                                // Recorremos cada día en el rango de fechas solicitado
+                                foreach ($periodo as $fecha) {
+                                    // Obtenemos los permisos ya creados por miembros de su mismo grupo para esta fecha
+                                    $permisosEnEsteDia = Permiso::query()
+                                        ->whereHas('empleado', function ($query) use ($grupo) {
+                                            $query->where('grupo_id', $grupo->id);
+                                        })
+                                        ->whereDate('desde', '<=', $fecha)
+                                        ->whereDate('hasta', '>=', $fecha)
+                                        ->when($record, function ($query) use ($record) {
+                                            $query->where('id', '!=', $record->id);
+                                        })
+                                        ->with('empleado')
+                                        ->get();
+
+                                    // Si la cantidad de permisos es igual o mayor al límite permitido para el grupo
+                                    if ($permisosEnEsteDia->count() >= $limite) {
+                                        $hayBloqueo = true;
+                                        $html .= "<div style='margin-bottom: 12px;'>";
+                                        $html .= "<strong style='color: #e53e3e;'>⚠️ El día {$fecha->format('d/m/Y')} está bloqueado (Límite: {$limite} permisos, Ocupados: " . $permisosEnEsteDia->count() . "):</strong>";
+                                        $html .= "<ul style='list-style-type: disc; margin-left: 20px; color: #4a5568;'>";
+                                        foreach ($permisosEnEsteDia as $p) {
+                                            $desdeStr = Carbon::parse($p->desde)->format('d/m/Y H:i');
+                                            $hastaStr = Carbon::parse($p->hasta)->format('d/m/Y H:i');
+                                            $html .= "<li>Permiso #{$p->id}: <strong>{$p->empleado->nombre}</strong> (ONI: {$p->empleado->oni}) - Desde: {$desdeStr} Hasta: {$hastaStr}</li>";
+                                        }
+                                        $html .= "</ul>";
+                                        $html .= "</div>";
+                                    }
+                                }
+
+                                // Si no hay ningún bloqueo en el rango seleccionado, mostramos un mensaje verde
+                                if (! $hayBloqueo) {
+                                    return new HtmlString("<span style='color: #38a169; font-weight: bold;'>🟢 No hay bloqueos. Hay cupo disponible para el rango seleccionado.</span>");
+                                }
+
+                                return new HtmlString($html);
+                            })
+                    ])
+                    ->columns(1)
+                    // Visible si el usuario tiene empleado logueado y ha especificado las fechas
+                    ->visible(fn ($get) => filled(auth()->user()->empleado) && filled($get('desde')) && filled($get('hasta'))),
+
+                // FIN MODIFICACIÓN
 
                 DatePicker::make('fecha_creacion')
                     ->label('Fecha de Creación')
