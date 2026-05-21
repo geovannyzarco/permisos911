@@ -34,7 +34,8 @@ class GestionPermisosTable
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('fecha_creacion')
                     ->label('Fecha de Creación')
