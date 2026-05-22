@@ -11,8 +11,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -106,6 +108,9 @@ class GestionPermisosTable
                     ->label('Jefe Aprobación')
                     ->sortable(),
 
+                BooleanColumn::make('tramitado')
+                    ->label('Tramitado'),
+
                 TextColumn::make('adjunto')
                     ->label('Adjunto')
                     ->icon('heroicon-o-paper-clip')
@@ -127,11 +132,44 @@ class GestionPermisosTable
 
                 SelectFilter::make('estado_vb')
                     ->label('VB')
-                    ->relationship('estadoVB', 'nombre'),
+                    ->relationship(
+                        name: 'estadoVB',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                    ),
 
                 SelectFilter::make('estado_aprobacion')
                     ->label('Aprobación')
-                    ->relationship('estadoAprobado', 'nombre'),
+                    ->relationship(
+                        name: 'estadoAprobado',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                    ),
+
+                Filter::make('id_oni_jefe_division')
+                    ->form([
+                        TextInput::make('id_oni_jefe_division')->label('ONI Jefe División'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when($data['id_oni_jefe_division'] ?? null, function ($query, $value) {
+                            $query->where('id_oni_jefe_division', 'like', "%{$value}%");
+                        });
+                    }),
+
+                SelectFilter::make('id_estado_aprobacion_jefe_division')
+                    ->label('Estado Aprobación Jefe División')
+                    ->relationship(
+                        name: 'estadoAprobacionJefeDivision',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                    ),
+
+                SelectFilter::make('tramitado')
+                    ->label('Tramitado')
+                    ->options([
+                        1 => 'Sí',
+                        0 => 'No',
+                    ]),
 
                 Filter::make('filtros_dependientes')
                     ->form([
@@ -182,7 +220,7 @@ class GestionPermisosTable
             /* =======================
              * BULK ACTIONS
              * ======================= */
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     ExportBulkAction::make(),
 

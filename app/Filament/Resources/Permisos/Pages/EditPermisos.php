@@ -35,6 +35,11 @@ class EditPermisos extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return static::getResource()::mutateFormDataBeforeSave($data);
+    }
+
     // Personalizar el botón de guardar cambios del formulario
     protected function getSaveFormAction(): \Filament\Actions\Action
     {

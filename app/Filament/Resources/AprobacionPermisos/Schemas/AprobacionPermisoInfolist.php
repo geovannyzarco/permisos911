@@ -65,14 +65,21 @@ class AprobacionPermisoInfolist
                     ->schema([
                         TextEntry::make('estadoVB.nombre')
                             ->label('Visto Bueno'),
-                        TextEntry::make('jefeVB')
+                        TextEntry::make('jefeVB.nombre')
                             ->label('Supervisor que dio Visto Bueno'),
                         TextEntry::make('estadoAprobado.nombre')
                             ->label('Aprobación de Jefatura'),
-                        TextEntry::make('jefeAprobacion')
+                        TextEntry::make('jefeAprobacion.nombre')
                             ->label('Jefe que aprobó'),
+                        TextEntry::make('id_oni_jefe_division')
+                            ->label('ONI Jefe División'),
+                        TextEntry::make('fecha_aprobacion_jefe_division')
+                            ->label('Fecha Aprobación Jefe División'),
+                        TextEntry::make('estadoAprobacionJefeDivision.nombre')
+                            ->label('Estado Aprobación Jefe División'),
                         TextEntry::make('comentarios')
                             ->label('Comentarios'),
+
                     ])->columns(2)
                     ->columnSpanFull(),
             ]);

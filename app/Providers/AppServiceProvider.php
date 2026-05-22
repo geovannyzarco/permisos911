@@ -23,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::define('aprobarVB', [AprobacionPermisoPolicy::class, 'aprobarVB']);
         Gate::define('aprobarFinal', [AprobacionPermisoPolicy::class, 'aprobarFinal']);
+        Gate::define('aprobarJefeDivision', [AprobacionPermisoPolicy::class, 'aprobarJefeDivision']);
     }
 }

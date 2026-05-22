@@ -15,12 +15,12 @@ class AprobacionPermisoPolicy
         if (!$emp) return false;
 
         // No auto-aprobación
-        if ($permiso->empleado->oni === $emp->oni) {
+        if ($permiso->empleado->oni == $emp->oni) {
             return false;
         }
 
-        return $emp->nivel_id === Empleado::NIVEL_JEFE_GRUPO
-            && $permiso->empleado->grupo_id === $emp->grupo_id
+        return $emp->nivel_id == Empleado::NIVEL_JEFE_GRUPO
+            && $permiso->empleado->grupo_id == $emp->grupo_id
             && is_null($permiso->id_estado_vb);
     }
 
@@ -30,12 +30,26 @@ class AprobacionPermisoPolicy
 
         if (!$emp) return false;
 
-        if ($permiso->empleado->oni === $emp->oni) {
+        if ($permiso->empleado->oni == $emp->oni) {
             return false;
         }
 
-        return $emp->nivel_id === Empleado::NIVEL_JEFE_UNIDAD
-            && $permiso->empleado->unidad_id === $emp->unidad_id
+        return $emp->nivel_id == Empleado::NIVEL_JEFE_UNIDAD
+            && $permiso->empleado->unidad_id == $emp->unidad_id
             && is_null($permiso->id_estado_aprobacion);
+    }
+
+    public function aprobarJefeDivision(User $user, Permiso $permiso): bool
+    {
+        $emp = $user->empleado;
+
+        if (!$emp) return false;
+
+        if ($permiso->empleado->oni == $emp->oni) {
+            return false;
+        }
+
+        return $emp->nivel_id == 4
+            && is_null($permiso->id_estado_aprobacion_jefe_division);
     }
 }

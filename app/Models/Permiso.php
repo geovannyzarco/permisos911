@@ -29,6 +29,10 @@ class Permiso extends Model
         'id_estado_aprobacion',
         'id_jefe_aprobacion',
         'fecha_aprobacion',
+        'id_oni_jefe_division',
+        'fecha_aprobacion_jefe_division',
+        'id_estado_aprobacion_jefe_division',
+        'tramitado',
     ];
 
 
@@ -40,6 +44,8 @@ class Permiso extends Model
         'hasta' => 'datetime',
         'fecha_vb' => 'datetime',
         'fecha_aprobacion' => 'datetime',
+        'fecha_aprobacion_jefe_division' => 'datetime',
+        'tramitado' => 'boolean',
     ];
 
     public function jefeVb()
@@ -76,6 +82,11 @@ class Permiso extends Model
     public function estadoAprobado()
     {
         return $this->belongsTo(Estado::class, 'id_estado_aprobacion');
+    }
+
+    public function estadoAprobacionJefeDivision()
+    {
+        return $this->belongsTo(Estado::class, 'id_estado_aprobacion_jefe_division');
     }
 
     public function getDuracionAttribute(): string

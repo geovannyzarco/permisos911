@@ -95,7 +95,7 @@ class AprobacionPermisoForm
                                         ->whereIn('id', [3, 5])
                                         ->pluck('nombre', 'id')
                                 )
-                                ->visible(fn () => auth()->user()->empleado->nivel_id == 2)
+                                ->visible(fn () => auth()->user()->empleado?->nivel_id == 2)
                                 ->reactive()
                                 ->afterStateUpdated(function ($state, $record) {
                                     if ($state) {
@@ -113,7 +113,7 @@ class AprobacionPermisoForm
                                         ->whereIn('id', [3, 5])
                                         ->pluck('nombre', 'id')
                                 )
-                                ->visible(fn () => auth()->user()->empleado->nivel_id == 3)
+                                ->visible(fn () => auth()->user()->empleado?->nivel_id == 3)
                                 ->reactive()
                                 ->afterStateUpdated(function ($state, $record) {
                                     if ($state) {
@@ -124,9 +124,27 @@ class AprobacionPermisoForm
                                     }
                                 }),
 
+                            Select::make('id_estado_aprobacion_jefe_division')
+                                ->label('Estado Aprobación Jefe División')
+                                ->options(
+                                    Estado::where('entidad_id', 2)
+                                        ->whereIn('id', [3, 5])
+                                        ->pluck('nombre', 'id')
+                                )
+                                ->visible(fn () => auth()->user()->empleado?->nivel_id == 4)
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, $record) {
+                                    if ($state) {
+                                        $record->update([
+                                            'id_oni_jefe_division' => auth()->user()->empleado->oni,
+                                            'fecha_aprobacion_jefe_division' => now(),
+                                        ]);
+                                    }
+                                }),
+
                             Textarea::make('comentarios')
                                 ->label('Comentarios')
-                                ->visible(fn () => in_array(auth()->user()->empleado->nivel_id, [2, 3])),
+                                ->visible(fn () => in_array(auth()->user()->empleado?->nivel_id, [2, 3])),
 
                         ])
                         ->columns(2)

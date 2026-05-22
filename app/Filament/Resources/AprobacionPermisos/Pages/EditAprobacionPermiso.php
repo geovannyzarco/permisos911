@@ -19,6 +19,11 @@ class EditAprobacionPermiso extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return static::getResource()::mutateFormDataBeforeSave($data);
+    }
+
     protected function authorizeAccess(): void
     {
         $record = $this->record;
@@ -30,13 +35,13 @@ class EditAprobacionPermiso extends EditRecord
         }
 
         if ($empleado->nivel_id == 2) {
-            if ($record->empleado->grupo_id !== $empleado->grupo_id) {
+            if ($record->empleado->grupo_id != $empleado->grupo_id) {
                 abort(403);
             }
         }
 
         if ($empleado->nivel_id == 3) {
-            if ($record->empleado->unidad_id !== $empleado->unidad_id) {
+            if ($record->empleado->unidad_id != $empleado->unidad_id) {
                 abort(403);
             }
         }

@@ -9,6 +9,7 @@ use App\Filament\Resources\AprobacionPermisos\Pages\ViewAprobacionPermiso;
 use App\Filament\Resources\AprobacionPermisos\Schemas\AprobacionPermisoForm;
 use App\Filament\Resources\AprobacionPermisos\Schemas\AprobacionPermisoInfolist;
 use App\Filament\Resources\AprobacionPermisos\Tables\AprobacionPermisosTable;
+use App\Models\Empleado;
 use App\Models\Permiso;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -52,19 +53,47 @@ class AprobacionPermisoResource extends Resource
         return auth()->user()->can('ViewAny:AprobacionPermisoResource');
     }
 
-    public static function canView($record): bool
-    {
-        return auth()->user()->can('View:AprobacionPermisoResource');
-    }
-
     public static function canEdit($record): bool
     {
-        return auth()->user()->can('Update:AprobacionPermisoResource');
+        return auth()->user()->can('Update:AprobacionPermisoResource')
+            && self::canAccessRecord($record);
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()->can('View:AprobacionPermisoResource')
+            && self::canAccessRecord($record);
     }
 
     public static function canDelete($record): bool
     {
-        return auth()->user()->can('Delete:AprobacionPermisoResource');
+        return auth()->user()->can('Delete:AprobacionPermisoResource')
+            && self::canAccessRecord($record);
+    }
+
+    /**
+     * Valida si el usuario autenticado tiene permisos para acceder a un registro específico.
+     * Los jefes de grupo (nivel 2) solo acceden a permisos de su grupo.
+     * Los jefes de unidad (nivel 3) solo acceden a permisos de su unidad.
+     */
+    public static function canAccessRecord($record): bool
+    {
+        $emp = auth()->user()->empleado;
+        if (!$emp) {
+            return false;
+        }
+
+        // Nivel 2: Jefe de Grupo. Solo accede a registros de su mismo grupo.
+        if ($emp->nivel_id == 2) {
+            return $record->empleado && $record->empleado->grupo_id == $emp->grupo_id;
+        }
+
+        // Nivel 3: Jefe de Unidad. Solo accede a registros de su misma unidad.
+        if ($emp->nivel_id == 3) {
+            return $record->empleado && $record->empleado->unidad_id == $emp->unidad_id;
+        }
+
+        return true;
     }
 
     public static function canCreate(): bool
@@ -102,6 +131,38 @@ class AprobacionPermisoResource extends Resource
     public static function table(Table $table): Table
     {
         return AprobacionPermisosTable::configure($table);
+    }
+
+    /**
+     * Hook ejecutado antes de guardar los datos de edición del formulario.
+     * Si el empleado logueado es jefe de grupo (nivel 2), se asigna su ID como jefe de visto bueno
+     * y la fecha actual en la que realiza la actualización.
+     */
+    public static function mutateFormDataBeforeSave(array $data): array
+    {
+        $empleado = auth()->user()->empleado;
+
+        if ($empleado) {
+            // Nivel 2: Jefe de Grupo
+            if ($empleado->nivel_id == Empleado::NIVEL_JEFE_GRUPO && isset($data['id_estado_vb'])) {
+                $data['id_jefe_vb'] = $empleado->id;
+                $data['fecha_vb'] = now();
+            }
+
+            // Nivel 3: Jefe de Unidad
+            if ($empleado->nivel_id == Empleado::NIVEL_JEFE_UNIDAD && isset($data['id_estado_aprobacion'])) {
+                $data['id_jefe_aprobacion'] = $empleado->id;
+                $data['fecha_aprobacion'] = now();
+            }
+
+            // Nivel 4: Jefe de División
+            if ($empleado->nivel_id == 4 && isset($data['id_estado_aprobacion_jefe_division'])) {
+                $data['id_oni_jefe_division'] = $empleado->oni;
+                $data['fecha_aprobacion_jefe_division'] = now();
+            }
+        }
+
+        return $data;
     }
 
     public static function getRelations(): array
