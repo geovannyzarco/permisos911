@@ -21,8 +21,13 @@ class ViewPermisos extends ViewRecord
     {
         return [
             EditAction::make()
-                ->label('Editar')
-                ->icon('heroicon-o-pencil'),
+                ->label('Editar Permisos')
+                ->icon('heroicon-o-pencil')
+                ->visible(fn ($record) => 
+                    $record->id_estado_vb == 4 && 
+                    $record->id_estado_aprobacion == 4 && 
+                    ($record->id_estado_aprobacion_jefe_division === null || $record->id_estado_aprobacion_jefe_division == 4)
+                ),
         ];
     }
 }

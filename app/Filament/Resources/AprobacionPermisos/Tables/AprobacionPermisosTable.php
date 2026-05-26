@@ -32,34 +32,51 @@ class AprobacionPermisosTable
                 //
             ])
             ->columns([
-                TextColumn::make('id')->label('ID'),
+                TextColumn::make('id')->label('ID')->sortable()->searchable(),
+                TextColumn::make('empleado.oni')->label('ONI')->sortable()->searchable(),
+                ImageColumn::make('empleado.foto')->label('FOTO')->circular()->size(40),
+                TextColumn::make('empleado.nombre')->label('NOMBRE')->sortable()->searchable(),
+                TextColumn::make('empleado.unidad.nombre')->label('UNIDAD')->sortable(),
+                TextColumn::make('empleado.grupo.nombre')->label('GRUPO')->sortable(),
+                TextColumn::make('fecha_creacion')->label('CREACIÓN')->date('d/m/Y')->sortable(),
+                TextColumn::make('tipoPermiso.nombre')->label('TIPO DE PERMISO')->sortable()->searchable(),
+                TextColumn::make('desde')->label('DESDE')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('hasta')->label('HASTA')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('duracion')->label('DURACIÓN'),
+                TextColumn::make('motivo')->label('MOTIVO')->limit(50)->searchable(),
+                TextColumn::make('adjunto')
+                    ->label('ADJUNTO')
+                    ->icon('heroicon-o-paper-clip')
+                    ->formatStateUsing(fn($state) => filled($state) ? 'Descargar' : '')
+                    ->url(
+                        fn($record) => $record?->adjunto
+                            ? route('descargar.archivo', $record->adjunto)
+                            : null
+                    )
+                    ->openUrlInNewTab(),
+                TextColumn::make('estadoVB.nombre')
+                    ->label('VISTO BUENO')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_vb == 3 ? 'success' : 'gray'),
+                TextColumn::make('jefeVb.nombre')->label('JEFE VB')->sortable(),
+                TextColumn::make('fecha_vb')->label('FECHA DE VB')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('estadoAprobado.nombre')
+                    ->label('APROBACION JEFATURA')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_aprobacion == 3 ? 'success' : 'gray'),
 
-                TextColumn::make('empleado.oni')->label('ONI'),
-
-                ImageColumn::make('empleado.foto')->label('Foto'),
-
-                TextColumn::make('empleado.nombre')
-                    ->label('Nombre')
-                    ->tooltip(function ($record) {
-                        $empleado = $record->empleado;
-
-                        return 'Unidad: ' . optional($empleado->unidad)->nombre . "\n" .
-                               'Grupo: ' . optional($empleado->grupo)->nombre . "\n" .
-                               'Horario: ' . optional($empleado->horario)->nombre;
-                    }),
-
-                TextColumn::make('tipoPermiso.nombre')->label('Tipo'),
-                TextColumn::make('desde')->label('Desde'),
-                TextColumn::make('hasta')->label('Hasta'),
-                TextColumn::make('duracion')->label('Duración'),
-                TextColumn::make('estadoVB.nombre')->label('Visto Bueno'),
-                TextColumn::make('jefeVB.nombre')->label('Jefe Visto Bueno'),
-                TextColumn::make('estadoAprobado.nombre')->label('Aprobación'),
-                TextColumn::make('jefeAprobacion.nombre')->label('Jefe Aprobación'),
-                TextColumn::make('id_oni_jefe_division')->label('ONI Jefe División')->sortable(),
-                TextColumn::make('fecha_aprobacion_jefe_division')->label('Fecha Aprobación Jefe División')->dateTime('d/m/Y H:i')->sortable(),
-                TextColumn::make('estadoAprobacionJefeDivision.nombre')->label('Estado Aprobación Jefe División')->sortable(),
-                TextColumn::make('comentarios')->label('Comentarios')->limit(50)
+                TextColumn::make('fecha_aprobacion')->label('FECHA APROBACION JEFATURA')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('jefeAprobacion.nombre')->label('JEFE APROBACIÓN')->sortable(),
+                TextColumn::make('estadoAprobacionJefeDivision.nombre')
+                    ->label('APROBACION JEFE DIVISION')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_aprobacion_jefe_division == 3 ? 'success' : 'gray'),
+                TextColumn::make('fecha_aprobacion_jefe_division')->label('FECHA APROBACION JEFE DIVISION')->dateTime('d/m/Y H:i')->sortable(),
+                TextColumn::make('id_oni_jefe_division')->label('JEFE DIVISION')->sortable(),
+                TextColumn::make('comentarios')->label('COMENTARIOS')->limit(50)->sortable(),
 
             ])
             ->filters([
@@ -92,25 +109,25 @@ class AprobacionPermisosTable
                     ->relationship(
                         name: 'estadoVB',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
 
                 // Filtro por aprobación (id_estado_aprobacion)
                 SelectFilter::make('id_estado_aprobacion')
-                    ->label('Aprobación')
+                    ->label('Aprobación Jefatura')
                     ->relationship(
                         name: 'estadoAprobado',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
 
                 // Filtro por estado de aprobación jefe de división
                 SelectFilter::make('id_estado_aprobacion_jefe_division')
-                    ->label('Estado Aprobación Jefe División')
+                    ->label('Aprobación Jefe División')
                     ->relationship(
                         name: 'estadoAprobacionJefeDivision',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
 
                 // Filtros dependientes por Unidad y Grupo (habilitados para Jefe de División / Nivel 4)
@@ -119,29 +136,50 @@ class AprobacionPermisosTable
                         Select::make('unidad_id')
                             ->label('Unidad')
                             ->options(Unidad::pluck('nombre', 'id'))
-                            ->reactive(),
+                            ->reactive()
+                            ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)
+                            ->afterStateUpdated(fn($set) => $set('grupo_id', null)),
 
                         Select::make('grupo_id')
                             ->label('Grupo')
                             ->options(function (callable $get) {
-                                $unidadId = $get('unidad_id');
+                                $nivel = auth()->user()->empleado?->nivel_id;
 
                                 return Grupo::query()
-                                    ->when($unidadId, fn ($query) => $query->where('unidad_id', $unidadId))
+                                    // Nivel 4 filtra por unidad seleccionada en el formulario
+                                    ->when(
+                                        $nivel == 4 && $get('unidad_id'),
+                                        fn($query) => $query->where('unidad_id', $get('unidad_id'))
+                                    )
+                                    // Nivel 3 filtra por la unidad del jefe de unidad logueado
+                                    ->when(
+                                        $nivel == 3,
+                                        fn($query) => $query->where('unidad_id', auth()->user()->empleado?->unidad_id)
+                                    )
                                     ->pluck('nombre', 'id');
                             })
-                            ->disabled(fn (callable $get) => !$get('unidad_id')),
+                            // Solo deshabilitar para nivel 4 si no hay unidad
+                            ->disabled(function (callable $get) {
+
+                                $nivel = auth()->user()->empleado?->nivel_id;
+
+                                if ($nivel == 4) {
+                                    return !$get('unidad_id');
+                                }
+
+                                return false;
+                            }),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
                             ->when($data['unidad_id'] ?? null, function ($query, $unidadId) {
-                                $query->whereHas('empleado', fn ($q) => $q->where('unidad_id', $unidadId));
+                                $query->whereHas('empleado', fn($q) => $q->where('unidad_id', $unidadId));
                             })
                             ->when($data['grupo_id'] ?? null, function ($query, $grupoId) {
-                                $query->whereHas('empleado', fn ($q) => $q->where('grupo_id', $grupoId));
+                                $query->whereHas('empleado', fn($q) => $q->where('grupo_id', $grupoId));
                             });
                     })
-                    ->visible(fn () => auth()->user()->empleado?->nivel_id == 4),
+                    ->visible(fn() => in_array(auth()->user()->empleado?->nivel_id, [3, 4])),
             ])
             ->bulkActions([
                 // Acciones masivas para procesar múltiples registros a la vez
@@ -150,7 +188,7 @@ class AprobacionPermisosTable
                     BulkAction::make('cambiar_estado_vb')
                         ->label('Cambiar Visto Bueno')
                         ->icon('heroicon-o-check-circle')
-                        ->visible(fn () => auth()->user()->empleado?->nivel_id == Empleado::NIVEL_JEFE_GRUPO)
+                        ->visible(fn() => auth()->user()->empleado?->nivel_id == Empleado::NIVEL_JEFE_GRUPO)
                         ->form([
                             Select::make('id_estado_vb')
                                 ->label('Estado Visto Bueno')
@@ -158,7 +196,7 @@ class AprobacionPermisosTable
                                     Estado::where('entidad_id', 2)
                                         ->whereIn('id', [3, 4, 5])
                                         ->pluck('nombre', 'id')
-                                  )
+                                )
                                 ->required(),
 
                             // Campo de comentarios habilitado para la acción masiva
@@ -184,7 +222,7 @@ class AprobacionPermisosTable
                     BulkAction::make('cambiar_estado_aprobacion')
                         ->label('Cambiar Aprobación')
                         ->icon('heroicon-o-shield-check')
-                        ->visible(fn () => auth()->user()->empleado?->nivel_id == Empleado::NIVEL_JEFE_UNIDAD)
+                        ->visible(fn() => auth()->user()->empleado?->nivel_id == Empleado::NIVEL_JEFE_UNIDAD)
                         ->form([
                             Select::make('id_estado_aprobacion')
                                 ->label('Estado de Aprobación')
@@ -214,7 +252,7 @@ class AprobacionPermisosTable
                     BulkAction::make('cambiar_estado_aprobacion_jefe_division')
                         ->label('Cambiar Aprobación Jefe División')
                         ->icon('heroicon-o-check-badge')
-                        ->visible(fn () => auth()->user()->empleado?->nivel_id == 4)
+                        ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)
                         ->form([
                             Select::make('id_estado_aprobacion_jefe_division')
                                 ->label('Estado Aprobación Jefe División')
@@ -241,70 +279,6 @@ class AprobacionPermisosTable
             ])
             ->recordActions([
                 ViewAction::make()->label('Ver Permiso'),
-
-                // Visto Bueno
-                Action::make('VB')
-                    ->label('Visto Bueno')
-                    ->visible(fn ($record) => auth()->user()->can('aprobarVB', $record))
-                    ->form([
-                        Select::make('id_estado_vb')
-                            ->label('Visto Bueno')
-                            ->options(
-                                Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 4, 5])
-                                    ->pluck('nombre', 'id')
-                            )
-                            ->required(),
-                    ])
-                    ->requiresConfirmation()
-                    ->action(fn ($record, $data, PermisoService $s) =>
-                        $s->aprobarVB($record, $data['id_estado_vb'], auth()->user())
-                    ),
-
-                // Aprobar Permiso
-                Action::make('Aprobar')
-                    ->label('Aprobar Permiso')
-                    ->icon('heroicon-o-check-badge')
-                    // CORRECCIÓN: Se cambió 'aprobarPermiso' por 'aprobarFinal' para alinearlo con el Gate definido en AppServiceProvider y el método en AprobacionPermisoPolicy.
-                    ->visible(fn ($record) => auth()->user()->can('aprobarFinal', $record))
-                    ->form([
-                        Select::make('id_estado_aprobacion')
-                            ->label('Aprobación')
-                            ->options(
-                                Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 4, 5])
-                                    ->pluck('nombre', 'id')
-                            )
-                            ->required(),
-                    ])
-                    ->requiresConfirmation()
-                    ->action(fn ($record, $data, PermisoService $s) =>
-                        $s->aprobarFinal($record, $data['id_estado_aprobacion'], auth()->user())
-                    ),
-
-                // Aprobar Jefe División
-                Action::make('AprobarJefeDivision')
-                    ->label('Aprobación División')
-                    ->icon('heroicon-o-check-badge')
-                    ->visible(fn ($record) => auth()->user()->can('aprobarJefeDivision', $record))
-                    ->form([
-                        Select::make('id_estado_aprobacion_jefe_division')
-                            ->label('Aprobación Jefe División')
-                            ->options(
-                                Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 4, 5])
-                                    ->pluck('nombre', 'id')
-                            )
-                            ->required(),
-                    ])
-                    ->requiresConfirmation()
-                    ->action(fn ($record, $data) =>
-                        $record->update([
-                            'id_estado_aprobacion_jefe_division' => $data['id_estado_aprobacion_jefe_division'],
-                            'id_oni_jefe_division' => auth()->user()->empleado->oni,
-                            'fecha_aprobacion_jefe_division' => now(),
-                        ])
-                    ),
             ]);
     }
 }

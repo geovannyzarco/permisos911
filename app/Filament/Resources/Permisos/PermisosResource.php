@@ -61,8 +61,11 @@ class PermisosResource extends Resource
 
     public static function canEdit($record): bool
     {
-        // Bloquear el botón de edición si el permiso ya fue evaluado por alguna jefatura (ya no es Pendiente = 4)
-        if ($record && ($record->id_estado_vb != 4 || $record->id_estado_aprobacion != 4 || $record->id_estado_aprobacion_jefe_division != 4)) {
+        if ($record && (
+            $record->id_estado_vb != 4 ||
+            $record->id_estado_aprobacion != 4 ||
+            ($record->id_estado_aprobacion_jefe_division !== null && $record->id_estado_aprobacion_jefe_division != 4)
+        )) {
             return false;
         }
 
