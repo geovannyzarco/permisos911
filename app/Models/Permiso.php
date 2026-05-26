@@ -40,11 +40,11 @@ class Permiso extends Model
 
     protected $casts = [
         'fecha_creacion' => 'date',
-        'desde' => 'datetime',
-        'hasta' => 'datetime',
-        'fecha_vb' => 'datetime',
-        'fecha_aprobacion' => 'datetime',
-        'fecha_aprobacion_jefe_division' => 'datetime',
+        'desde' => \App\Casts\DateTimeOffsetCast::class,
+        'hasta' => \App\Casts\DateTimeOffsetCast::class,
+        'fecha_vb' => \App\Casts\DateTimeOffsetCast::class,
+        'fecha_aprobacion' => \App\Casts\DateTimeOffsetCast::class,
+        'fecha_aprobacion_jefe_division' => \App\Casts\DateTimeOffsetCast::class,
         'tramitado' => 'boolean',
     ];
 
@@ -56,6 +56,11 @@ class Permiso extends Model
     public function jefeAprobacion()
     {
         return $this->belongsTo(Empleado::class, 'id_jefe_aprobacion');
+    }
+
+    Public function jefeDivision()
+    {
+        return $this->belongsTo(Empleado::class, 'id_oni_jefe_division');
     }
 
 
