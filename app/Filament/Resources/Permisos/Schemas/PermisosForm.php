@@ -19,11 +19,18 @@ class PermisosForm
 {
     public static function configure(Schema $schema): Schema
     {
+        // Closure para verificar si algún estado de aprobación ya no es "Pendiente" (4)
+        $deshabilitarSiNoPendiente = fn(?Permiso $record) => $record !== null && (
+            $record->id_estado_vb != 4 ||
+            $record->id_estado_aprobacion != 4 ||
+            $record->id_estado_aprobacion_jefe_division != 4
+        );
+
         return $schema
             ->components([
 
                 // INICIO MODIFICACIÓN: Paneles informativos y alertas de bloqueo/conflictos de cupos del empleado logueado
-                
+
                 // 1. Sección para mostrar la información del empleado autenticado (resumen de horas personales)
                 Section::make('Información del empleado')
                     ->schema([
@@ -55,7 +62,7 @@ class PermisosForm
                     ])
                     ->columns(1)
                     // Visible solo si el usuario autenticado tiene un empleado asignado
-                    ->visible(fn () => filled(auth()->user()->empleado)),
+                    ->visible(fn() => filled(auth()->user()->empleado)),
 
                 // 2. Resumen de la cantidad de permisos aprobados del empleado en el año en curso
                 Section::make('Permisos del año en curso')
@@ -97,7 +104,7 @@ class PermisosForm
                     ])
                     ->columns(1)
                     // Visible solo si el usuario autenticado tiene un empleado asignado
-                    ->visible(fn () => filled(auth()->user()->empleado)),
+                    ->visible(fn() => filled(auth()->user()->empleado)),
 
                 // 3. Sección de alertas de cupos bloqueados y permisos de otros miembros del grupo que interfieren en el rango
                 Section::make('Permisos en Conflicto (Bloqueos de Cupo)')
@@ -179,7 +186,7 @@ class PermisosForm
                     ])
                     ->columns(1)
                     // Visible si el usuario tiene empleado logueado y ha especificado las fechas
-                    ->visible(fn ($get) => filled(auth()->user()->empleado) && filled($get('desde')) && filled($get('hasta'))),
+                    ->visible(fn($get) => filled(auth()->user()->empleado) && filled($get('desde')) && filled($get('hasta'))),
 
                 // FIN MODIFICACIÓN
 
@@ -190,9 +197,9 @@ class PermisosForm
                 Select::make('tipo_permiso_id')
                     ->label('Tipo de Permiso')
                     ->relationship('tipoPermiso', 'nombre')
-
                     ->required()
-                    ->live(),
+                    ->live()
+                    ->disabled($deshabilitarSiNoPendiente),
                 DateTimePicker::make('desde')
                     ->label('Desde')
                     ->native(false)
@@ -200,7 +207,8 @@ class PermisosForm
                     ->format('Y-m-d H:i')
                     ->withoutSeconds()
                     ->required()
-                    ->live(), // MODIFICACIÓN: Hace que la vista reaccione en tiempo real al cambiar la fecha
+                    ->live() // MODIFICACIÓN: Hace que la vista reaccione en tiempo real al cambiar la fecha
+                    ->disabled($deshabilitarSiNoPendiente),
                 DateTimePicker::make('hasta')
                     ->label('Hasta')
                     ->native(false)
@@ -209,8 +217,9 @@ class PermisosForm
                     ->withoutSeconds()
                     ->required()
                     ->live() // MODIFICACIÓN: Hace que la vista reaccione en tiempo real al cambiar la fecha
+                    ->disabled($deshabilitarSiNoPendiente)
                     ->rules([
-                        fn ($get, ?\App\Models\Permiso $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                        fn($get, ?\App\Models\Permiso $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
                             // Obtenemos la fecha "desde" seleccionada en el formulario
                             $desde = $get('desde');
 
@@ -261,7 +270,7 @@ class PermisosForm
                 \Filament\Forms\Components\Placeholder::make('disponibilidad_grupo')
                     ->label('Disponibilidad del Grupo')
                     // Solo es visible si el usuario ya escogió ambas fechas (desde y hasta)
-                    ->visible(fn ($get) => filled($get('desde')) && filled($get('hasta')))
+                    ->visible(fn($get) => filled($get('desde')) && filled($get('hasta')))
                     ->content(function ($get, ?\App\Models\Permiso $record) {
                         $desde = $get('desde');
                         $hasta = $get('hasta');
@@ -301,7 +310,8 @@ class PermisosForm
                 TextInput::make('motivo')
                     ->label('Motivo')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->disabled($deshabilitarSiNoPendiente),
                 FileUpload::make('adjunto')
                     ->label('Adjunto')
                     ->preserveFilenames()
@@ -309,7 +319,8 @@ class PermisosForm
                     ->maxSize(10240)
                     ->disk('public')
                     ->directory('permisos/adjuntos')
-                    ->nullable(),
+                    ->nullable()
+                    ->disabled($deshabilitarSiNoPendiente),
 
                 \Filament\Forms\Components\Repeater::make('compensados')
                     ->relationship()
@@ -346,9 +357,10 @@ class PermisosForm
                     ])
                     ->columns(2)
                     ->columnSpanFull()
-                    ->visible(fn ($get) => $get('tipo_permiso_id') == 2)
+                    ->visible(fn($get) => $get('tipo_permiso_id') == 2)
+                    ->disabled($deshabilitarSiNoPendiente)
                     ->rules([
-                        fn ($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
                             // 1. Obtenemos las fechas generales del permiso solicitadas en la parte de arriba del formulario
                             $desdePrincipal = $get('desde');
                             $hastaPrincipal = $get('hasta');
