@@ -43,8 +43,13 @@ class CreatePermisos extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return static::getResource()::mutateFormDataBeforeCreate($data);
+        $data = static::getResource()::mutateFormDataBeforeCreate($data);
 
+        $data['id_estado_vb'] = 4;
+        $data['id_estado_aprobacion'] = 4;
+        $data['id_estado_aprobacion_jefe_division'] = 4;
+
+        return $data;
     }
 
     protected function getRedirectUrl(): string
