@@ -34,7 +34,7 @@ class AprobacionPermisoInfolist
                     ])->columns(3)
                     ->columnSpanFull(),
 
-                    Section::make('Detalles del permiso')
+                Section::make('Detalles del permiso')
                     ->schema([
                         TextEntry::make('tipoPermiso.nombre')
                             ->label('Tipo de Permiso'),
@@ -51,7 +51,7 @@ class AprobacionPermisoInfolist
                             ->color('primary')
                             ->formatStateUsing(function ($state) {
                                 if ($state) {
-                                    return '<a href="'.asset('storage/'.$state).'" target="_blank">Ver Anexo</a>';
+                                    return '<a href="' . asset('storage/' . $state) . '" target="_blank">Ver Anexo</a>';
                                 }
 
                                 return 'No hay adjunto';
@@ -61,7 +61,7 @@ class AprobacionPermisoInfolist
                     ])->columns(3)
                     ->columnSpanFull(),
 
-                    Section::make('Aprobaciones')
+                Section::make('Aprobaciones')
                     ->schema([
                         TextEntry::make('estadoVB.nombre')
                             ->label('Visto Bueno'),

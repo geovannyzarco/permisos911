@@ -16,6 +16,8 @@ use Filament\Schemas\Components\Image;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
+use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
+use Filament\Forms\Components\Toggle;
 
 class GestionPermisoForm
 {
@@ -24,6 +26,29 @@ class GestionPermisoForm
         // Mostrar de las horas personales y permisos del empleado seleccionado
         return $schema
             ->components([
+
+                Section::make('Permiso Tramitado')
+                    ->schema([
+                        Toggle::make('tramitado')
+                            ->label('¿Este permiso ya fue tramitado?')
+                            ->helperText('Marque esto si el permiso ya fue ingresado al sistema SAAP')
+                            ->dehydrated(fn ($record) => $record === null)
+                            ->live()
+                            ->afterStateUpdated(function ($state, $record) {
+                                if ($record) {
+                                    $record->update(['tramitado' => (bool) $state]);
+                                    
+                                    \Filament\Notifications\Notification::make()
+                                        ->title('Estado de trámite actualizado')
+                                        ->body('El permiso ha sido marcado como ' . ($state ? 'tramitado' : 'no tramitado') . '.')
+                                        ->success()
+                                        ->send();
+                                }
+                            })
+                            ->columnSpanFull(),
+                    ]),
+
+
                 // informacion de las horas personales
                 Section::make('Informacion del empleado')
                     ->schema([
@@ -58,7 +83,7 @@ class GestionPermisoForm
                             }),
                     ])
                     ->columns(1)
-                    ->visible(fn ($get) => filled($get('empleado_id'))),
+                    ->visible(fn($get) => filled($get('empleado_id'))),
 
                 // Resumen de la cantidad permisos del empleado en el año en curso
                 Section::make('Permisos del año en curso')
@@ -102,7 +127,7 @@ class GestionPermisoForm
                             }),
                     ])
                     ->columns(1)
-                    ->visible(fn ($get) => filled($get('empleado_id'))),
+                    ->visible(fn($get) => filled($get('empleado_id'))),
 
                 // Sección para mostrar alertas de cupos bloqueados y permisos que interfieren
                 Section::make('Permisos en Conflicto (Bloqueos de Cupo)')
@@ -178,10 +203,10 @@ class GestionPermisoForm
                             })
                     ])
                     ->columns(1)
-                    ->visible(fn ($get) => filled($get('empleado_id')) && filled($get('desde')) && filled($get('hasta'))),
+                    ->visible(fn($get) => filled($get('empleado_id')) && filled($get('desde')) && filled($get('hasta'))),
 
                 Image::make(
-                    url: fn ($get) => route('foto.empleado', [
+                    url: fn($get) => route('foto.empleado', [
                         'filename' => optional(
                             Empleado::find($get('empleado_id'))
                         )->foto ?? 'dummy.jpg', // nunca null
@@ -211,7 +236,7 @@ class GestionPermisoForm
                             ->orWhere('oni', 'like', "%{$search}%")
                             ->limit(50)
                             ->get()
-                            ->mapWithKeys(fn ($e) => [
+                            ->mapWithKeys(fn($e) => [
                                 $e->id => "{$e->oni} - {$e->nombre}",
                             ]);
                     })
@@ -230,7 +255,7 @@ class GestionPermisoForm
                     ->live(),
 
                 // MODIFICACIÓN: Nuevo interruptor para que el administrador pueda registrar permisos pasados saltándose las restricciones.
-                \Filament\Forms\Components\Toggle::make('ignorar_validaciones')
+                Toggle::make('ignorar_validaciones')
                     ->label('Es un permiso retroactivo / Ignorar validaciones (Límite diario y Horas)')
                     ->helperText('Activa esto si se van a ingresar un permiso con fecha anterior a hoy y el sistema no lo bloquee por límites de grupo o saldos.')
                     ->dehydrated(false) // Esto evita que Filament intente guardar este campo en la tabla de base de datos
@@ -255,7 +280,7 @@ class GestionPermisoForm
                     ->required()
                     ->live() // MODIFICACIÓN: Reactividad para escuchar cambios de fecha en tiempo real
                     ->rules([
-                        fn ($get, ?\App\Models\Permiso $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                        fn($get, ?\App\Models\Permiso $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
                             $desde = $get('desde');
                             $empleadoId = $get('empleado_id');
                             $tipoPermisoId = $get('tipo_permiso_id');
@@ -294,7 +319,6 @@ class GestionPermisoForm
                                         $fail('El tiempo solicitado excede el saldo de horas personales disponibles según tu horario.');
                                     }
                                 }
-
                             } catch (\DomainException $e) {
                                 $fail($e->getMessage());
                             }
@@ -305,7 +329,7 @@ class GestionPermisoForm
                 \Filament\Forms\Components\Placeholder::make('disponibilidad_grupo')
                     ->label('Disponibilidad del Grupo')
                     // Solo se muestra si ya se escogieron empleado, desde y hasta
-                    ->visible(fn ($get) => filled($get('desde')) && filled($get('hasta')) && filled($get('empleado_id')))
+                    ->visible(fn($get) => filled($get('desde')) && filled($get('hasta')) && filled($get('empleado_id')))
                     ->content(function ($get, ?\App\Models\Permiso $record) {
                         $desde = $get('desde');
                         $hasta = $get('hasta');
@@ -357,7 +381,7 @@ class GestionPermisoForm
                     ->relationship(
                         name: 'estadoVB',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     )
                     ->required(),
                 Select::make('id_jefe_vb')
@@ -371,7 +395,7 @@ class GestionPermisoForm
                             ->orWhere('oni', 'like', "%{$search}%")
                             ->limit(50)
                             ->get()
-                            ->mapWithKeys(fn ($e) => [
+                            ->mapWithKeys(fn($e) => [
                                 $e->id => "{$e->oni} - {$e->nombre}",
                             ]);
                     })
@@ -388,7 +412,8 @@ class GestionPermisoForm
                     ->relationship(
                         name: 'estadoAprobado',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2))
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
+                    )
                     ->required(),
                 Select::make('id_jefe_aprobacion')
                     ->label('Jefe Aprobador')
@@ -401,7 +426,7 @@ class GestionPermisoForm
                             ->orWhere('oni', 'like', "%{$search}%")
                             ->limit(50)
                             ->get()
-                            ->mapWithKeys(fn ($e) => [
+                            ->mapWithKeys(fn($e) => [
                                 $e->id => "{$e->oni} - {$e->nombre}",
                             ]);
                     })
@@ -429,11 +454,11 @@ class GestionPermisoForm
                 Placeholder::make('descarga')
                     ->label('Archivo adjunto')
                     ->icon('heroicon-o-paper-clip')
-                    ->visible(fn ($record) => filled($record?->adjunto))
-                    ->content(fn ($record) => new HtmlString(
-                        '<a href="'.
-                        route('descargar.archivo', $record->adjunto).
-                        '" class="text-primary-600 underline" target="_blank">
+                    ->visible(fn($record) => filled($record?->adjunto))
+                    ->content(fn($record) => new HtmlString(
+                        '<a href="' .
+                            route('descargar.archivo', $record->adjunto) .
+                            '" class="text-primary-600 underline" target="_blank">
                                     DESCARGAR ARCHIVO ADJUNTO
                                 </a>'
                     )),
@@ -473,9 +498,9 @@ class GestionPermisoForm
                     ])
                     ->columns(2)
                     ->columnSpanFull()
-                    ->visible(fn ($get) => $get('tipo_permiso_id') == 2)
+                    ->visible(fn($get) => $get('tipo_permiso_id') == 2)
                     ->rules([
-                        fn ($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
                             // 1. Obtenemos las fechas generales del permiso solicitadas en la parte de arriba del formulario
                             $desdePrincipal = $get('desde');
                             $hastaPrincipal = $get('hasta');

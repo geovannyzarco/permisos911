@@ -43,6 +43,7 @@
         .oni { top: 208px; left: 640px; width: 100px; }
         .cargo { top: 238px; left: 140px; width: 250px; }
         .unidad { top: 238px; left: 568px; width: 210px; }
+        .unidad-continuation { top: 270px; left: 33px; width: 350px; }
         .departamento { top: 270px; left: 615px; width: 400px; }
         .motivo_texto { top: 720px; left: 450px; width: 400px; }
 
@@ -103,17 +104,72 @@
                 ->whereHas('unidad', function($q) use ($permiso) {
                     $q->where('division_id', $permiso->empleado->unidad?->division_id);
                 })->first();
+
+            $jefeNombre = $jefeDivision?->nombre ?? '';
+            $jefeFontSize = '12px';
+            if (strlen($jefeNombre) > 35) {
+                $jefeFontSize = '9px';
+            } elseif (strlen($jefeNombre) > 25) {
+                $jefeFontSize = '10px';
+            }
+
+            $nombreEmpleado = $permiso->empleado->nombre ?? '';
+            $nombreFontSize = '12px';
+            if (strlen($nombreEmpleado) > 35) {
+                $nombreFontSize = '9px';
+            } elseif (strlen($nombreEmpleado) > 25) {
+                $nombreFontSize = '10px';
+            }
+
+            $cargoNombre = $permiso->empleado->categoria?->nombre ?? '';
+            $cargoFontSize = '12px';
+            if (strlen($cargoNombre) > 30) {
+                $cargoFontSize = '9px';
+            } elseif (strlen($cargoNombre) > 22) {
+                $cargoFontSize = '10px';
+            }
+
+            $unidadNombre = $permiso->empleado->unidad?->division?->nombre ?? '';
+            $unidadPart1 = $unidadNombre;
+            $unidadPart2 = '';
+            // Si tiene más de 24 caracteres, lo dividimos en dos partes
+            if (strlen($unidadNombre) > 24) {
+                $pos = strrpos(substr($unidadNombre, 0, 24), ' ');
+                if ($pos !== false) {
+                    $unidadPart1 = substr($unidadNombre, 0, $pos);
+                    $unidadPart2 = substr($unidadNombre, $pos + 1);
+                } else {
+                    $unidadPart1 = substr($unidadNombre, 0, 24);
+                    $unidadPart2 = substr($unidadNombre, 24);
+                }
+            }
+
+            $unidadFontSize = '12px';
+            if (strlen($unidadPart1) > 22) {
+                $unidadFontSize = '10px';
+            }
+
+            $deptNombre = $permiso->empleado->unidad?->nombre ?? '';
+            $deptFontSize = '12px';
+            if (strlen($deptNombre) > 30) {
+                $deptFontSize = '8px';
+            } elseif (strlen($deptNombre) > 22) {
+                $deptFontSize = '10px';
+            }
         @endphp
 
         <!-- Datos -->
         <div class="field id">ID: {{ $permiso->id }}</div>
         <div class="field fecha">{{ $permiso->fecha_creacion?->format('d/m/Y') }}</div>
-        <div class="field senor">{{ $jefeDivision?->nombre ?? '________________________________________________' }}</div>
-        <div class="field yo">{{ $permiso->empleado->nombre }}</div>
+        <div class="field senor" style="font-size: {{ $jefeFontSize }};">{{ $jefeNombre ?: '________________________________________________' }}</div>
+        <div class="field yo" style="font-size: {{ $nombreFontSize }};">{{ $nombreEmpleado }}</div>
         <div class="field oni">{{ $permiso->empleado->oni }}</div>
-        <div class="field cargo">{{ $permiso->empleado->categoria?->nombre }}</div>
-        <div class="field unidad">{{ $permiso->empleado->unidad?->division?->nombre }}</div>
-        <div class="field departamento">{{ $permiso->empleado->unidad?->nombre }}</div>
+        <div class="field cargo" style="font-size: {{ $cargoFontSize }};">{{ $cargoNombre }}</div>
+        <div class="field unidad" style="font-size: {{ $unidadFontSize }};">{{ $unidadPart1 }}</div>
+        @if(filled($unidadPart2))
+            <div class="field unidad-continuation" style="font-size: {{ $unidadFontSize }};">{{ $unidadPart2 }}</div>
+        @endif
+        <div class="field departamento" style="font-size: {{ $deptFontSize }};">{{ $deptNombre }}</div>
 
         <div class="field meses">{{ $permiso->meses ?? '0' }}</div>
         <div class="field dias">{{ $permiso->dias ?? '0' }}</div>
@@ -204,18 +260,21 @@
 
 
         <!-- Firmas -->
+        <!-- Firma del solicitante -->
         @if($permiso->empleado && $permiso->empleado->firma)
             <div class="field firma-solicitante">
                 <img src="{{ $permiso->empleado->firma }}" class="firma-img">
             </div>
         @endif
 
+        <!-- Firma del jefe de departamento -->
         @if($permiso->jefeAprobacion && $permiso->jefeAprobacion->firma)
             <div class="field firma-vb">
-               <img src="{{ $permiso->jefeVb->firma }}" class="firma-img">
+               <img src="{{ $permiso->jefeAprobacion->firma }}" class="firma-img">
             </div>
         @endif
 
+        <!-- Firma del jefe de división -->
         @if($permiso->jefeDivision && $permiso->jefeDivision->firma)
             <div class="field firma-autoriza">
                <img src="{{ $permiso->jefeAprobacion->firma }}" class="firma-img">

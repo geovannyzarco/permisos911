@@ -144,7 +144,7 @@ class AprobacionPermisoForm
 
                         Textarea::make('comentarios')
                             ->label('COMENTARIOS')
-                            ->visible(fn() => in_array(auth()->user()->empleado?->nivel_id, [2, 3])),
+                            ->visible(fn() => in_array(auth()->user()->empleado?->nivel_id, [2, 3, 4])),
 
                     ])
                     ->columns(2)

@@ -14,13 +14,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
+use Filament\Forms\Components\DatePicker;
 
 class GestionPermisosTable
 {
@@ -28,7 +29,7 @@ class GestionPermisosTable
     {
         return $table
 
-            ->paginated([10, 25, 50, 100, 'all'])
+            ->paginated([5, 10, 25, 50, 100, 'all'])
 
             /* =======================
              * COLUMNS
@@ -40,14 +41,9 @@ class GestionPermisosTable
                     ->searchable(),
 
                 TextColumn::make('fecha_creacion')
-                    ->label('Fecha de Creación')
+                    ->label('CREACIÓN')
                     ->date('d/m/Y')
                     ->sortable(),
-
-                TextColumn::make('tipoPermiso.nombre')
-                    ->label('Tipo de Permiso')
-                    ->sortable()
-                    ->searchable(),
 
                 TextColumn::make('empleado.oni')
                     ->label('ONI')
@@ -56,68 +52,92 @@ class GestionPermisosTable
 
                 ImageColumn::make('empleado.foto')
                     ->circular()
-                    ->label('Foto'),
+                    ->label('FOTO'),
 
                 TextColumn::make('empleado.nombre')
-                    ->label('Empleado')
+                    ->label('NOMBRE')
                     ->sortable()
                     ->searchable(),
 
+                TextColumn::make('tipoPermiso.nombre')
+                    ->label('TIPO DE PERMISO')
+                    ->sortable(),
+
                 TextColumn::make('desde')
-                    ->label('Desde')
+                    ->label('DESDE')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
                 TextColumn::make('hasta')
-                    ->label('Hasta')
+                    ->label('HASTA')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
                 TextColumn::make('duracion')
-                    ->label('Duración')
+                    ->label('DURACIÓN')
                     ->sortable(),
 
-                TextColumn::make('motivo')
+                TextColumn::make('MOTIVO')
                     ->label('Motivo')
                     ->limit(50)
                     ->sortable(),
 
                 TextColumn::make('estadoVB.nombre')
                     ->label('VB')
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_aprobacion_jefe_division == 3 ? 'success' : 'gray')
                     ->sortable(),
 
                 TextColumn::make('fecha_vb')
-                    ->label('Fecha VB')
+                    ->label('FECHA VB')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
-                TextColumn::make('jefeVB.oni')
-                    ->label('Jefe VB')
+                TextColumn::make('jefeVB.nombre')
+                    ->label('JEFE VB')
                     ->sortable(),
 
                 TextColumn::make('estadoAprobado.nombre')
-                    ->label('Aprobación')
+                    ->label('APROBACIÓN JEFATURA')
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_aprobacion == 3 ? 'success' : 'gray')
                     ->sortable(),
 
                 TextColumn::make('fecha_aprobacion')
-                    ->label('Fecha Aprobación')
+                    ->label('FECHA APROBACIÓN JEFATURA')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
-                TextColumn::make('jefeAprobacion.oni')
-                    ->label('Jefe Aprobación')
+                TextColumn::make('jefeAprobacion.nombre')
+                    ->label('JEFE APROBOCIÓN JEFATURA')
                     ->sortable(),
 
-                BooleanColumn::make('tramitado')
-                    ->label('Tramitado'),
+                TextColumn::make('estadoAprobacionJefeDivision.nombre')
+                    ->label('APROBACIÓN DIVISIÓN')
+                    ->badge()
+                    ->color(fn($record) => $record->id_estado_aprobacion_jefe_division == 3 ? 'success' : 'gray')
+                    ->sortable(),
+
+                TextColumn::make('fecha_aprobacion_jefe_division')
+                    ->label('FECHA APROBACIÓN DIVISIÓN')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
+
+                TextColumn::make('jefeAprobacionJefeDivision.nombre')
+                    ->label('JEFE APROBACIÓN DIVISIÓN')
+                    ->sortable(),
+
+                ToggleColumn::make('tramitado')
+                    ->label('TRAMITADO'),
 
                 TextColumn::make('adjunto')
-                    ->label('Adjunto')
+                    ->label('ADJUNTO')
                     ->icon('heroicon-o-paper-clip')
-                    ->formatStateUsing(fn ($state) => filled($state) ? 'Descargar' : '')
-                    ->url(fn ($record) => $record?->adjunto
-                        ? route('descargar.archivo', $record->adjunto)
-                        : null
+                    ->formatStateUsing(fn($state) => filled($state) ? 'Descargar' : '')
+                    ->url(
+                        fn($record) => $record?->adjunto
+                            ? route('descargar.archivo', $record->adjunto)
+                            : null
                     )
                     ->openUrlInNewTab(),
             ])
@@ -126,42 +146,49 @@ class GestionPermisosTable
              * FILTERS
              * ======================= */
             ->filters([
+
+                // Filtro por rango de fechas en el campo desde
+                Filter::make('desde')
+                    ->label('Fecha Desde')
+                    ->form([
+                        DatePicker::make('desde_inicio')->label('Desde (Inicio)'),
+                        DatePicker::make('desde_fin')->label('Desde (Fin)'),
+                    ])
+                    ->query(function ($query, $data) {
+                        if ($data['desde_inicio']) {
+                            $query->whereDate('desde', '>=', $data['desde_inicio']);
+                        }
+                        if ($data['desde_fin']) {
+                            $query->whereDate('desde', '<=', $data['desde_fin']);
+                        }
+                    }),
+
                 SelectFilter::make('tipo_permiso_id')
                     ->label('Tipo de Permiso')
                     ->relationship('tipoPermiso', 'nombre'),
 
                 SelectFilter::make('estado_vb')
-                    ->label('VB')
+                    ->label('Visto Bueno')
                     ->relationship(
                         name: 'estadoVB',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
 
                 SelectFilter::make('estado_aprobacion')
-                    ->label('Aprobación')
+                    ->label('Aprobación Jefatura')
                     ->relationship(
                         name: 'estadoAprobado',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
-
-                Filter::make('id_oni_jefe_division')
-                    ->form([
-                        TextInput::make('id_oni_jefe_division')->label('ONI Jefe División'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query->when($data['id_oni_jefe_division'] ?? null, function ($query, $value) {
-                            $query->where('id_oni_jefe_division', 'like', "%{$value}%");
-                        });
-                    }),
 
                 SelectFilter::make('id_estado_aprobacion_jefe_division')
                     ->label('Estado Aprobación Jefe División')
                     ->relationship(
                         name: 'estadoAprobacionJefeDivision',
                         titleAttribute: 'nombre',
-                        modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                     ),
 
                 SelectFilter::make('tramitado')
@@ -184,20 +211,26 @@ class GestionPermisosTable
                                 $unidadId = $get('unidad_id');
 
                                 return Grupo::query()
-                                    ->when($unidadId, fn ($query) => $query->where('unidad_id', $unidadId)
+                                    ->when(
+                                        $unidadId,
+                                        fn($query) => $query->where('unidad_id', $unidadId)
                                     )
                                     ->pluck('nombre', 'id');
                             })
-                            ->disabled(fn (callable $get) => ! $get('unidad_id')),
+                            ->disabled(fn(callable $get) => ! $get('unidad_id')),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
                             ->when($data['unidad_id'] ?? null, function ($query, $unidadId) {
-                                $query->whereHas('empleado', fn ($q) => $q->where('unidad_id', $unidadId)
+                                $query->whereHas(
+                                    'empleado',
+                                    fn($q) => $q->where('unidad_id', $unidadId)
                                 );
                             })
                             ->when($data['grupo_id'] ?? null, function ($query, $grupoId) {
-                                $query->whereHas('empleado', fn ($q) => $q->where('grupo_id', $grupoId)
+                                $query->whereHas(
+                                    'empleado',
+                                    fn($q) => $q->where('grupo_id', $grupoId)
                                 );
                             });
                     }),
@@ -212,9 +245,9 @@ class GestionPermisosTable
 
                 Action::make('pdf')
                     ->label('Ver Hoja de Permiso')
-                    ->url(fn ($record) => route('permiso.pdf', ['id' => $record->id]))
+                    ->url(fn($record) => route('permiso.pdf', ['id' => $record->id]))
                     ->openUrlInNewTab()
-                    ->visible(fn ($record) => $record->id_estado_aprobacion == 3),
+                    ->visible(fn($record) => $record->id_estado_aprobacion == 3),
             ])
 
             /* =======================
@@ -233,7 +266,7 @@ class GestionPermisosTable
                                 ->relationship(
                                     name: 'estadoVB',
                                     titleAttribute: 'nombre',
-                                    modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                                    modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                                 )
                                 ->required(),
 
@@ -249,7 +282,7 @@ class GestionPermisosTable
                                         ->orWhere('oni', 'like', "%{$search}%")
                                         ->limit(50)
                                         ->get()
-                                        ->mapWithKeys(fn ($e) => [
+                                        ->mapWithKeys(fn($e) => [
                                             $e->id => "{$e->oni} - {$e->nombre}",
                                         ]);
                                 })
@@ -280,7 +313,7 @@ class GestionPermisosTable
                                 ->relationship(
                                     name: 'estadoAprobado',
                                     titleAttribute: 'nombre',
-                                    modifyQueryUsing: fn ($query) => $query->where('entidad_id', 2)
+                                    modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
                                 )
                                 ->required(),
 
@@ -296,7 +329,7 @@ class GestionPermisosTable
                                         ->orWhere('oni', 'like', "%{$search}%")
                                         ->limit(50)
                                         ->get()
-                                        ->mapWithKeys(fn ($e) => [
+                                        ->mapWithKeys(fn($e) => [
                                             $e->id => "{$e->oni} - {$e->nombre}",
                                         ]);
                                 })
