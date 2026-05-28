@@ -100,12 +100,18 @@
         <img src="{{ public_path('formatos/permisos.jpg') }}" class="background-img">
 
         @php
-            $jefeDivision = \App\Models\Empleado::where('nivel_id', 4)
-                ->whereHas('unidad', function($q) use ($permiso) {
-                    $q->where('division_id', $permiso->empleado->unidad?->division_id);
-                })->first();
+            // NUEVO: Intentar obtener el Jefe de División desde el snapshot histórico del permiso.
+            // Si no está registrado en el histórico, buscarlo de forma dinámica como fallback.
+            $jefeDivision = null;
+            if (blank($permiso->jefe_division_nombre)) {
+                $jefeDivision = \App\Models\Empleado::where('nivel_id', 4)
+                    ->whereHas('unidad', function($q) use ($permiso) {
+                        $q->where('division_id', $permiso->empleado->unidad?->division_id);
+                    })->first();
+            }
 
-            $jefeNombre = $jefeDivision?->nombre ?? '';
+            // Nombre del jefe de división (histórico o dinámico)
+            $jefeNombre = $permiso->jefe_division_nombre ?: ($jefeDivision?->nombre ?? '');
             $jefeFontSize = '12px';
             if (strlen($jefeNombre) > 35) {
                 $jefeFontSize = '9px';
@@ -113,7 +119,8 @@
                 $jefeFontSize = '10px';
             }
 
-            $nombreEmpleado = $permiso->empleado->nombre ?? '';
+            // Nombre del empleado solicitante (histórico o dinámico)
+            $nombreEmpleado = $permiso->empleado_nombre ?: ($permiso->empleado->nombre ?? '');
             $nombreFontSize = '12px';
             if (strlen($nombreEmpleado) > 35) {
                 $nombreFontSize = '9px';
@@ -121,7 +128,11 @@
                 $nombreFontSize = '10px';
             }
 
-            $cargoNombre = $permiso->empleado->categoria?->nombre ?? '';
+            // ONI del empleado solicitante (histórico o dinámico)
+            $oniEmpleado = $permiso->empleado_oni ?: ($permiso->empleado->oni ?? '');
+
+            // Cargo o categoría del solicitante (histórico o dinámico)
+            $cargoNombre = $permiso->cargo_nombre ?: ($permiso->empleado->categoria?->nombre ?? '');
             $cargoFontSize = '12px';
             if (strlen($cargoNombre) > 30) {
                 $cargoFontSize = '9px';
@@ -129,10 +140,11 @@
                 $cargoFontSize = '10px';
             }
 
-            $unidadNombre = $permiso->empleado->unidad?->division?->nombre ?? '';
+            // Unidad nombre (que en el diseño del PDF se mapea al nombre de la División)
+            $unidadNombre = $permiso->division_nombre ?: ($permiso->empleado->unidad?->division?->nombre ?? '');
             $unidadPart1 = $unidadNombre;
             $unidadPart2 = '';
-            // Si tiene más de 24 caracteres, lo dividimos en dos partes
+            // Si tiene más de 24 caracteres, dividirlo en dos líneas
             if (strlen($unidadNombre) > 24) {
                 $pos = strrpos(substr($unidadNombre, 0, 24), ' ');
                 if ($pos !== false) {
@@ -149,13 +161,45 @@
                 $unidadFontSize = '10px';
             }
 
-            $deptNombre = $permiso->empleado->unidad?->nombre ?? '';
+            // Departamento nombre (que en el diseño del PDF se mapea al nombre de la Unidad/Departamento)
+            $deptNombre = $permiso->unidad_nombre ?: ($permiso->empleado->unidad?->nombre ?? '');
             $deptFontSize = '12px';
             if (strlen($deptNombre) > 30) {
                 $deptFontSize = '8px';
             } elseif (strlen($deptNombre) > 22) {
                 $deptFontSize = '10px';
             }
+
+            // NUEVO HELPER: Función para obtener la representación Base64 de las firmas.
+            // Si el campo apunta a un archivo físico del disco privado, se lee y convierte.
+            // Si no, se hace fallback a la firma en Base64 directa de las relaciones dinámicas.
+            $getFirmaBase64 = function ($firmaPath, $fallbackFirmaBase64) {
+                if (filled($firmaPath)) {
+                    // Si ya viene codificado como data URI
+                    if (str_starts_with($firmaPath, 'data:image/')) {
+                        return $firmaPath;
+                    }
+                    // Si es una ruta de archivo local privado, leer y codificar en base64
+                    if (\Illuminate\Support\Facades\Storage::disk('local')->exists($firmaPath)) {
+                        try {
+                            $fileData = \Illuminate\Support\Facades\Storage::disk('local')->get($firmaPath);
+                            return 'data:image/png;base64,' . base64_encode($fileData);
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error("Error cargando firma física en PDF: " . $e->getMessage());
+                        }
+                    }
+                }
+                // Fallback dinámico si no hay snapshot o falló la carga
+                if (filled($fallbackFirmaBase64) && str_starts_with($fallbackFirmaBase64, 'data:image/')) {
+                    return $fallbackFirmaBase64;
+                }
+                return null;
+            };
+
+            // Resolver los Base64 de las firmas para renderizar en el HTML
+            $firmaEmpleado = $getFirmaBase64($permiso->empleado_firma, $permiso->empleado?->firma);
+            $firmaJefeAprobacion = $getFirmaBase64($permiso->jefe_aprobacion_firma, $permiso->jefeAprobacion?->firma);
+            $firmaJefeDivision = $getFirmaBase64($permiso->jefe_division_firma, $jefeDivision?->firma ?? $permiso->jefeDivision?->firma);
         @endphp
 
         <!-- Datos -->
@@ -163,7 +207,7 @@
         <div class="field fecha">{{ $permiso->fecha_creacion?->format('d/m/Y') }}</div>
         <div class="field senor" style="font-size: {{ $jefeFontSize }};">{{ $jefeNombre ?: '________________________________________________' }}</div>
         <div class="field yo" style="font-size: {{ $nombreFontSize }};">{{ $nombreEmpleado }}</div>
-        <div class="field oni">{{ $permiso->empleado->oni }}</div>
+        <div class="field oni">{{ $oniEmpleado }}</div>
         <div class="field cargo" style="font-size: {{ $cargoFontSize }};">{{ $cargoNombre }}</div>
         <div class="field unidad" style="font-size: {{ $unidadFontSize }};">{{ $unidadPart1 }}</div>
         @if(filled($unidadPart2))
@@ -261,23 +305,24 @@
 
         <!-- Firmas -->
         <!-- Firma del solicitante -->
-        @if($permiso->empleado && $permiso->empleado->firma)
+        @if($firmaEmpleado)
             <div class="field firma-solicitante">
-                <img src="{{ $permiso->empleado->firma }}" class="firma-img">
+                <img src="{{ $firmaEmpleado }}" class="firma-img">
             </div>
         @endif
 
         <!-- Firma del jefe de departamento -->
-        @if($permiso->jefeAprobacion && $permiso->jefeAprobacion->firma)
+        @if($firmaJefeAprobacion)
             <div class="field firma-vb">
-               <img src="{{ $permiso->jefeAprobacion->firma }}" class="firma-img">
+               <img src="{{ $firmaJefeAprobacion }}" class="firma-img">
             </div>
         @endif
 
         <!-- Firma del jefe de división -->
-        @if($permiso->jefeDivision && $permiso->jefeDivision->firma)
+        @if($firmaJefeDivision)
             <div class="field firma-autoriza">
-               <img src="{{ $permiso->jefeAprobacion->firma }}" class="firma-img">
+               {{-- CORREGIDO: Anteriormente renderizaba la firma de aprobación aquí por error ($permiso->jefeAprobacion->firma) --}}
+               <img src="{{ $firmaJefeDivision }}" class="firma-img">
             </div>
         @endif
     </div>

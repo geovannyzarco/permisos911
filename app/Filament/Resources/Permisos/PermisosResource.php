@@ -61,6 +61,12 @@ class PermisosResource extends Resource
 
     public static function canEdit($record): bool
     {
+        // NUEVA REGLA: Si el permiso ya está marcado como tramitado (registrado en SAAP),
+        // se bloquea por completo su edición ya que se trata de un registro histórico.
+        if ($record && $record->tramitado) {
+            return false;
+        }
+
         if ($record && (
             $record->id_estado_vb != 4 ||
             $record->id_estado_aprobacion != 4 ||

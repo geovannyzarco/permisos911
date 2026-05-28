@@ -48,6 +48,12 @@ class GestionPermisoResource extends Resource
 
     public static function canEdit($record): bool
     {
+        // NUEVA REGLA: Si el permiso ya fue marcado como tramitado por un administrador,
+        // se bloquea su edición completa para impedir cambios retroactivos sobre la solicitud.
+        if ($record && $record->tramitado) {
+            return false;
+        }
+
         return auth()->user()->can('Update:GestionPermisoResource');
     }
 

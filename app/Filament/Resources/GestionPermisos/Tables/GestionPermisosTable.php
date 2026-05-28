@@ -247,7 +247,7 @@ class GestionPermisosTable
                     ->label('Ver Hoja de Permiso')
                     ->url(fn($record) => route('permiso.pdf', ['id' => $record->id]))
                     ->openUrlInNewTab()
-                    ->visible(fn($record) => $record->id_estado_aprobacion == 3),
+                    ->visible(fn($record) => $record->id_estado_aprobacion_jefe_division == 3),
             ])
 
             /* =======================
