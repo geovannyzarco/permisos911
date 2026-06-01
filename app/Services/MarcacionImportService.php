@@ -10,38 +10,58 @@ class MarcacionImportService
     public function importFromTxt(string $path): array
     {
         $file = fopen($path, 'r');
+        if (!$file) {
+            return ['importadas' => 0, 'duplicadas' => 0];
+        }
 
-        // Leer encabezado (TAB como delimitador)
-        fgetcsv($file, 0, "\t");
+        // Leer y descartar la cabecera (primera línea)
+        fgets($file);
 
-        $importadas = 0;
+        $tempRecords = [];
         $duplicadas = 0;
+        $seenInFile = []; // Evitar duplicidad dentro del mismo archivo
 
         while (($row = fgetcsv($file, 0, "\t")) !== false) {
+            $colsCount = count($row);
 
-            // Validar que existan las columnas necesarias
-            if (!isset($row[2]) || !isset($row[7])) {
+            // Validar que al menos tengamos 4 columnas
+            if ($colsCount < 4) {
                 continue;
             }
 
+            // El código siempre está en la columna 3 (índice 2)
             $codigo = (int) trim($row[2]);
 
-            if (empty($codigo) || empty($row[7])) {
+            // La fecha y hora siempre están en la última columna de la línea
+            $fechaRaw = trim($row[$colsCount - 1]);
+
+            if (empty($codigo) || empty($fechaRaw)) {
                 continue;
             }
 
-            // Normalizar espacios múltiples en la fecha
-            $fechaRaw = preg_replace('/\s+/', ' ', trim($row[7]));
+            // Normalizar espacios múltiples en la fecha (ej. "2026/01/07  16:12:14" -> "2026/01/07 16:12:14")
+            $fechaRaw = preg_replace('/\s+/', ' ', $fechaRaw);
 
             try {
-                $marcacion = Carbon::createFromFormat(
-                    'Y/m/d H:i:s',
-                    $fechaRaw
-                );
+                $marcacion = Carbon::createFromFormat('Y/m/d H:i:s', $fechaRaw);
             } catch (\Exception $e) {
-                continue;
+                try {
+                    $marcacion = Carbon::createFromFormat('Y/m/d H:i', $fechaRaw);
+                } catch (\Exception $ex) {
+                    continue; // Formato de fecha no válido, se omite
+                }
             }
 
+            $uniqueKey = $codigo . '_' . $marcacion->toDateTimeString();
+
+            // Omitir si ya se procesó en este archivo
+            if (isset($seenInFile[$uniqueKey])) {
+                $duplicadas++;
+                continue;
+            }
+            $seenInFile[$uniqueKey] = true;
+
+            // Omitir si ya existe en la base de datos
             $exists = Marcacion::where('codigo', $codigo)
                 ->where('marcacion', $marcacion)
                 ->exists();
@@ -51,15 +71,28 @@ class MarcacionImportService
                 continue;
             }
 
-            Marcacion::create([
+            $tempRecords[] = [
                 'codigo'    => $codigo,
                 'marcacion' => $marcacion,
-            ]);
-
-            $importadas++;
+            ];
         }
 
         fclose($file);
+
+        // Ordenar cronológicamente ascendente
+        usort($tempRecords, function ($a, $b) {
+            return $a['marcacion']->timestamp <=> $b['marcacion']->timestamp;
+        });
+
+        // Insertar registros en la base de datos
+        $importadas = 0;
+        foreach ($tempRecords as $record) {
+            Marcacion::create([
+                'codigo'    => $record['codigo'],
+                'marcacion' => $record['marcacion'],
+            ]);
+            $importadas++;
+        }
 
         return compact('importadas', 'duplicadas');
     }

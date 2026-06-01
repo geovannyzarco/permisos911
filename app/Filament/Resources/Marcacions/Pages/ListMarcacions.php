@@ -20,75 +20,39 @@ class ListMarcacions extends ListRecords
 
     protected function getHeaderActions(): array
     {
-       return [
-         //importacion usando controlador y servicio
-          /*  Action::make('Importar')
+        return [
+            Action::make('Importar')
                 ->label('Importar Marcaciones')
-
-                ->modalHeading('Imporar Archivo TXT')
+                ->color('primary')
+                ->modalHeading('Importar Archivo de Marcaciones (.dat / .txt / .csv)')
                 ->modalSubmitActionLabel('Importar')
                 ->form([
                     FileUpload::make('archivo')
-                        ->label('Archivo TXT')
+                        ->label('Archivo de datos')
                         ->required()
-                        ->acceptedFileTypes(['text/plain', '.txt', '.csv'])
-                        ->storeFile(false),
+                        ->acceptedFileTypes(['text/plain', 'application/octet-stream', '.dat', '.txt', '.csv'])
+                        ->disk('local')
+                        ->directory('imports-temp')
                 ])
                 ->action(function (array $data, MarcacionImportService $service) {
-                   $path = $data['archivo']->getRealPath();
-                   $result = $service->importFromTxt($path);
-                   Notification::make()
-                    ->title('Importación completada')
-                    ->body(
-                        "Importadas: {$result['importadas']} | " .
-                        "Duplicadas: {$result['duplicadas']}"
-                    )
-                    ->success()
-                    ->send();
-                })*/
-/*
-                 ExcelImportAction::make()
-                    ->label('Importar Marcaciones')
-                    ->color('primary')
-                    ->modalHeading('Importar Marcaciones desde Archivo TXT')
-                    ->modalSubmitActionLabel('Importar')
-                    ->model(Marcacion::class)
-                    ->beforeImport(function (array $row) {
+                    $fileName = $data['archivo'];
+                    $disk = \Illuminate\Support\Facades\Storage::disk('local');
+                    $path = $disk->path($fileName);
 
-                        $codigo = $row[0] ?? null;
-                        $fecha  = $row[1] ?? null;
+                    $result = $service->importFromTxt($path);
 
-                        if (! $codigo || ! $fecha) {
-                            return null;
-                        }
+                    // Eliminar el archivo temporal
+                    $disk->delete($fileName);
 
-                        try {
-                            $marcacion = Carbon::createFromFormat('d/m/Y H:i', $fecha)->setSeconds(0);
-                        } catch (\Exception $e) {
-                            return null; // omite filas con fecha inválida
-                        }
-
-                        if (
-                            Marcacion::where('codigo', $codigo)
-                                ->where('marcacion', $marcacion)
-                                ->exists()
-                        ) {
-                            return null;
-                        }
-
-                        return [
-                            'codigo'    => $codigo,
-                            'marcacion' => $marcacion,
-                        ];
-                    })*/
-
-                ImportAction::make()
-                ->importer(MarcacionImporter::class)
-                ->csvDelimiter("\t")
-                ->label('Importar Marcaciones')
-                ->color('primary')
-                ->modalHeading('Importar Marcaciones desde Archivo TXT')
-
-       ];
+                    Notification::make()
+                        ->title('Importación completada')
+                        ->body(
+                            "Importadas: {$result['importadas']} | " .
+                            "Duplicadas/Omitidas: {$result['duplicadas']}"
+                        )
+                        ->success()
+                        ->send();
+                })
+        ];
     }
 }
