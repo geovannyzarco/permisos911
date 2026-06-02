@@ -12,10 +12,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -35,6 +32,15 @@ class AppServiceProvider extends ServiceProvider
                 $keyName = app($model)->getKeyName();
                 return $table->getSortColumn() !== $keyName;
             });
+        });
+
+        // Configuración de Livewire para entorno de subdirectorio / Alias de Apache
+        \Livewire\Livewire::setScriptRoute(function ($handle) {
+            return \Illuminate\Support\Facades\Route::get('/permisos/livewire/livewire.js', $handle);
+        });
+
+        \Livewire\Livewire::setUpdateRoute(function ($handle) {
+            return \Illuminate\Support\Facades\Route::post('/permisos/livewire/update', $handle);
         });
     }
 }

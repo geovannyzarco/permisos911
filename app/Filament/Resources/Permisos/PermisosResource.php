@@ -20,6 +20,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Model;
 
 
 class PermisosResource extends Resource
@@ -169,6 +170,4 @@ class PermisosResource extends Resource
         unset($data['empleado_id']); // impedir cambios al editar
         return $data;
     }
-
-
 }
