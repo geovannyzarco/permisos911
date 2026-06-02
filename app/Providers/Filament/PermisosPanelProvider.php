@@ -37,7 +37,7 @@ class PermisosPanelProvider extends PanelProvider
             ->brandLogoHeight('4rem')
             ->brandName('Gestor de Permisos')
             ->id('permisos')
-            ->path('permisos')
+            ->path('')
             ->login(CustomLogin::class)
             /*->userMenuItems([
                 'profile' => \Filament\Navigation\MenuItem::make()
@@ -82,7 +82,7 @@ class PermisosPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 'panels::body.end',
-                fn () => Blade::render("
+                fn() => Blade::render("
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             // Esperamos un momento a que el DOM y el plugin carguen
