@@ -5,9 +5,7 @@ use App\Http\Controllers\PermisoPdfController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\MarcacionImportController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/permisos');
 
 Route::get('/permiso/{id}/pdf', [PermisoPdfController::class, 'generar'])
     ->name('permiso.pdf');
@@ -31,5 +29,4 @@ Route::get('/foto-empleado/{filename}', function ($filename) {
     }
 
     return response()->file($path);
-
 })->where('filename', '.*')->name('foto.empleado');
