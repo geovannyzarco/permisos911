@@ -299,4 +299,43 @@ class PermisoService
             }
         });
     }
+
+    /**
+     * INICIO CAMBIO: Validación de antigüedad máxima de 6 meses para periodos compensados
+     *
+     * Valida que la fecha "desde" de cada periodo compensado no supere los 6 meses de antigüedad.
+     * Si la opción de ignorar validaciones (retroactivo) está activa, la validación se omite.
+     *
+     * @param array $compensados
+     * @param bool $ignorarValidaciones
+     * @return bool
+     * @throws DomainException
+     */
+    public function validarAntiguedadCompensados(array $compensados, bool $ignorarValidaciones = false): bool
+    {
+        // Si el administrador activó la opción retroactiva, omitir la validación de fecha
+        if ($ignorarValidaciones) {
+            return true;
+        }
+
+        // Definir el límite de antigüedad (6 meses atrás a partir del inicio del día actual)
+        $limiteSeisMeses = now()->subMonths(6)->startOfDay();
+
+        foreach ($compensados as $item) {
+            if (isset($item['desde']) && !empty($item['desde'])) {
+                $desdeCompensado = Carbon::parse($item['desde'])->startOfDay();
+
+                // Si la fecha desde del compensado es anterior al límite de 6 meses, arrojar error
+                if ($desdeCompensado->lessThan($limiteSeisMeses)) {
+                    $fechaFormateada = Carbon::parse($item['desde'])->format('d/m/Y');
+                    throw new DomainException(
+                        "El periodo compensado con fecha inicial {$fechaFormateada} excede el límite de 6 meses de antigüedad permitido."
+                    );
+                }
+            }
+        }
+
+        return true;
+    }
+    // FIN CAMBIO
 }

@@ -535,6 +535,14 @@ class GestionPermisoForm
                                 // Arrojamos el error (esto evita que el formulario se guarde)
                                 $fail("La suma de horas de los periodos compensados ({$horasC} hrs) debe ser exactamente igual a las horas solicitadas en el permiso ({$horasP} hrs).");
                             }
+
+                            // INICIO CAMBIO: Validar antigüedad de los periodos compensados (máximo 6 meses)
+                            try {
+                                $service->validarAntiguedadCompensados($value, (bool) $ignorarValidaciones);
+                            } catch (\DomainException $e) {
+                                $fail($e->getMessage());
+                            }
+                            // FIN CAMBIO
                         },
                     ]),
 
