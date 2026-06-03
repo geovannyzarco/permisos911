@@ -133,7 +133,59 @@ class EmpleadoForm
                             ->required()
                             ->label('Nivel')
                             ->options(Nivel::query()->pluck('nivel', 'id'))
-                            ->disabled($isEmpleado),
+                            ->disabled($isEmpleado)
+                            ->rules([
+                                // INICIO CAMBIO: Validación para evitar duplicidad de Jefes de Unidad y División
+                                fn($get, ?\App\Models\Empleado $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    // Obtener la unidad seleccionada en el formulario
+                                    $unidadId = $get('unidad_id');
+
+                                    // 1. Validación para Jefe de Unidad (Nivel 3)
+                                    if ($value == 3) {
+                                        if ($unidadId) {
+                                            // Buscar si ya existe otro empleado con nivel 3 en esta unidad
+                                            $query = \App\Models\Empleado::where('nivel_id', 3)
+                                                ->where('unidad_id', $unidadId);
+
+                                            // Si estamos editando un empleado existente, excluirlo de la búsqueda
+                                            if ($record) {
+                                                $query->where('id', '!=', $record->id);
+                                            }
+
+                                            if ($query->exists()) {
+                                                $unidadNombre = \App\Models\Unidad::find($unidadId)?->nombre ?? 'esta unidad';
+                                                $fail("Ya existe un Jefe de Unidad asignado a la unidad: {$unidadNombre}.");
+                                            }
+                                        }
+                                    }
+
+                                    // 2. Validación para Jefe de División (Nivel 4)
+                                    if ($value == 4) {
+                                        if ($unidadId) {
+                                            // Obtener la división asociada a la unidad seleccionada
+                                            $divisionId = \App\Models\Unidad::find($unidadId)?->division_id;
+                                            if ($divisionId) {
+                                                // Buscar si ya existe otro empleado con nivel 4 en la misma división
+                                                $query = \App\Models\Empleado::where('nivel_id', 4)
+                                                    ->whereHas('unidad', function ($q) use ($divisionId) {
+                                                        $q->where('division_id', $divisionId);
+                                                    });
+
+                                                // Si estamos editando un empleado existente, excluirlo de la búsqueda
+                                                if ($record) {
+                                                    $query->where('id', '!=', $record->id);
+                                                }
+
+                                                if ($query->exists()) {
+                                                    $divisionNombre = \App\Models\Division::find($divisionId)?->nombre ?? 'esta división';
+                                                    $fail("Ya existe un Jefe de División asignado a la división: {$divisionNombre}.");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                // FIN CAMBIO
+                            ]),
 
                         Select::make('estado_id')
                             ->required()
