@@ -35,6 +35,7 @@ class CalendarioPermisos extends Component
     public $isEmployeeRestricted = false;
     public $isGrupoRestricted = false;
     public $isUnidadRestricted = false;
+    public $isDivisionRestricted = false;
 
     public function mount()
     {
@@ -46,22 +47,40 @@ class CalendarioPermisos extends Component
         $emp = $user->empleado;
 
         if ($emp) {
+            // Admins y Super Admins no tienen restricciones de visualización
+            if ($user->hasRole(['super_admin', 'admin'])) {
+                return;
+            }
+
             if ($emp->nivel_id == 1) {
-                // Empleado regular: restringir a su propia unidad/grupo
-                $this->isEmployeeRestricted = true;
-                $this->unidadId = $emp->unidad_id;
-                $this->grupoId = $emp->grupo_id;
-                $this->divisionId = $emp->unidad?->division_id;
+                // Empleado regular: restringir a su grupo si tiene uno asignado (y no es ID 12)
+                if ($emp->grupo_id && $emp->grupo_id != 12) {
+                    $this->isEmployeeRestricted = true;
+                    $this->grupoId = $emp->grupo_id;
+                    $this->unidadId = $emp->unidad_id;
+                    $this->divisionId = $emp->unidad?->division_id;
+                } else {
+                    // Si no tiene grupo asignado (es nulo o ID 12), ve los de su unidad y puede filtrar por grupo
+                    $this->isUnidadRestricted = true;
+                    $this->grupoId = null;
+                    $this->unidadId = $emp->unidad_id;
+                    $this->divisionId = $emp->unidad?->division_id;
+                }
             } elseif ($emp->nivel_id == 2) {
-                // Jefe de Grupo: restringir a su grupo asignado
-                $this->isGrupoRestricted = true;
-                $this->grupoId = $emp->grupo_id;
+                // Supervisor: restringir a su unidad y puede filtrar por grupos
+                $this->isUnidadRestricted = true;
+                $this->grupoId = null;
                 $this->unidadId = $emp->unidad_id;
                 $this->divisionId = $emp->unidad?->division_id;
             } elseif ($emp->nivel_id == 3) {
-                // Jefe de Unidad: restringir a su unidad
+                // Jefe de Unidad/Departamento: restringir a su unidad y puede filtrar por grupos
                 $this->isUnidadRestricted = true;
+                $this->grupoId = null;
                 $this->unidadId = $emp->unidad_id;
+                $this->divisionId = $emp->unidad?->division_id;
+            } elseif ($emp->nivel_id == 4) {
+                // Jefe de División: restringir a su división y puede filtrar por unidades/grupos
+                $this->isDivisionRestricted = true;
                 $this->divisionId = $emp->unidad?->division_id;
             }
         }
@@ -113,41 +132,44 @@ class CalendarioPermisos extends Component
             'estadoAprobacionJefeDivision'
         ]);
 
-        // Restringir el alcance inicial según jerarquía
+        // Restringir el alcance inicial según jerarquía (nivel_id)
         if ($emp) {
-            if ($emp->nivel_id == 1) {
-                // Empleado ve permisos de su grupo (si tiene) o de su unidad
-                if ($emp->grupo_id) {
-                    $query->whereHas('empleado', function ($q) use ($emp) {
-                        $q->where('grupo_id', $emp->grupo_id);
-                    });
-                } else {
+            // Si es administrador o superadministrador, no restringimos el alcance inicial
+            if ($user->hasRole(['super_admin', 'admin'])) {
+                // Acceso total
+            } else {
+                if ($emp->nivel_id == 1) {
+                    // Empleado ve permisos de su grupo (si tiene y no es ID 12) o de su unidad
+                    if ($emp->grupo_id && $emp->grupo_id != 12) {
+                        $query->whereHas('empleado', function ($q) use ($emp) {
+                            $q->where('grupo_id', $emp->grupo_id);
+                        });
+                    } else {
+                        $query->whereHas('empleado', function ($q) use ($emp) {
+                            $q->where('unidad_id', $emp->unidad_id);
+                        });
+                    }
+                } elseif ($emp->nivel_id == 2) {
+                    // Supervisor ve permisos de su unidad
                     $query->whereHas('empleado', function ($q) use ($emp) {
                         $q->where('unidad_id', $emp->unidad_id);
                     });
-                }
-            } elseif ($emp->nivel_id == 2) {
-                // Jefe de Grupo ve permisos de su grupo
-                if ($emp->grupo_id) {
+                } elseif ($emp->nivel_id == 3) {
+                    // Jefe de Departamento ve permisos de su unidad
                     $query->whereHas('empleado', function ($q) use ($emp) {
-                        $q->where('grupo_id', $emp->grupo_id);
+                        $q->where('unidad_id', $emp->unidad_id);
+                    });
+                } elseif ($emp->nivel_id == 4) {
+                    // Jefe de División ve permisos de su división
+                    $query->whereHas('empleado.unidad', function ($q) use ($emp) {
+                        $q->where('division_id', $emp->unidad?->division_id);
                     });
                 }
-            } elseif ($emp->nivel_id == 3) {
-                // Jefe de Unidad ve permisos de su unidad
-                $query->whereHas('empleado', function ($q) use ($emp) {
-                    $q->where('unidad_id', $emp->unidad_id);
-                });
-            } elseif ($emp->nivel_id == 4) {
-                // Jefe de División ve permisos de su división
-                $query->whereHas('empleado.unidad', function ($q) use ($emp) {
-                    $q->where('division_id', $emp->unidad?->division_id);
-                });
             }
         }
 
         // Filtros dinámicos adicionales (si el usuario tiene permisos para usarlos)
-        if (!$this->isEmployeeRestricted && !$this->isGrupoRestricted && !$this->isUnidadRestricted) {
+        if (!$this->isEmployeeRestricted && !$this->isGrupoRestricted && !$this->isUnidadRestricted && !$this->isDivisionRestricted) {
             $query->when($this->divisionId, function ($q) {
                 $q->whereHas('empleado.unidad', fn($sub) => $sub->where('division_id', $this->divisionId));
             });
@@ -191,13 +213,17 @@ class CalendarioPermisos extends Component
         $this->selectedDate = $dateString;
         $date = Carbon::parse($dateString);
 
+        $format = 'Y-m-d H:i:s.v P';
+        $startStr = $date->copy()->startOfDay()->format($format);
+        $endStr = $date->copy()->endOfDay()->format($format);
+
         $this->selectedDayPermissions = $this->getPermissionsQuery()
-            ->where(function ($query) use ($date) {
-                $query->whereBetween('desde', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
-                      ->orWhereBetween('hasta', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
-                      ->orWhere(function ($sub) use ($date) {
-                          $sub->where('desde', '<=', $date->copy()->startOfDay())
-                              ->where('hasta', '>=', $date->copy()->endOfDay());
+            ->where(function ($query) use ($startStr, $endStr) {
+                $query->whereBetween('desde', [$startStr, $endStr])
+                      ->orWhereBetween('hasta', [$startStr, $endStr])
+                      ->orWhere(function ($sub) use ($startStr, $endStr) {
+                          $sub->where('desde', '<=', $startStr)
+                              ->where('hasta', '>=', $endStr);
                       });
             })
             ->get()
@@ -264,13 +290,17 @@ class CalendarioPermisos extends Component
             $gridEnd->addDays(6 - $gridEnd->dayOfWeek);
         }
 
+        $format = 'Y-m-d H:i:s.v P';
+        $gridStartStr = $gridStart->copy()->startOfDay()->format($format);
+        $gridEndStr = $gridEnd->copy()->endOfDay()->format($format);
+
         $permissions = $this->getPermissionsQuery()
-            ->where(function ($query) use ($gridStart, $gridEnd) {
-                $query->whereBetween('desde', [$gridStart->copy()->startOfDay(), $gridEnd->copy()->endOfDay()])
-                      ->orWhereBetween('hasta', [$gridStart->copy()->startOfDay(), $gridEnd->copy()->endOfDay()])
-                      ->orWhere(function ($sub) use ($gridStart, $gridEnd) {
-                          $sub->where('desde', '<=', $gridStart->copy()->startOfDay())
-                              ->where('hasta', '>=', $gridEnd->copy()->endOfDay());
+            ->where(function ($query) use ($gridStartStr, $gridEndStr) {
+                $query->whereBetween('desde', [$gridStartStr, $gridEndStr])
+                      ->orWhereBetween('hasta', [$gridStartStr, $gridEndStr])
+                      ->orWhere(function ($sub) use ($gridStartStr, $gridEndStr) {
+                          $sub->where('desde', '<=', $gridStartStr)
+                              ->where('hasta', '>=', $gridEndStr);
                       });
             })
             ->get();
@@ -356,7 +386,7 @@ class CalendarioPermisos extends Component
         return view('livewire.calendario-permisos', [
             'days' => $days,
             'monthName' => ucfirst($monthName),
-            'divisions' => $this->isEmployeeRestricted || $this->isGrupoRestricted || $this->isUnidadRestricted ? [] : Division::all(),
+            'divisions' => $this->isEmployeeRestricted || $this->isGrupoRestricted || $this->isUnidadRestricted || $this->isDivisionRestricted ? [] : Division::all(),
             'unidades' => $this->isEmployeeRestricted || $this->isGrupoRestricted ? [] : ($this->divisionId ? Unidad::where('division_id', $this->divisionId)->get() : Unidad::all()),
             'grupos' => $this->isEmployeeRestricted ? [] : ($this->unidadId ? Grupo::where('unidad_id', $this->unidadId)->get() : Grupo::all()),
             'tipoPermisos' => TipoPermiso::all(),

@@ -23,7 +23,7 @@
             </div>
 
             <!-- División (Solo Admin/Divisiones) -->
-            @if(!$isEmployeeRestricted && !$isGrupoRestricted && !$isUnidadRestricted)
+            @if(!$isEmployeeRestricted && !$isGrupoRestricted && !$isUnidadRestricted && !$isDivisionRestricted)
                 <div>
                     <label for="division" class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">DIVISIÓN</label>
                     <select 
