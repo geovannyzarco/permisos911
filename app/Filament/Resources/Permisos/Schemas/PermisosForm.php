@@ -396,6 +396,7 @@ class PermisosForm
                             }
 
                             // INICIO CAMBIO: Validar antigüedad de los periodos compensados (máximo 6 meses)
+                            $service = app(\App\Services\PermisoService::class);
                             try {
                                 $service->validarAntiguedadCompensados($value);
                             } catch (\DomainException $e) {
