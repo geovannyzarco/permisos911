@@ -1,59 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gestor de Permisos de Empleados
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es un sistema web empresarial diseñado para la solicitud, validación y flujo de aprobación de permisos laborales de empleados. Está construido sobre **Laravel 12** y **Filament v4**, integrando controles en tiempo real de cupos, límites de horas personales y acumulación de tiempo compensatorio.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tecnologías Principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+*   **Framework Backend:** [Laravel 12](https://laravel.com)
+*   **Panel de Administración e Interfaz:** [Filament v4](https://filamentphp.com) (Livewire, Alpine.js, Tailwind CSS)
+*   **Seguridad y Permisos:** `spatie/laravel-permission` y `bezhansalleh/filament-shield`
+*   **Reportes PDF:** `barryvdh/laravel-dompdf` (Generación de comprobantes oficiales firmados)
+*   **Importaciones y Reportes Excel:** `pxlrbt/filament-excel` y `eightynine/filament-excel-import`
+*   **Base de Datos:** SQL Server / MySQL (Soporta funciones de fecha y transacciones)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Características Clave del Sistema
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Gestión Integral de Solicitudes (Fórmula de Permisos)
+El sistema permite solicitar 17 tipos de permisos distintos. Al crearse, se inicializan con estados **Pendiente** y requieren un flujo de tres firmas:
+1.  **VB (Visto Bueno):** Otorgado por el supervisor o jefe directo.
+2.  **Aprobación Jefatura:** Otorgado por el Jefe de la Unidad o Departamento.
+3.  **Aprobación Jefe de División:** Aprobación final y definitiva que habilita el PDF oficial.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> [!WARNING]
+> Las solicitudes se bloquean para edición y eliminación una vez que algún revisor otorga un visto bueno/aprobación o cuando el registro es marcado como **Tramitado** por Recursos Humanos.
 
-## Laravel Sponsors
+### 2. Control de Permisos Personales (Horas Personales)
+*   El sistema recupera automáticamente las horas personales anuales asignadas al horario del empleado.
+*   En tiempo real, calcula la duración del permiso solicitado (en base a los campos *Desde* y *Hasta*) y valida que no supere el saldo de horas disponibles del empleado.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Gestión de Tiempo Compensatorio (Horas Extras)
+*   Permite canjear horas extras trabajadas por tiempo libre.
+*   Incluye una sección repetible (*Repeater*) donde el usuario debe detallar las jornadas extras con justificaciones y adjuntos.
+*   **Validaciones Automatizadas:**
+    *   La suma de horas de las jornadas compensadas debe coincidir exactamente con el tiempo solicitado.
+    *   Las jornadas extras ingresadas no deben superar los **6 meses** de antigüedad.
 
-### Premium Partners
+### 4. Control de Cupos y Disponibilidad de Grupo
+*   Los empleados se organizan en grupos operativos con límites de permisos diarios configurados.
+*   El formulario de solicitud alerta en tiempo real si hay conflictos (bloqueos de cupo por otros miembros del grupo ya aprobados en el mismo rango de fechas).
+*   Muestra un listado dinámico de disponibilidad con estados `🟢 Disponible` o `🔴 Lleno`.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 5. Calendario de Permisos Interactivo
+*   Desarrollado en **Livewire**, muestra de forma mensual las ausencias programadas.
+*   **Restricciones de Privacidad:** Un empleado regular de Nivel 1 solo puede visualizar ausencias de miembros de su propio **Grupo** (o de su **Unidad** si carece de grupo).
+*   Permite a los usuarios autorizados hacer clic en un día del calendario para desplegar detalles y descargar el PDF de permisos aprobados.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 👥 Roles y Niveles de Usuario
 
-## Code of Conduct
+El sistema clasifica a los empleados mediante cuatro niveles jerárquicos definidos en `Empleado.php`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1.  **Nivel 1 (`NIVEL_EMPLEADO`):** Personal operativo. Crea sus solicitudes de permiso, visualiza su dashboard personal de estadísticas y consulta el calendario restringido a su grupo.
+2.  **Nivel 2 (`NIVEL_JEFE_GRUPO`):** Supervisores. Otorgan el visto bueno inicial (VB) y tienen visibilidad del calendario a nivel de unidad.
+3.  **Nivel 3 (`NIVEL_JEFE_UNIDAD`):** Jefes de Unidad o Departamento. Otorgan la aprobación intermedia (Jefatura) de las solicitudes.
+4.  **Nivel 4 (`NIVEL_JEFE_DIV`):** Jefes de División. Otorgan la aprobación final y definitiva de las solicitudes.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🛠️ Instalación y Configuración Local
 
-## License
+Siga estos pasos para configurar el entorno de desarrollo en su máquina local:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1.  **Clonar el repositorio y entrar al directorio:**
+    ```bash
+    git clone <url-del-repositorio> permisos
+    cd permisos
+    ```
+
+2.  **Instalar dependencias de PHP y JavaScript:**
+    ```bash
+    composer install
+    npm install
+    ```
+
+3.  **Configurar variables de entorno:**
+    Copie el archivo `.env.example` como `.env` y configure sus credenciales de base de datos y llaves de acceso:
+    ```bash
+    copy .env.example .env
+    ```
+
+4.  **Generar la llave de la aplicación y ejecutar migraciones/seeders:**
+    El sistema cuenta con seeders completos para establecer categorías, estados, horarios, tipos de permisos y usuarios de prueba:
+    ```bash
+    php artisan key:generate
+    php artisan migrate --seed
+    ```
+
+5.  **Compilar recursos y levantar servidores de desarrollo:**
+    ```bash
+    npm run build
+    # Para desarrollo continuo:
+    npm run dev
+    php artisan serve
+    ```
+
+---
+
+## 📄 Documentación Adicional
+
+*   **Manual del Usuario (Empleado Nivel 1):** Guía paso a paso para el personal operativo. Disponible en [manual_empleado_nivel_1.md](file:///c:/xampp/htdocs/permisos/public/doc/manual_empleado_nivel_1.md).
+*   **Manual de Instalación y Configuración:** Guía técnica para desplegar el proyecto y activar controladores SQL Server en XAMPP. Disponible en [manual_instalacion.md](file:///c:/xampp/htdocs/permisos/public/doc/manual_instalacion.md).
+*   **Manual del Administrador (Superadmin):** Detalla el mapeo de usuarios, límites de horas, cupos por grupo e importación de marcaciones. Disponible en [manual_superadmin.md](file:///c:/xampp/htdocs/permisos/public/doc/manual_superadmin.md).
+
+---
+
+## 👥 Desarrollador y Créditos
+
+Este sistema ha sido desarrollado y configurado por:
+
+👤 **Geovanny Escobar**
+*   **LinkedIn:** [Geovanny Escobar](https://www.linkedin.com/in/geovannyescobar/)
