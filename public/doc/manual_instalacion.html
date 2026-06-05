@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Instalación - Gestor de Permisos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #f59e0b;
+            --primary-hover: #d97706;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            
+            --note-bg: #eff6ff;
+            --note-border: #3b82f6;
+            --note-text: #1e3a8a;
+            
+            --warning-bg: #fffbeb;
+            --warning-border: #f59e0b;
+            --warning-text: #78350f;
+            
+            --danger-bg: #fef2f2;
+            --danger-border: #ef4444;
+            --danger-text: #7f1d1d;
+
+            --success-bg: #f0fdf4;
+            --success-border: #22c55e;
+            --success-text: #14532d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.65;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-note {
+            background-color: var(--note-bg);
+            border-color: var(--note-border);
+            color: var(--note-text);
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .alert-danger {
+            background-color: var(--danger-bg);
+            border-color: var(--danger-border);
+            color: var(--danger-text);
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Code Styles */
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: #d97706;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        footer {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <span class="logo-title">Gestor de Permisos</span>
+                <span class="logo-badge">Instalación</span>
+            </div>
+            <span class="logo-badge" style="background-color: #6b7280;">Servidor</span>
+        </header>
+
+        <main>
+            <h1>Manual de Instalación y Configuración</h1>
+            <p class="subtitle">Guía paso a paso para el despliegue del sistema en servidores de producción y entornos locales.</p>
+
+            <p>Este manual describe detalladamente los pasos para desplegar y configurar el sistema de gestión de permisos en un entorno de desarrollo local (como XAMPP en Windows) o en un servidor de producción.</p>
+
+            <h2>1. Requisitos del Sistema</h2>
+            <p>Para el correcto funcionamiento de la aplicación, asegúrese de contar con las siguientes herramientas:</p>
+            <ul>
+                <li><strong>PHP:</strong> Versión <code>8.2</code> o superior.</li>
+                <li><strong>Gestor de Dependencias PHP:</strong> <a href="https://getcomposer.org/" target="_blank">Composer</a> v2.x.</li>
+                <li><strong>Gestor de Paquetes JS:</strong> <a href="https://nodejs.org/" target="_blank">Node.js</a> (incluye NPM) v18.x o superior.</li>
+                <li><strong>Servidor Web:</strong> Apache (incluido en XAMPP), Nginx o IIS.</li>
+                <li><strong>Base de Datos:</strong>
+                    <ul>
+                        <li><strong>Principal:</strong> Microsoft SQL Server (2012 o superior).</li>
+                        <li><strong>Alternativa:</strong> MySQL / MariaDB (también soportado).</li>
+                    </ul>
+                </li>
+                <li><strong>Extensiones PHP requeridas:</strong>
+                    <ul>
+                        <li><code>openssl</code>, <code>pdo</code>, <code>mbstring</code>, <code>tokenizer</code>, <code>xml</code>, <code>ctype</code>, <code>json</code>, <code>bcmath</code>.</li>
+                        <li><strong>Para SQL Server:</strong> <code>sqlsrv</code> y <code>pdo_sqlsrv</code> habilitadas en PHP.</li>
+                        <li><strong>Para MySQL:</strong> <code>pdo_mysql</code> habilitada en PHP.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>2. Configuración Especial para SQL Server (en Windows / XAMPP)</h2>
+            <p>Si utilizará Microsoft SQL Server como base de datos, deberá instalar manualmente los controladores de PHP. Siga estos pasos:</p>
+
+            <h3>Paso 1: Descargar los controladores de PHP para SQL Server</h3>
+            <ol>
+                <li>Visite la descarga oficial de Microsoft: <a href="https://learn.microsoft.com/en-us/sql/connect/php/download-drivers-php-sql-server" target="_blank">Microsoft Drivers for PHP for SQL Server</a>.</li>
+                <li>Descargue el instalador compatible con su versión de PHP (por ejemplo, PHP 8.2 requiere la versión 5.11 o superior de los controladores).</li>
+            </ol>
+
+            <h3>Paso 2: Copiar las extensiones al directorio de PHP</h3>
+            <ol>
+                <li>Extraiga el archivo descargado.</li>
+                <li>Copie los archivos <code>.dll</code> correspondientes a su versión de PHP y arquitectura (Thread Safe - <code>ts</code> - es la que suele usar XAMPP) en la carpeta <code>C:\xampp\php\ext\</code>.
+                    <ul>
+                        <li><em>Ejemplo para PHP 8.2 en 64 bits:</em>
+                            <ul>
+                                <li><code>php_sqlsrv_82_ts_x64.dll</code></li>
+                                <li><code>php_pdo_sqlsrv_82_ts_x64.dll</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Paso 3: Habilitar las extensiones en <code>php.ini</code></h3>
+            <ol>
+                <li>Abra el archivo de configuración <code>C:\xampp\php\php.ini</code>.</li>
+                <li>Busque la sección de extensiones y agregue las siguientes líneas:
+                    <pre><code>extension=php_sqlsrv_82_ts_x64.dll
+extension=php_pdo_sqlsrv_82_ts_x64.dll</code></pre>
+                </li>
+                <li>Guarde el archivo y reinicie su servidor Apache desde el Panel de XAMPP.</li>
+            </ol>
+
+            <h3>Paso 4: Instalar el Microsoft ODBC Driver</h3>
+            <p>Para que los controladores PHP puedan comunicarse con SQL Server, debe instalar el <strong>Microsoft ODBC Driver for SQL Server</strong> en el sistema operativo Windows. Descárguelo e instálelo desde la página oficial de Microsoft.</p>
+
+            <h2>3. Instalación de la Aplicación</h2>
+            <p>Siga los pasos descritos a continuación para levantar la aplicación desde cero:</p>
+
+            <h3>Paso 1: Descargar el Código Fuente</h3>
+            <p>Coloque la carpeta del proyecto dentro del directorio raíz de su servidor web (por ejemplo, en <code>C:\xampp\htdocs\permisos\</code>).</p>
+
+            <h3>Paso 2: Instalar Dependencias del Backend (PHP)</h3>
+            <p>Abra una terminal en la raíz del proyecto y ejecute:</p>
+            <pre><code>composer install</code></pre>
+
+            <h3>Paso 3: Configurar Variables de Entorno</h3>
+            <ol>
+                <li>Cree una copia del archivo <code>.env.example</code> y renómbrela a <code>.env</code>:
+                    <pre><code>copy .env.example .env</code></pre>
+                </li>
+                <li>Abra el archivo <code>.env</code> y configure la conexión de base de datos elegida.</li>
+            </ol>
+
+            <h4>Opción A: Configuración para SQL Server (Configuración por Defecto)</h4>
+            <pre><code>DB_CONNECTION=sqlsrv
+DB_HOST=192.168.120.1 # IP o localhost de su SQL Server
+DB_PORT=1433
+DB_DATABASE=permisos_dev
+DB_USERNAME=gescobar
+DB_PASSWORD=su_contraseña
+DB_ENCRYPT=no
+DB_TRUST_SERVER_CERTIFICATE=true</code></pre>
+
+            <h4>Opción B: Configuración Alternativa para MySQL</h4>
+            <p>Si decide cambiar a MySQL, comente las líneas de SQL Server y descomente el bloque correspondiente en el <code>.env</code>:</p>
+            <pre><code>DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=nombre_base_datos
+DB_USERNAME=root
+DB_PASSWORD=</code></pre>
+
+            <h3>Paso 4: Generar la Llave de Seguridad de Laravel</h3>
+            <p>Genere el <code>APP_KEY</code> necesario para el cifrado de datos y sesiones:</p>
+            <pre><code>php artisan key:generate</code></pre>
+
+            <h3>Paso 5: Ejecutar Migraciones e Inicializar Datos (Seeders)</h3>
+            <p>Ejecute las migraciones para estructurar la base de datos y poblar las tablas con los datos base de configuración requeridos (estados, categorías, tipos de permisos, horarios y usuarios de prueba):</p>
+            <pre><code>php artisan migrate --seed</code></pre>
+
+            <h3>Paso 6: Crear el Enlace Simbólico de Almacenamiento</h3>
+            <p>Cree el enlace para que las firmas y archivos adjuntos cargados a la carpeta privada de storage sean accesibles desde la web:</p>
+            <pre><code>php artisan storage:link</code></pre>
+
+            <h3>Paso 7: Instalar y Compilar Recursos Frontend</h3>
+            <p>Instale los paquetes de Node.js y compile los scripts y estilos de Tailwind CSS/Vite:</p>
+            <pre><code>npm install
+npm run build</code></pre>
+
+            <h2>4. Configuración de Servidor Web y Virtual Host</h2>
+            <p>Para que las URLs funcionen correctamente con nombres amigables (ej. <code>http://permisos.local</code>), se recomienda configurar un Virtual Host en Apache:</p>
+
+            <h3>Configurar Apache (<code>httpd-vhosts.conf</code>):</h3>
+            <ol>
+                <li>Abra el archivo <code>C:\xampp\apache\conf\extra\httpd-vhosts.conf</code>.</li>
+                <li>Añada la siguiente configuración al final del archivo:
+                    <pre><code>&lt;VirtualHost *:80&gt;
+    DocumentRoot "C:/xampp/htdocs/permisos/public"
+    ServerName permisos.local
+    &lt;Directory "C:/xampp/htdocs/permisos/public"&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+                </li>
+            </ol>
+
+            <h3>Configurar archivo <code>hosts</code> en Windows:</h3>
+            <ol>
+                <li>Abra el Bloc de notas con privilegios de Administrador.</li>
+                <li>Abra el archivo <code>C:\Windows\System32\drivers\etc\hosts</code>.</li>
+                <li>Añada la siguiente línea al final:
+                    <pre><code>127.0.0.1       permisos.local</code></pre>
+                </li>
+                <li>Guarde el archivo y reinicie Apache. Ahora podrá ingresar al sistema desde <code>http://permisos.local</code>.</li>
+            </ol>
+        </main>
+
+        <footer>
+            Sistema de Gestión de Permisos &copy; 2026<br>
+            Desarrollado y configurado por: <a href="https://www.linkedin.com/in/geovannyescobar/" target="_blank">Geovanny Escobar</a>
+        </footer>
+    </div>
+</body>
+</html>

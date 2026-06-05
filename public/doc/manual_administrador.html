@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual del Administrador - Gestor de Permisos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #f59e0b;
+            --primary-hover: #d97706;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            
+            --note-bg: #eff6ff;
+            --note-border: #3b82f6;
+            --note-text: #1e3a8a;
+            
+            --warning-bg: #fffbeb;
+            --warning-border: #f59e0b;
+            --warning-text: #78350f;
+            
+            --danger-bg: #fef2f2;
+            --danger-border: #ef4444;
+            --danger-text: #7f1d1d;
+
+            --success-bg: #f0fdf4;
+            --success-border: #22c55e;
+            --success-text: #14532d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.65;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-note {
+            background-color: var(--note-bg);
+            border-color: var(--note-border);
+            color: var(--note-text);
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .alert-danger {
+            background-color: var(--danger-bg);
+            border-color: var(--danger-border);
+            color: var(--danger-text);
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Code Styles */
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: #d97706;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        footer {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <span class="logo-title">Gestor de Permisos</span>
+                <span class="logo-badge">Administrador</span>
+            </div>
+            <span class="logo-badge" style="background-color: #6b7280;">Configuración</span>
+        </header>
+
+        <main>
+            <h1>Manual del Administrador</h1>
+            <p class="subtitle">Guía de uso y configuración para administradores y superadministradores de la plataforma.</p>
+
+            <p>Este manual está dirigido a los administradores del sistema. Detalla el uso de los módulos administrativos de <strong>Filament v4</strong>, la configuración de parámetros críticos de negocio (límites de horas, cupos de grupo) y la gestión general de la plataforma.</p>
+
+            <h2>1. Mapeo Crítico: Usuarios vs. Empleados</h2>
+            <p>Para que un usuario pueda utilizar el sistema de manera correcta (ver sus saldos, solicitar permisos y ver el calendario restringido), su cuenta de usuario <strong>debe estar vinculada a un registro de empleado</strong>.</p>
+
+            <h3>Procedimiento de Mapeo:</h3>
+            <ol>
+                <li>Vaya al módulo <strong>Administración -> Usuarios</strong>.</li>
+                <li>Edite un usuario existente o cree uno nuevo.</li>
+                <li>En el campo <strong>Empleado Asociado</strong> (o equivalente en el formulario), seleccione el empleado correspondiente usando su nombre u ONI.</li>
+                <li>Asigne los roles correspondientes mediante el panel de roles provisto por Filament Shield (<code>super_admin</code>, <code>admin</code>, <code>jefe_division</code>, <code>jefe_unidad</code>, <code>jefe_grupo</code> o <code>empleado</code>).</li>
+                <li>Guarde el registro.</li>
+            </ol>
+
+            <div class="alert alert-danger">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Atención: Sin Vinculación
+                </div>
+                Si un usuario inicia sesión con el rol de empleado pero no tiene un registro de <strong>Empleado</strong> asociado a su cuenta, el sistema mostrará alertas en el panel y no le permitirá realizar solicitudes, ya que carece de saldo de horas y grupo de trabajo definidos.
+            </div>
+
+            <h2>2. Configuración de la Estructura Organizativa</h2>
+            <p>La estructura del personal se organiza jerárquicamente en <strong>Divisiones</strong>, <strong>Unidades (o Departamentos)</strong> y <strong>Grupos de Trabajo</strong>.</p>
+
+            <h3>A. Divisiones (<code>Divisions</code>)</h3>
+            <p>Representa el nivel más alto de la institución (ej. División de Operaciones, División de Administración). Configure cada una desde <strong>Administración -> Divisiones</strong>.</p>
+
+            <h3>B. Unidades (<code>Unidads</code>)</h3>
+            <p>Subdivisiones asociadas a una División específica. Se administran en <strong>Administración -> Unidades</strong>. Al crear una unidad, es obligatorio especificar a qué División pertenece.</p>
+
+            <h3>C. Grupos de Trabajo (<code>Grupos</code>)</h3>
+            <p>Son los equipos operativos finales que pertenecen a una Unidad. Se administran en <strong>Administración -> Grupos</strong>.</p>
+
+            <div class="alert alert-note">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Configuración de Cupos Diarios (<code>permisos_diarios</code>)
+                </div>
+                Al editar o crear un Grupo, encontrará el campo <strong>Límite de Permisos Diarios</strong>.
+                <ul>
+                    <li>Este número define cuántas personas de ese mismo grupo pueden tener permisos aprobados/pendientes en un mismo día.</li>
+                    <li><em>Ejemplo:</em> Si define el límite en <code>2</code>, el sistema bloqueará automáticamente a un tercer empleado de ese grupo que intente solicitar un permiso en esa misma fecha.</li>
+                    <li>Si deja este campo vacío o asigna al empleado al grupo especial "Sin Grupo" (ID 12), el sistema no le aplicará restricciones de cupos diarios.</li>
+                </ul>
+            </div>
+
+            <h2>3. Horarios y Límites de Horas Personales</h2>
+            <p>El saldo de horas disponibles para permisos personales (Tipo de Permiso ID 1) se configura en los <strong>Horarios</strong>.</p>
+            <ol>
+                <li>Vaya al módulo <strong>Administración -> Horarios</strong>.</li>
+                <li>Cree o edite un horario laboral.</li>
+                <li>Establece el campo <strong>Horas Personales</strong>. Este valor representa el límite anual de horas personales que los empleados con este horario tienen derecho a solicitar.</li>
+                <li>Asocie este horario a los empleados correspondientes en el módulo de <strong>Empleados</strong>.</li>
+            </ol>
+
+            <h2>4. Gestión de Empleados (<code>Empleados</code>)</h2>
+            <p>En el módulo <strong>Solicitudes/Administración -> Empleados</strong>, usted puede gestionar las fichas de todo el personal:</p>
+            <ul>
+                <li><strong>Identificación:</strong> ONI (obligatorio y único), nombre, correo, teléfono y dirección.</li>
+                <li><strong>Fotografía y Firma:</strong> Permite subir archivos multimedia de la foto y la firma escaneada del empleado.</li>
+                <li><strong>Parámetros Laborales:</strong> Asignación de Grupo, Unidad, Categoría, Horario y Nivel (determina los permisos de aprobación del 1 al 4).</li>
+                <li><strong>Estado:</strong> Activo (permite operar en el sistema) o Inactivo/Suspendido (bloquea el acceso).</li>
+            </ul>
+
+            <h2>5. Importación Masiva de Marcaciones</h2>
+            <p>El sistema permite importar registros de asistencia (entradas/salidas) mediante archivos externos en formatos <code>.dat</code>, <code>.txt</code> o <code>.csv</code>.</p>
+
+            <h3>Procedimiento:</h3>
+            <ol>
+                <li>Vaya a <strong>Administración -> Marcaciones</strong>.</li>
+                <li>En la esquina superior derecha, haga clic en el botón <strong>Importar Marcaciones</strong>.</li>
+                <li>En el cuadro de diálogo, suba el archivo de marcaciones de su reloj marcador.</li>
+                <li>Haga clic en <strong>Importar</strong>.</li>
+                <li>El sistema procesará las líneas mediante el servicio de importación, registrando las nuevas marcaciones y omitiendo automáticamente los registros duplicados para evitar inconsistencias.</li>
+                <li>Al finalizar, recibirá una notificación en pantalla con el resumen: <em>Importadas: X | Duplicadas/Omitidas: Y</em>.</li>
+            </ol>
+
+            <h2>6. Control Global de Solicitudes (<code>GestionPermisos</code>)</h2>
+            <p>Como Superadmin, usted tiene acceso al módulo <strong>Gestión de Permisos</strong>:</p>
+            <ul>
+                <li><strong>Visualización Completa:</strong> Puede ver todos los permisos de todos los empleados de la institución.</li>
+                <li><strong>Filtros Avanzados:</strong> Filtrar por fechas, estados de Visto Bueno (VB), Jefatura o División.</li>
+                <li><strong>Acción de Tramitado:</strong> Cuando Recursos Humanos procesa manualmente el permiso en el sistema central SAAP, usted o el personal de RRHH debe editar el permiso y marcar la casilla <strong>Tramitado</strong>. Esto bloqueará definitivamente el registro para cualquier edición posterior del usuario y de las jefaturas.</li>
+                <li><strong>Corrección Administrativa:</strong> Puede editar motivos, fechas o anular solicitudes directamente en caso de errores en la cadena de aprobación.</li>
+            </ul>
+        </main>
+
+        <footer>
+            Sistema de Gestión de Permisos &copy; 2026<br>
+            Desarrollado y configurado por: <a href="https://www.linkedin.com/in/geovannyescobar/" target="_blank">Geovanny Escobar</a>
+        </footer>
+    </div>
+</body>
+</html>

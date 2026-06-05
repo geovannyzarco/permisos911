@@ -59,21 +59,21 @@ class PermisosPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('Manual de Usuario')
-                    ->url('/doc/manual_empleado_nivel_1.md', shouldOpenInNewTab: true)
+                    ->url('/doc/manual_usuario.html', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-book-open')
                     ->group('Documentación')
                     ->sort(90)
                     ->visible(fn() => auth()->check()),
 
                 NavigationItem::make('Manual del Administrador')
-                    ->url('/doc/manual_superadmin.md', shouldOpenInNewTab: true)
+                    ->url('/doc/manual_administrador.html', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-cog-6-tooth')
                     ->group('Documentación')
                     ->sort(91)
                     ->visible(fn() => auth()->user()?->hasRole(['super_admin', 'admin'])),
 
                 NavigationItem::make('Manual de Instalación')
-                    ->url('/doc/manual_instalacion.md', shouldOpenInNewTab: true)
+                    ->url('/doc/manual_instalacion.html', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->group('Documentación')
                     ->sort(92)

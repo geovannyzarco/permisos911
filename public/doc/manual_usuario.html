@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Gestor de Permisos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #f59e0b;
+            --primary-hover: #d97706;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            
+            --note-bg: #eff6ff;
+            --note-border: #3b82f6;
+            --note-text: #1e3a8a;
+            
+            --warning-bg: #fffbeb;
+            --warning-border: #f59e0b;
+            --warning-text: #78350f;
+            
+            --danger-bg: #fef2f2;
+            --danger-border: #ef4444;
+            --danger-text: #7f1d1d;
+
+            --success-bg: #f0fdf4;
+            --success-border: #22c55e;
+            --success-text: #14532d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.65;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-note {
+            background-color: var(--note-bg);
+            border-color: var(--note-border);
+            color: var(--note-text);
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .alert-danger {
+            background-color: var(--danger-bg);
+            border-color: var(--danger-border);
+            color: var(--danger-text);
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Code Styles */
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: #d97706;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        footer {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <span class="logo-title">Gestor de Permisos</span>
+                <span class="logo-badge">Usuario</span>
+            </div>
+            <span class="logo-badge" style="background-color: #6b7280;">Nivel 1</span>
+        </header>
+
+        <main>
+            <h1>Manual de Usuario</h1>
+            <p class="subtitle">Guía de uso para personal y empleados solicitantes en el sistema de permisos.</p>
+
+            <p>Este manual está diseñado para guiar a los empleados en el uso del sistema de gestión de permisos. Aquí aprenderá a navegar por el sistema, realizar solicitudes personales y compensadas, comprender las validaciones en tiempo real, interactuar con el calendario y mantener su cuenta segura.</p>
+
+            <h2>1. El Dashboard (Panel Principal)</h2>
+            <p>Al iniciar sesión en el sistema, la primera pantalla que visualizará es el <strong>Dashboard</strong>. Este panel le ofrece una vista gráfica rápida del estado de sus solicitudes en el año actual:</p>
+            <ul>
+                <li><strong>Mis permisos solicitados por mes (Año actual):</strong> Un gráfico de barras que muestra la distribución mensual de sus permisos que ya han sido <strong>Aprobados</strong>.</li>
+                <li><strong>Mis permisos por tipo (Año actual):</strong> Un gráfico de dona (<em>doughnut</em>) que desglosa visualmente el número de permisos aprobados que tiene, categorizados por su tipo (por ejemplo, Permiso Personal, Consulta Médica, Cumpleaños, etc.).</li>
+            </ul>
+
+            <div class="alert alert-note">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Nota Informativa
+                </div>
+                Estos gráficos se alimentan exclusivamente de los permisos que cuentan con la aprobación final del <strong>Jefe de División</strong> (Estado: <em>APROBADO</em>). Las solicitudes pendientes o anuladas no sumarán a estas estadísticas.
+            </div>
+
+            <h2>2. Creación de Permisos Generales</h2>
+            <p>Para iniciar una nueva solicitud de permiso, diríjase al menú lateral izquierdo y haga clic en <strong>Mis Permisos</strong> (bajo la sección <em>Solicitudes</em>). Luego, pulse el botón <strong>Crear</strong>.</p>
+
+            <h3>Campos del Formulario:</h3>
+            <p>Al crear cualquier tipo de permiso, deberá completar los siguientes campos básicos:</p>
+            <ol>
+                <li><strong>Fecha de Creación:</strong> Se completa automáticamente con la fecha y hora actual (es de solo lectura).</li>
+                <li><strong>Tipo de Permiso:</strong> Un menú desplegable para seleccionar la categoría de su permiso.</li>
+                <li><strong>Desde:</strong> Fecha y hora inicial del permiso.</li>
+                <li><strong>Hasta:</strong> Fecha y hora final del permiso.</li>
+                <li><strong>Motivo:</strong> Explicación obligatoria y detallada del porqué de la solicitud (máximo 255 caracteres).</li>
+                <li><strong>Adjunto:</strong> Espacio para subir un archivo justificante (PDF, imagen, etc.) si es necesario. El tamaño máximo del archivo es de <strong>10 MB</strong>.</li>
+            </ol>
+
+            <h3>Flujo de Aprobación por Defecto:</h3>
+            <p>Una vez que guarda su solicitud, el sistema le asigna automáticamente el estado de <strong>Pendiente</strong> en los tres niveles de revisión requeridos:</p>
+            <ul>
+                <li><strong>VB (Visto Bueno):</strong> Pendiente (revisión de su supervisor inmediato).</li>
+                <li><strong>Aprobación Jefatura:</strong> Pendiente (revisión del Jefe de su Unidad/Departamento).</li>
+                <li><strong>Aprobación Jefe de División:</strong> Pendiente (revisión del Jefe de su División).</li>
+            </ul>
+
+            <div class="alert alert-warning">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Regla de Bloqueo
+                </div>
+                Usted únicamente podrá editar o eliminar una solicitud si todos sus estados de aprobación se encuentran en <strong>PENDIENTE</strong> y el registro no ha sido marcado como <strong>Tramitado</strong> por Recursos Humanos/SAAP. Si algún jefe aprueba o si es anulado, el formulario se bloqueará automáticamente.
+            </div>
+
+            <h2>3. Permiso Personal y sus Validaciones</h2>
+            <p>El <strong>Permiso Personal</strong> es aquel que descuenta tiempo directamente del saldo de horas anuales asignadas a su horario laboral.</p>
+
+            <h3>Panel Informativo en Tiempo Real:</h3>
+            <p>Al seleccionar el tipo <strong>PERMISO PERSONAL</strong>, se activará en la parte superior el panel de <strong>Información del empleado</strong>. Este panel le muestra:</p>
+            <ul>
+                <li><strong>Horas asignadas:</strong> Las horas personales anuales correspondientes a su contrato y horario.</li>
+                <li><strong>Horas utilizadas:</strong> El acumulado de horas de permisos personales ya aprobados en el año en curso.</li>
+                <li><strong>Horas disponibles:</strong> Su saldo actual neto para solicitar nuevos permisos.</li>
+            </ul>
+
+            <h3>Validación Crítica:</h3>
+            <p>El sistema calculará automáticamente la duración solicitada y validará que no supere su saldo de <strong>Horas disponibles</strong>. En caso de excederse, visualizará el siguiente mensaje de error debajo del campo <em>Hasta</em>:</p>
+            <pre>❌ El tiempo solicitado excede el saldo de horas personales disponibles según tu horario.</pre>
+
+            <h2>4. Permisos por Tiempo Compensatorio</h2>
+            <p>El <strong>Permiso por Tiempo Compensatorio</strong> se utiliza para solicitar tiempo libre a cambio de horas extras que haya acumulado y justificado previamente.</p>
+            <p>Al seleccionar el tipo <strong>POR TIEMPO COMPENSATORIO</strong>, se desplegará una sección llamada <strong>Periodos Compensados a Utilizar</strong> (una tabla repetible donde deberá detallar cada periodo trabajado que respalda su solicitud).</p>
+
+            <h3>Campos de la Tabla Compensados:</h3>
+            <p>Para cada periodo que agregue, debe especificar:</p>
+            <ul>
+                <li><strong>Desde / Hasta:</strong> Fecha y hora en las que realizó el tiempo compensatorio (horas extras).</li>
+                <li><strong>Justificación:</strong> Explicación del trabajo realizado durante esas horas extras.</li>
+                <li><strong>Adjunto:</strong> Documento o reporte firmado que valide la realización de dicho tiempo compensatorio (máximo 10 MB).</li>
+            </ul>
+
+            <div class="alert alert-danger">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Validaciones Obligatorias
+                </div>
+                <ul>
+                    <li><strong>Coincidencia de Horas:</strong> La suma total de los periodos compensatorios ingresados en la tabla debe ser <strong>exactamente igual</strong> a la duración del permiso principal solicitada en los campos generales (<em>Desde / Hasta</em>).</li>
+                    <li><strong>Límite de Antigüedad:</strong> Cada periodo compensatorio registrado debe haber ocurrido dentro de los últimos <strong>6 meses</strong> a contar desde la fecha actual.</li>
+                </ul>
+            </div>
+
+            <h2>5. Catálogo de Otros Permisos</h2>
+            <p>El sistema cuenta con un catálogo de <strong>17 tipos de permisos</strong> para clasificar sus ausencias:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Nombre del Permiso</th>
+                        <th>Notas de Uso General</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td><strong>PERMISO PERSONAL</strong></td>
+                        <td>Descuenta de su saldo anual de horas personales.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td><strong>POR TIEMPO COMPENSATORIO</strong></td>
+                        <td>Requiere justificar las horas extras equivalentes (antigüedad < 6 meses).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td><strong>CUMPLEAÑOS</strong></td>
+                        <td>Permiso especial por el día de su cumpleaños.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td><strong>LICENCIA DE 8 DIAS POR MATERNIDAD</strong></td>
+                        <td>Licencia por maternidad en los términos institucionales.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td><strong>DELEGACIONES DEPORTIVAS, CULT. O CIENTIF.</strong></td>
+                        <td>Justificado mediante invitación u oficio de la delegación.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td><strong>TRATAMIENTO EN EL EXTRANJERO</strong></td>
+                        <td>Requiere dictamen médico oficial y comprobantes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td><strong>CONSULTA MEDICA</strong></td>
+                        <td>Justificante médico de asistencia (ISSS, hospital o clínica).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td><strong>ENFERMEDAD O DUELO</strong></td>
+                        <td>Por fallecimiento de familiares cercanos o enfermedad propia.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>9</strong></td>
+                        <td><strong>ESTUDIOS/HORAS SOCIALES</strong></td>
+                        <td>Para asistencia a clases, exámenes u horas sociales autorizadas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10</strong></td>
+                        <td><strong>DILIGENCIAS JUDICIALES/EXTRAJUDICIALES</strong></td>
+                        <td>Citaciones de juzgados, fiscalía u otras entidades legales.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>11</strong></td>
+                        <td><strong>FALTA DE MARCACION</strong></td>
+                        <td>Justificación ante un olvido o falla al marcar entrada/salida.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>12</strong></td>
+                        <td><strong>LICENCIA POR ENFERMEDAD SIN INCAPACIDAD</strong></td>
+                        <td>Ausencia por enfermedad que no genera incapacidad del ISSS (días cortos).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>13</strong></td>
+                        <td><strong>MISION OFICIAL</strong></td>
+                        <td>Salidas asignadas en cumplimiento de sus funciones laborales.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>14</strong></td>
+                        <td><strong>PATERNIDAD</strong></td>
+                        <td>Días concedidos por el nacimiento de un hijo.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>15</strong></td>
+                        <td><strong>POR LACTANCIA</strong></td>
+                        <td>Tiempo diario asignado para lactancia materna.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>16</strong></td>
+                        <td><strong>POR IMPARTIR CLASES</strong></td>
+                        <td>Autorización especial para docencia en horarios laborales.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>17</strong></td>
+                        <td><strong>MATRIMONIO</strong></td>
+                        <td>Licencia concedida por matrimonio civil/religioso.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>6. Validaciones de Cupo (Disponibilidad de Grupo)</h2>
+            <p>Cada empleado pertenece a un grupo de trabajo. Para garantizar la continuidad de las operaciones, cada grupo tiene un límite diario de permisos autorizados.</p>
+            <p>Al ingresar las fechas de su solicitud, el sistema evaluará la disponibilidad de su grupo en tiempo real:</p>
+            <ul>
+                <li><strong>Permisos en Conflicto (Bloqueos de Cupo):</strong> Si en alguna fecha seleccionada ya se alcanzó el límite máximo de permisos, aparecerá una alerta de color rojo que lista los permisos de sus compañeros que copan el cupo.</li>
+                <li><strong>Disponibilidad del Grupo:</strong> Una lista de viñetas que muestra el cupo libre/ocupado día a día:
+                    <ul>
+                        <li><span style="color: var(--success-border); font-weight: bold;">🟢 Disponible:</span> Hay cupo libre.</li>
+                        <li><span style="color: var(--danger-border); font-weight: bold;">🔴 Lleno:</span> El cupo está agotado y el día se encuentra bloqueado.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>7. Calendario de Permisos</h2>
+            <p>El calendario está disponible en <strong>Consultas -> Calendario de Permisos</strong>. Muestra de forma mensual las ausencias programadas.</p>
+            <div class="alert alert-note">
+                <div class="alert-title">
+                    <svg width="16" height="16" style="display:inline; margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Restricción de Privacidad
+                </div>
+                Como empleado de Nivel 1, usted <strong>solo</strong> visualizará las ausencias de los compañeros de su propio <strong>Grupo de Trabajo</strong> (o de su <strong>Unidad</strong> si no pertenece a un grupo). No se listan datos de otras áreas.
+            </div>
+            <p>Al hacer clic en un día con ausencias, se abrirá un modal de detalles. Si el permiso de un compañero está completamente aprobado, podrá descargar el documento PDF firmado desde el mismo modal.</p>
+
+            <h2>8. Cambio de Contraseña y Datos de Perfil</h2>
+            <p>Para actualizar sus credenciales de acceso:</p>
+            <ol>
+                <li>Haga clic en su nombre o avatar en la esquina de la barra del panel.</li>
+                <li>Seleccione la opción <strong>Mi Perfil</strong>.</li>
+                <li>Escriba su nueva contraseña en el campo correspondiente y confírmela.</li>
+                <li>Presione el botón <strong>Guardar</strong>.</li>
+            </ol>
+        </main>
+
+        <footer>
+            Sistema de Gestión de Permisos &copy; 2026<br>
+            Desarrollado y configurado por: <a href="https://www.linkedin.com/in/geovannyescobar/" target="_blank">Geovanny Escobar</a>
+        </footer>
+    </div>
+</body>
+</html>
