@@ -21,7 +21,7 @@ class AprobacionPermisoPolicy
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_GRUPO
             && $permiso->empleado->grupo_id == $emp->grupo_id
-            && is_null($permiso->id_estado_vb);
+            && (is_null($permiso->id_estado_vb) || $permiso->id_estado_vb == 4);
     }
 
     public function aprobarFinal(User $user, Permiso $permiso): bool
@@ -36,7 +36,7 @@ class AprobacionPermisoPolicy
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_UNIDAD
             && $permiso->empleado->unidad_id == $emp->unidad_id
-            && is_null($permiso->id_estado_aprobacion);
+            && (is_null($permiso->id_estado_aprobacion) || $permiso->id_estado_aprobacion == 4);
     }
 
     public function aprobarJefeDivision(User $user, Permiso $permiso): bool
@@ -50,6 +50,6 @@ class AprobacionPermisoPolicy
         }
 
         return $emp->nivel_id == 4
-            && is_null($permiso->id_estado_aprobacion_jefe_division);
+            && (is_null($permiso->id_estado_aprobacion_jefe_division) || $permiso->id_estado_aprobacion_jefe_division == 4);
     }
 }
