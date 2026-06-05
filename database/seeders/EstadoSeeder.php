@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Estado;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EstadoSeeder extends Seeder
 {
@@ -12,6 +13,15 @@ class EstadoSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('estados')->delete();
+
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlsrv') {
+            DB::statement("DBCC CHECKIDENT (estados, RESEED, 0)");
+        } elseif ($driver === 'mysql') {
+            DB::statement("ALTER TABLE estados AUTO_INCREMENT = 1");
+        }
+
         $estados = [
             ['nombre' => 'ACTIVO','entidad_id' => 1],
             ['nombre' => 'INACTIVO','entidad_id' => 1],

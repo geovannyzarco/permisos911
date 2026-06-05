@@ -1,0 +1,1836 @@
+[
+    {
+        "id": "1",
+        "municipio_id": "2",
+        "nombre": "Ahuachapán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "2",
+        "municipio_id": "2",
+        "nombre": "Apaneca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "3",
+        "municipio_id": "2",
+        "nombre": "Concepción de Ataco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "4",
+        "municipio_id": "2",
+        "nombre": "Tacuba",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "5",
+        "municipio_id": "1",
+        "nombre": "Atiquizaya",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "6",
+        "municipio_id": "1",
+        "nombre": "El Refugio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "7",
+        "municipio_id": "1",
+        "nombre": "San Lorenzo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "8",
+        "municipio_id": "1",
+        "nombre": "Turín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "9",
+        "municipio_id": "3",
+        "nombre": "Guaymango",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "10",
+        "municipio_id": "3",
+        "nombre": "Jujutla",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "11",
+        "municipio_id": "3",
+        "nombre": "San Francisco Menéndez",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "12",
+        "municipio_id": "3",
+        "nombre": "San Pedro Puxtla",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "13",
+        "municipio_id": "4",
+        "nombre": "Dolores",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "14",
+        "municipio_id": "5",
+        "nombre": "Cinquera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "15",
+        "municipio_id": "5",
+        "nombre": "Ilobasco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "16",
+        "municipio_id": "4",
+        "nombre": "Guacotecti",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "17",
+        "municipio_id": "4",
+        "nombre": "San Isidro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "18",
+        "municipio_id": "4",
+        "nombre": "Sensuntepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "19",
+        "municipio_id": "4",
+        "nombre": "Victoria",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "20",
+        "municipio_id": "5",
+        "nombre": "Jutiapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "21",
+        "municipio_id": "5",
+        "nombre": "Tejutepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "22",
+        "municipio_id": "6",
+        "nombre": "Citalá",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "23",
+        "municipio_id": "6",
+        "nombre": "La Palma",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "24",
+        "municipio_id": "6",
+        "nombre": "San Ignacio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "25",
+        "municipio_id": "7",
+        "nombre": "Agua Caliente",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "26",
+        "municipio_id": "7",
+        "nombre": "San Fernando",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "27",
+        "municipio_id": "7",
+        "nombre": "San Francisco Morazán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "28",
+        "municipio_id": "7",
+        "nombre": "San Rafael",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "29",
+        "municipio_id": "7",
+        "nombre": "Santa Rita",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "30",
+        "municipio_id": "7",
+        "nombre": "Tejutla",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "31",
+        "municipio_id": "8",
+        "nombre": "Arcatao",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "32",
+        "municipio_id": "8",
+        "nombre": "Azacualpa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "33",
+        "municipio_id": "8",
+        "nombre": "Cancasque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "34",
+        "municipio_id": "8",
+        "nombre": "Chalatenango",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "35",
+        "municipio_id": "8",
+        "nombre": "Comalapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "36",
+        "municipio_id": "8",
+        "nombre": "Concepción Quezaltepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "37",
+        "municipio_id": "7",
+        "nombre": "Dulce Nombre de María",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "38",
+        "municipio_id": "7",
+        "nombre": "El Paraíso",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "39",
+        "municipio_id": "7",
+        "nombre": "La Reina",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "40",
+        "municipio_id": "7",
+        "nombre": "Nueva Concepción",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "41",
+        "municipio_id": "8",
+        "nombre": "El Carrizal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "42",
+        "municipio_id": "8",
+        "nombre": "Nombre de Jesús",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "43",
+        "municipio_id": "8",
+        "nombre": "Nueva Trinidad",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "44",
+        "municipio_id": "8",
+        "nombre": "Ojos de Agua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "45",
+        "municipio_id": "8",
+        "nombre": "Potonico",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "46",
+        "municipio_id": "8",
+        "nombre": "San Antonio de la Cruz",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "47",
+        "municipio_id": "8",
+        "nombre": "San Antonio Los Ranchos",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "48",
+        "municipio_id": "8",
+        "nombre": "San Francisco Lempa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "49",
+        "municipio_id": "8",
+        "nombre": "San Isidro Labrador",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "50",
+        "municipio_id": "8",
+        "nombre": "San Luis del Carmen",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "51",
+        "municipio_id": "8",
+        "nombre": "San Miguel de Mercedes",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "52",
+        "municipio_id": "8",
+        "nombre": "La Laguna",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "53",
+        "municipio_id": "8",
+        "nombre": "Las Vueltas",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "54",
+        "municipio_id": "8",
+        "nombre": "Las Flores",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "55",
+        "municipio_id": "9",
+        "nombre": "Suchitoto",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "56",
+        "municipio_id": "9",
+        "nombre": "San José Guayabal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "57",
+        "municipio_id": "9",
+        "nombre": "Oratorio de Concepción",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "58",
+        "municipio_id": "9",
+        "nombre": "San Bartolomé Perulapía",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "59",
+        "municipio_id": "9",
+        "nombre": "San Pedro Perulapán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "60",
+        "municipio_id": "10",
+        "nombre": "Cojutepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "61",
+        "municipio_id": "10",
+        "nombre": "Candelaria",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "62",
+        "municipio_id": "10",
+        "nombre": "El Carmen",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "63",
+        "municipio_id": "10",
+        "nombre": "El Rosario",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "64",
+        "municipio_id": "10",
+        "nombre": "Monte San Juan",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "65",
+        "municipio_id": "10",
+        "nombre": "San Cristóbal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "66",
+        "municipio_id": "10",
+        "nombre": "San Rafael Cedros",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "67",
+        "municipio_id": "10",
+        "nombre": "San Ramón",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "68",
+        "municipio_id": "10",
+        "nombre": "Santa Cruz Analquito",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "69",
+        "municipio_id": "10",
+        "nombre": "Santa Cruz Michapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "70",
+        "municipio_id": "10",
+        "nombre": "Tenancingo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "71",
+        "municipio_id": "11",
+        "nombre": "Quezaltepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "72",
+        "municipio_id": "11",
+        "nombre": "San Matías",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "73",
+        "municipio_id": "11",
+        "nombre": "San Pablo Tacachico",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "74",
+        "municipio_id": "12",
+        "nombre": "San Juan Opico",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "75",
+        "municipio_id": "13",
+        "nombre": "Sacacoyo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "76",
+        "municipio_id": "13",
+        "nombre": "Tepecoyo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "77",
+        "municipio_id": "15",
+        "nombre": "Teotepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "78",
+        "municipio_id": "16",
+        "nombre": "Santa Tecla",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "79",
+        "municipio_id": "16",
+        "nombre": "Comasagua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "80",
+        "municipio_id": "17",
+        "nombre": "Cuyultitán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "81",
+        "municipio_id": "17",
+        "nombre": "Olocuilta",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "82",
+        "municipio_id": "14",
+        "nombre": "Zaragoza",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "83",
+        "municipio_id": "15",
+        "nombre": "Chiltiupán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "84",
+        "municipio_id": "15",
+        "nombre": "Jicalapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "85",
+        "municipio_id": "15",
+        "nombre": "La Libertad",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "86",
+        "municipio_id": "15",
+        "nombre": "Tamanique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "87",
+        "municipio_id": "12",
+        "nombre": "Ciudad Arce",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "88",
+        "municipio_id": "13",
+        "nombre": "Colón",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "89",
+        "municipio_id": "13",
+        "nombre": "Jayaque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "90",
+        "municipio_id": "13",
+        "nombre": "Talnique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "91",
+        "municipio_id": "14",
+        "nombre": "Antiguo Cuscatlán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "92",
+        "municipio_id": "14",
+        "nombre": "Huizúcar",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "93",
+        "municipio_id": "14",
+        "nombre": "Nuevo Cuscatlán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "94",
+        "municipio_id": "14",
+        "nombre": "San José Villanueva",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "95",
+        "municipio_id": "17",
+        "nombre": "San Juan Talpa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "96",
+        "municipio_id": "17",
+        "nombre": "San Luis Talpa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "97",
+        "municipio_id": "18",
+        "nombre": "San Juan Tepezontes",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "98",
+        "municipio_id": "18",
+        "nombre": "San Luis La Herradura",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "99",
+        "municipio_id": "18",
+        "nombre": "San Miguel Tepezontes",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "100",
+        "municipio_id": "18",
+        "nombre": "San Pedro Nonualco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "101",
+        "municipio_id": "18",
+        "nombre": "Santa María Ostuma",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "102",
+        "municipio_id": "18",
+        "nombre": "Mercedes La Ceiba",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "103",
+        "municipio_id": "18",
+        "nombre": "Paraíso de Osorio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "104",
+        "municipio_id": "18",
+        "nombre": "San Antonio Masahuat",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "105",
+        "municipio_id": "18",
+        "nombre": "San Emigdio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "106",
+        "municipio_id": "17",
+        "nombre": "San Pedro Masahuat",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "107",
+        "municipio_id": "17",
+        "nombre": "Tapalhuaca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "108",
+        "municipio_id": "17",
+        "nombre": "San Francisco Chinameca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "109",
+        "municipio_id": "18",
+        "nombre": "El Rosario",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "110",
+        "municipio_id": "18",
+        "nombre": "Jerusalén",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "111",
+        "municipio_id": "18",
+        "nombre": "Santiago Nonualco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "112",
+        "municipio_id": "19",
+        "nombre": "San Juan Nonualco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "113",
+        "municipio_id": "19",
+        "nombre": "San Rafael Obrajuelo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "114",
+        "municipio_id": "19",
+        "nombre": "Zacatecoluca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "115",
+        "municipio_id": "20",
+        "nombre": "Anamorós",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "116",
+        "municipio_id": "20",
+        "nombre": "Bolívar",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "117",
+        "municipio_id": "20",
+        "nombre": "Concepción de Oriente",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "118",
+        "municipio_id": "20",
+        "nombre": "El Sauce",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "119",
+        "municipio_id": "20",
+        "nombre": "Lislique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "120",
+        "municipio_id": "20",
+        "nombre": "Nueva Esparta",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "121",
+        "municipio_id": "20",
+        "nombre": "Pasaquina",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "122",
+        "municipio_id": "20",
+        "nombre": "Polorós",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "123",
+        "municipio_id": "20",
+        "nombre": "San José",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "124",
+        "municipio_id": "20",
+        "nombre": "Santa Rosa de Lima",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "125",
+        "municipio_id": "21",
+        "nombre": "Conchagua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "126",
+        "municipio_id": "21",
+        "nombre": "El Carmen",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "127",
+        "municipio_id": "21",
+        "nombre": "Intipucá",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "128",
+        "municipio_id": "21",
+        "nombre": "La Unión",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "129",
+        "municipio_id": "43",
+        "nombre": "Santa Elena",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "130",
+        "municipio_id": "43",
+        "nombre": "San Dionisio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "131",
+        "municipio_id": "43",
+        "nombre": "Santa María",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "132",
+        "municipio_id": "21",
+        "nombre": "San Alejo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "133",
+        "municipio_id": "21",
+        "nombre": "Yayantique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "134",
+        "municipio_id": "21",
+        "nombre": "Yucuaiquín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "135",
+        "municipio_id": "22",
+        "nombre": "Arambala",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "136",
+        "municipio_id": "22",
+        "nombre": "Cacaopera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "137",
+        "municipio_id": "22",
+        "nombre": "Corinto",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "138",
+        "municipio_id": "22",
+        "nombre": "El Rosario",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "139",
+        "municipio_id": "22",
+        "nombre": "Joateca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "140",
+        "municipio_id": "22",
+        "nombre": "Jocoaitique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "141",
+        "municipio_id": "22",
+        "nombre": "Meanguera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "142",
+        "municipio_id": "22",
+        "nombre": "Perquín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "143",
+        "municipio_id": "22",
+        "nombre": "San Fernando",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "144",
+        "municipio_id": "22",
+        "nombre": "San Isidro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "145",
+        "municipio_id": "22",
+        "nombre": "Torola",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "146",
+        "municipio_id": "23",
+        "nombre": "Chilanga",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "147",
+        "municipio_id": "43",
+        "nombre": "Tecapán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "148",
+        "municipio_id": "43",
+        "nombre": "Usulután",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "149",
+        "municipio_id": "44",
+        "nombre": "Jiquilisco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "150",
+        "municipio_id": "44",
+        "nombre": "Puerto El Triunfo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "151",
+        "municipio_id": "44",
+        "nombre": "San Agustín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "152",
+        "municipio_id": "44",
+        "nombre": "San Francisco Javier",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "153",
+        "municipio_id": "21",
+        "nombre": "Meanguera del Golfo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "154",
+        "municipio_id": "23",
+        "nombre": "Delicias de Concepción",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "155",
+        "municipio_id": "23",
+        "nombre": "El Divisadero",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "156",
+        "municipio_id": "23",
+        "nombre": "Gualococti",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "157",
+        "municipio_id": "23",
+        "nombre": "Guatajiagua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "158",
+        "municipio_id": "23",
+        "nombre": "Jocoro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "159",
+        "municipio_id": "23",
+        "nombre": "Lolotiquillo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "160",
+        "municipio_id": "23",
+        "nombre": "Osicala",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "161",
+        "municipio_id": "23",
+        "nombre": "San Carlos",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "162",
+        "municipio_id": "23",
+        "nombre": "San Francisco Gotera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "163",
+        "municipio_id": "23",
+        "nombre": "San Simón",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "164",
+        "municipio_id": "23",
+        "nombre": "Sensembra",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "165",
+        "municipio_id": "23",
+        "nombre": "Sociedad",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "166",
+        "municipio_id": "23",
+        "nombre": "Yamabal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "167",
+        "municipio_id": "23",
+        "nombre": "Yoloaiquín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "168",
+        "municipio_id": "24",
+        "nombre": "Ciudad Barrios",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "169",
+        "municipio_id": "24",
+        "nombre": "Sesori",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "170",
+        "municipio_id": "24",
+        "nombre": "Nuevo Edén de San Juan",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "171",
+        "municipio_id": "24",
+        "nombre": "San Gerardo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "172",
+        "municipio_id": "24",
+        "nombre": "San Luis de la Reina",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "173",
+        "municipio_id": "24",
+        "nombre": "Carolina",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "174",
+        "municipio_id": "24",
+        "nombre": "San Antonio",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "175",
+        "municipio_id": "24",
+        "nombre": "Chapeltique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "176",
+        "municipio_id": "26",
+        "nombre": "Nueva Guadalupe",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "177",
+        "municipio_id": "26",
+        "nombre": "San Jorge",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "178",
+        "municipio_id": "26",
+        "nombre": "San Rafael Oriente",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "179",
+        "municipio_id": "27",
+        "nombre": "Aguilares",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "180",
+        "municipio_id": "27",
+        "nombre": "El Paisnal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "181",
+        "municipio_id": "27",
+        "nombre": "Guazapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "182",
+        "municipio_id": "28",
+        "nombre": "Apopa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "183",
+        "municipio_id": "28",
+        "nombre": "Nejapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "184",
+        "municipio_id": "29",
+        "nombre": "Ilopango",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "185",
+        "municipio_id": "29",
+        "nombre": "San Martín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "186",
+        "municipio_id": "25",
+        "nombre": "San Miguel",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "187",
+        "municipio_id": "25",
+        "nombre": "Comacarán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "188",
+        "municipio_id": "25",
+        "nombre": "Uluazapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "189",
+        "municipio_id": "25",
+        "nombre": "Moncagua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "190",
+        "municipio_id": "25",
+        "nombre": "Quelepa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "191",
+        "municipio_id": "25",
+        "nombre": "Chirilagua",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "192",
+        "municipio_id": "26",
+        "nombre": "Chinameca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "193",
+        "municipio_id": "26",
+        "nombre": "El Tránsito",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "194",
+        "municipio_id": "26",
+        "nombre": "Lolotique",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "195",
+        "municipio_id": "29",
+        "nombre": "Soyapango",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "196",
+        "municipio_id": "29",
+        "nombre": "Tonacatepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "197",
+        "municipio_id": "30",
+        "nombre": "Ayutuxtepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "198",
+        "municipio_id": "30",
+        "nombre": "Mejicanos",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "199",
+        "municipio_id": "32",
+        "nombre": "Apastepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "200",
+        "municipio_id": "32",
+        "nombre": "Santa Clara",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "201",
+        "municipio_id": "32",
+        "nombre": "San Ildefonso",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "202",
+        "municipio_id": "32",
+        "nombre": "San Esteban Catarina",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "203",
+        "municipio_id": "32",
+        "nombre": "San Sebastián",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "204",
+        "municipio_id": "32",
+        "nombre": "San Lorenzo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "205",
+        "municipio_id": "30",
+        "nombre": "Cuscatancingo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "206",
+        "municipio_id": "30",
+        "nombre": "Delgado",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "207",
+        "municipio_id": "30",
+        "nombre": "San Salvador",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "208",
+        "municipio_id": "31",
+        "nombre": "San Marcos",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "209",
+        "municipio_id": "31",
+        "nombre": "Santo Tomás",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "210",
+        "municipio_id": "31",
+        "nombre": "Santiago Texacuangos",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "211",
+        "municipio_id": "31",
+        "nombre": "Panchimalco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "212",
+        "municipio_id": "31",
+        "nombre": "Rosario de Mora",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "213",
+        "municipio_id": "32",
+        "nombre": "Santo Domingo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "214",
+        "municipio_id": "33",
+        "nombre": "San Vicente",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "215",
+        "municipio_id": "33",
+        "nombre": "Guadalupe",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "216",
+        "municipio_id": "33",
+        "nombre": "San Cayetano Istepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "217",
+        "municipio_id": "33",
+        "nombre": "Tecoluca",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "218",
+        "municipio_id": "33",
+        "nombre": "Tepetitán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "219",
+        "municipio_id": "33",
+        "nombre": "Verapaz",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "220",
+        "municipio_id": "34",
+        "nombre": "Masahuat",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "221",
+        "municipio_id": "34",
+        "nombre": "Metapán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "222",
+        "municipio_id": "34",
+        "nombre": "Santa Rosa Guachipilín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "223",
+        "municipio_id": "34",
+        "nombre": "Texistepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "224",
+        "municipio_id": "35",
+        "nombre": "Santa Ana",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "225",
+        "municipio_id": "36",
+        "nombre": "Coatepeque",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "226",
+        "municipio_id": "36",
+        "nombre": "El Congo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "227",
+        "municipio_id": "37",
+        "nombre": "Candelaria de la Frontera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "228",
+        "municipio_id": "37",
+        "nombre": "Chalchuapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "229",
+        "municipio_id": "37",
+        "nombre": "El Porvenir",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "230",
+        "municipio_id": "37",
+        "nombre": "San Antonio Pajonal",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "231",
+        "municipio_id": "37",
+        "nombre": "San Sebastián Salitrillo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "232",
+        "municipio_id": "37",
+        "nombre": "Santiago de la Frontera",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "233",
+        "municipio_id": "38",
+        "nombre": "Juayúa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "234",
+        "municipio_id": "38",
+        "nombre": "Nahuizalco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "235",
+        "municipio_id": "38",
+        "nombre": "Salcoatitán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "236",
+        "municipio_id": "38",
+        "nombre": "Santa Catarina Masahuat",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "237",
+        "municipio_id": "39",
+        "nombre": "Sonsonate",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "238",
+        "municipio_id": "39",
+        "nombre": "Sonzacate",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "239",
+        "municipio_id": "39",
+        "nombre": "Nahulingo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "240",
+        "municipio_id": "39",
+        "nombre": "San Antonio del Monte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "241",
+        "municipio_id": "39",
+        "nombre": "Santo Domingo de Guzmán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "242",
+        "municipio_id": "40",
+        "nombre": "Armenia",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "243",
+        "municipio_id": "40",
+        "nombre": "Caluco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "244",
+        "municipio_id": "40",
+        "nombre": "Cuisnahuat",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "245",
+        "municipio_id": "40",
+        "nombre": "Izalco",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "246",
+        "municipio_id": "40",
+        "nombre": "San Julián",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "247",
+        "municipio_id": "40",
+        "nombre": "Santa Isabel Ishuatán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "248",
+        "municipio_id": "41",
+        "nombre": "Acajutla",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "249",
+        "municipio_id": "42",
+        "nombre": "Alegría",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "250",
+        "municipio_id": "42",
+        "nombre": "Berlín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "251",
+        "municipio_id": "42",
+        "nombre": "El Triunfo",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "252",
+        "municipio_id": "42",
+        "nombre": "Estanzuelas",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "253",
+        "municipio_id": "42",
+        "nombre": "Jucuapa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "254",
+        "municipio_id": "42",
+        "nombre": "Mercedes Umaña",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "255",
+        "municipio_id": "42",
+        "nombre": "Nueva Granada",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "256",
+        "municipio_id": "42",
+        "nombre": "San Buenaventura",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "257",
+        "municipio_id": "42",
+        "nombre": "Santiago de María",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "258",
+        "municipio_id": "43",
+        "nombre": "California",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "259",
+        "municipio_id": "43",
+        "nombre": "Concepción Batres",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "260",
+        "municipio_id": "43",
+        "nombre": "Ereguayquín",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "261",
+        "municipio_id": "43",
+        "nombre": "Jucuarán",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "262",
+        "municipio_id": "43",
+        "nombre": "Ozatlán",
+        "created_at": "",
+        "updated_at": ""
+    }
+]

@@ -3,31 +3,43 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Distrito;
-use App\Models\Municipio;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class DistritoSeeder extends Seeder
 {
     public function run(): void
     {
+        $path = database_path('seeders/datos/distritos.json');
+        
+        if (!File::exists($path)) {
+            $this->command->error("No se encontró distritos.json");
+            return;
+        }
 
-        $path = database_path('seeders/datos/distritos_sv.csv');
-        $rows = array_map('str_getcsv', file($path));
-        unset($rows[0]);
+        $distritos = json_decode(File::get($path), true);
 
-        foreach ($rows as $row) {
-            [$municipioNombre, $distritoNombre] = $row;
+        // Sort by ID to ensure order of auto-increment matches original IDs
+        usort($distritos, function ($a, $b) {
+            return (int)$a['id'] <=> (int)$b['id'];
+        });
 
-            $municipio = Municipio::where('nombre', $municipioNombre)->first();
+        DB::table('distritos')->delete();
 
-            if ($municipio) {
-                Distrito::create([
-                    'municipio_id' => $municipio->id,
-                    'nombre' => $distritoNombre,
-                ]);
-            }
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlsrv') {
+            DB::statement("DBCC CHECKIDENT (distritos, RESEED, 0)");
+        } elseif ($driver === 'mysql') {
+            DB::statement("ALTER TABLE distritos AUTO_INCREMENT = 1");
+        }
+
+        foreach ($distritos as $d) {
+            DB::table('distritos')->insert([
+                'municipio_id' => $d['municipio_id'],
+                'nombre' => trim($d['nombre']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
 }
-

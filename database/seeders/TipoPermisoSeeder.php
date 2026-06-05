@@ -4,40 +4,46 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class TipoPermisoSeeder extends Seeder
 {
     public function run(): void
     {
-        $path = database_path('seeders/datos/tipo_permisos.csv');
+        $tipoPermisos = [
+            'PERMISO PERSONAL',
+            'POR TIEMPO COMPENSATORIO',
+            'CUMPLEAÑOS',
+            'LICENCIA DE 8 DIAS POR MATERNIDAD',
+            'DELEGACIONES DEPORTIVAS, CULTURAL O CIENTIFICAS',
+            'TRATAMIENTO DE ENFERMEDAD EN EL EXTRANJERO',
+            'CONSULTA MEDICA',
+            'ENFERMEDAD O DUELO',
+            'ESTUDIOS/HORAS SOCIALES',
+            'DILIGENCIAS JUDICIALES/EXTRAJUDICIALES',
+            'FALTA DE MARCACION',
+            'LICENCIA POR ENFERMEDAD SIN INCAPACIDAD',
+            'MISION OFICIAL',
+            'PATERNIDAD',
+            'POR LACTANCIA',
+            'POR IMPARTIR CLASES',
+            'MATRIMONIO',
+        ];
 
-        if (!File::exists($path)) {
-            $this->command->error("No se encontró el archivo tipo_permisos.csv en: $path");
-            return;
+        DB::table('tipo_permisos')->delete();
+
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlsrv') {
+            DB::statement("DBCC CHECKIDENT (tipo_permisos, RESEED, 0)");
+        } elseif ($driver === 'mysql') {
+            DB::statement("ALTER TABLE tipo_permisos AUTO_INCREMENT = 1");
         }
 
-        $file = fopen($path, 'r');
-
-        // Saltar la primera línea (encabezados)
-        fgetcsv($file);
-
-        $registros = 0;
-
-        while (($data = fgetcsv($file)) !== false) {
-            // CSV esperado: "id","nombre"
-            $nombre = $data[1] ?? null;
-
-            if ($nombre) {
-                DB::table('tipo_permisos')->insert([
-                    'nombre' => $nombre,
-                ]);
-                $registros++;
-            }
+        foreach ($tipoPermisos as $nombre) {
+            DB::table('tipo_permisos')->insert([
+                'nombre' => $nombre,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        fclose($file);
-
-        $this->command->info("Se importaron {$registros} registros en la tabla tipo_permisos.");
     }
 }

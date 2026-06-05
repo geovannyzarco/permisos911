@@ -1,0 +1,310 @@
+[
+    {
+        "id": "1",
+        "departamento_id": "1",
+        "nombre": "Ahuachapán Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "2",
+        "departamento_id": "1",
+        "nombre": "Ahuachapán Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "3",
+        "departamento_id": "1",
+        "nombre": "Ahuachapán Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "4",
+        "departamento_id": "2",
+        "nombre": "Cabañas Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "5",
+        "departamento_id": "2",
+        "nombre": "Cabañas Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "6",
+        "departamento_id": "3",
+        "nombre": "Chalatenango Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "7",
+        "departamento_id": "3",
+        "nombre": "Chalatenango Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "8",
+        "departamento_id": "3",
+        "nombre": "Chalatenango Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "9",
+        "departamento_id": "4",
+        "nombre": "Cuscatlán Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "10",
+        "departamento_id": "4",
+        "nombre": "Cuscatlán Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "11",
+        "departamento_id": "5",
+        "nombre": "La Libertad Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "12",
+        "departamento_id": "5",
+        "nombre": "La Libertad Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "13",
+        "departamento_id": "5",
+        "nombre": "La Libertad Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "14",
+        "departamento_id": "5",
+        "nombre": " La Libertad Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "15",
+        "departamento_id": "5",
+        "nombre": " La Libertad Costa",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "16",
+        "departamento_id": "5",
+        "nombre": "La Libertad Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "17",
+        "departamento_id": "6",
+        "nombre": "La Paz Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "18",
+        "departamento_id": "6",
+        "nombre": "La Paz Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "19",
+        "departamento_id": "6",
+        "nombre": "La Paz Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "20",
+        "departamento_id": "7",
+        "nombre": "La Unión Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "21",
+        "departamento_id": "7",
+        "nombre": "La Unión Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "22",
+        "departamento_id": "8",
+        "nombre": "Morazán Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "23",
+        "departamento_id": "8",
+        "nombre": "Morazán Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "24",
+        "departamento_id": "9",
+        "nombre": "San Miguel Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "25",
+        "departamento_id": "9",
+        "nombre": "San Miguel Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "26",
+        "departamento_id": "9",
+        "nombre": " San Miguel Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "27",
+        "departamento_id": "10",
+        "nombre": "San Salvador Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "28",
+        "departamento_id": "10",
+        "nombre": "San Salvador Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "29",
+        "departamento_id": "10",
+        "nombre": "San Salvador Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "30",
+        "departamento_id": "10",
+        "nombre": "San Salvador Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "31",
+        "departamento_id": "10",
+        "nombre": "San Salvador Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "32",
+        "departamento_id": "11",
+        "nombre": "San Vicente Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "33",
+        "departamento_id": "11",
+        "nombre": "San Vicente Sur",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "34",
+        "departamento_id": "12",
+        "nombre": "Santa Ana Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "35",
+        "departamento_id": "12",
+        "nombre": " Santa Ana Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "36",
+        "departamento_id": "12",
+        "nombre": " Santa Ana Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "37",
+        "departamento_id": "12",
+        "nombre": "Santa Ana Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "38",
+        "departamento_id": "13",
+        "nombre": "Sonsonate Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "39",
+        "departamento_id": "13",
+        "nombre": "Sonsonate Centro",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "40",
+        "departamento_id": "13",
+        "nombre": "Sonsonate Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "41",
+        "departamento_id": "13",
+        "nombre": "Sonsonate Oeste",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "42",
+        "departamento_id": "14",
+        "nombre": "Usulután Norte",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "43",
+        "departamento_id": "14",
+        "nombre": " Usulután Este",
+        "created_at": "",
+        "updated_at": ""
+    },
+    {
+        "id": "44",
+        "departamento_id": "14",
+        "nombre": " Usulután Oeste",
+        "created_at": "",
+        "updated_at": ""
+    }
+]
