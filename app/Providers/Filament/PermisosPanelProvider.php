@@ -24,6 +24,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+use Filament\Navigation\NavigationItem;
+
 class PermisosPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -54,6 +56,28 @@ class PermisosPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
 
+            ])
+            ->navigationItems([
+                NavigationItem::make('Manual de Usuario')
+                    ->url('/doc/manual_empleado_nivel_1.md', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-book-open')
+                    ->group('Documentación')
+                    ->sort(90)
+                    ->visible(fn() => auth()->check()),
+
+                NavigationItem::make('Manual del Administrador')
+                    ->url('/doc/manual_superadmin.md', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->group('Documentación')
+                    ->sort(91)
+                    ->visible(fn() => auth()->user()?->hasRole(['super_admin', 'admin'])),
+
+                NavigationItem::make('Manual de Instalación')
+                    ->url('/doc/manual_instalacion.md', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-wrench-screwdriver')
+                    ->group('Documentación')
+                    ->sort(92)
+                    ->visible(fn() => auth()->user()?->hasRole(['super_admin'])),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([

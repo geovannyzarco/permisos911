@@ -149,15 +149,14 @@ class CalendarioPermisos extends Component
                             $q->where('unidad_id', $emp->unidad_id);
                         });
                     }
-                } elseif ($emp->nivel_id == 2) {
-                    // Supervisor ve permisos de su unidad
-                    $query->whereHas('empleado', function ($q) use ($emp) {
-                        $q->where('unidad_id', $emp->unidad_id);
-                    });
-                } elseif ($emp->nivel_id == 3) {
-                    // Jefe de Departamento ve permisos de su unidad
-                    $query->whereHas('empleado', function ($q) use ($emp) {
-                        $q->where('unidad_id', $emp->unidad_id);
+                } elseif ($emp->nivel_id == 2 || $emp->nivel_id == 3) {
+                    // Jefes y Supervisores ven permisos de sus grupos o unidades asignadas (incluyendo delegados)
+                    $grupoIds = $emp->obtenerGruposAsignados();
+                    $unidadIds = $emp->obtenerUnidadesAsignadas();
+
+                    $query->whereHas('empleado', function ($q) use ($grupoIds, $unidadIds) {
+                        $q->whereIn('grupo_id', $grupoIds)
+                          ->orWhereIn('unidad_id', $unidadIds);
                     });
                 } elseif ($emp->nivel_id == 4) {
                     // Jefe de División ve permisos de su división
@@ -383,12 +382,43 @@ class CalendarioPermisos extends Component
         $days = $this->getDaysInGrid();
         $monthName = Carbon::create($this->year, $this->month, 1)->translatedFormat('F Y');
 
+        $user = auth()->user();
+        $emp = $user->empleado;
+
+        // Cargar listas de opciones filtradas dinámicamente según nivel y delegaciones
+        if ($emp && $emp->nivel_id == 1) {
+            $divisions = [];
+            $unidades = [];
+            $grupos = [];
+        } elseif ($emp && ($emp->nivel_id == 2 || $emp->nivel_id == 3)) {
+            $grupoIds = $emp->obtenerGruposAsignados();
+            $unidadIds = $emp->obtenerUnidadesAsignadas();
+            $delegatedGrupoUnits = Grupo::whereIn('id', $grupoIds)->pluck('unidad_id')->toArray();
+            $allSelectableUnitIds = array_unique(array_merge($unidadIds, $delegatedGrupoUnits));
+
+            $unidades = Unidad::whereIn('id', $allSelectableUnitIds)->get();
+            $grupos = Grupo::where(function($q) use ($grupoIds, $allSelectableUnitIds) {
+                    $q->whereIn('id', $grupoIds)
+                      ->orWhereIn('unidad_id', $allSelectableUnitIds);
+                })
+                ->when($this->unidadId, fn($q) => $q->where('unidad_id', $this->unidadId))
+                ->get();
+
+            $divisionIds = Unidad::whereIn('id', $allSelectableUnitIds)->pluck('division_id')->toArray();
+            $divisions = Division::whereIn('id', $divisionIds)->get();
+        } else {
+            // Nivel 4 o Admin: Ver todo según restricciones de la página
+            $divisions = $this->isEmployeeRestricted || $this->isGrupoRestricted || $this->isUnidadRestricted || $this->isDivisionRestricted ? [] : Division::all();
+            $unidades = $this->isEmployeeRestricted || $this->isGrupoRestricted ? [] : ($this->divisionId ? Unidad::where('division_id', $this->divisionId)->get() : Unidad::all());
+            $grupos = $this->isEmployeeRestricted ? [] : ($this->unidadId ? Grupo::where('unidad_id', $this->unidadId)->get() : Grupo::all());
+        }
+
         return view('livewire.calendario-permisos', [
             'days' => $days,
             'monthName' => ucfirst($monthName),
-            'divisions' => $this->isEmployeeRestricted || $this->isGrupoRestricted || $this->isUnidadRestricted || $this->isDivisionRestricted ? [] : Division::all(),
-            'unidades' => $this->isEmployeeRestricted || $this->isGrupoRestricted ? [] : ($this->divisionId ? Unidad::where('division_id', $this->divisionId)->get() : Unidad::all()),
-            'grupos' => $this->isEmployeeRestricted ? [] : ($this->unidadId ? Grupo::where('unidad_id', $this->unidadId)->get() : Grupo::all()),
+            'divisions' => $divisions,
+            'unidades' => $unidades,
+            'grupos' => $grupos,
             'tipoPermisos' => TipoPermiso::all(),
         ]);
     }

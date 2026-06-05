@@ -111,4 +111,35 @@ class Empleado extends Model
         return $this->belongsTo(Distrito::class);
     }
 
+    /**
+     * Retorna un array con el ID de su grupo principal y los IDs de grupos delegados activos.
+     */
+    public function obtenerGruposAsignados(): array
+    {
+        $grupoPrincipal = $this->grupo_id ? [$this->grupo_id] : [];
+        
+        $gruposDelegados = DelegarAprobacion::where('jefe_id', $this->id)
+            ->where('tipo_delegacion', 'grupo')
+            ->activas()
+            ->pluck('entidad_delegada_id')
+            ->toArray();
+
+        return array_unique(array_merge($grupoPrincipal, array_map('intval', $gruposDelegados)));
+    }
+
+    /**
+     * Retorna un array con el ID de su unidad principal y los IDs de unidades delegadas activas.
+     */
+    public function obtenerUnidadesAsignadas(): array
+    {
+        $unidadPrincipal = $this->unidad_id ? [$this->unidad_id] : [];
+        
+        $unidadesDelegadas = DelegarAprobacion::where('jefe_id', $this->id)
+            ->where('tipo_delegacion', 'unidad')
+            ->activas()
+            ->pluck('entidad_delegada_id')
+            ->toArray();
+
+        return array_unique(array_merge($unidadPrincipal, array_map('intval', $unidadesDelegadas)));
+    }
 }

@@ -73,8 +73,8 @@ class AprobacionPermisoResource extends Resource
 
     /**
      * Valida si el usuario autenticado tiene permisos para acceder a un registro específico.
-     * Los jefes de grupo (nivel 2) solo acceden a permisos de su grupo.
-     * Los jefes de unidad (nivel 3) solo acceden a permisos de su unidad.
+     * Los jefes de grupo (nivel 2) solo acceden a permisos de su grupo o grupos delegados.
+     * Los jefes de unidad (nivel 3) solo acceden a permisos de su unidad o unidades delegadas.
      */
     public static function canAccessRecord($record): bool
     {
@@ -83,14 +83,14 @@ class AprobacionPermisoResource extends Resource
             return false;
         }
 
-        // Nivel 2: Jefe de Grupo. Solo accede a registros de su mismo grupo.
+        // Nivel 2: Jefe de Grupo. Accede a registros de su grupo principal o delegados.
         if ($emp->nivel_id == 2) {
-            return $record->empleado && $record->empleado->grupo_id == $emp->grupo_id;
+            return $record->empleado && in_array($record->empleado->grupo_id, $emp->obtenerGruposAsignados());
         }
 
-        // Nivel 3: Jefe de Unidad. Solo accede a registros de su misma unidad.
+        // Nivel 3: Jefe de Unidad. Accede a registros de su unidad principal o delegados.
         if ($emp->nivel_id == 3) {
-            return $record->empleado && $record->empleado->unidad_id == $emp->unidad_id;
+            return $record->empleado && in_array($record->empleado->unidad_id, $emp->obtenerUnidadesAsignadas());
         }
 
         return true;
@@ -103,17 +103,20 @@ class AprobacionPermisoResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Personalizar la consulta para mostrar solo los permisos que el usuario puede aprobar
+        // Personalizar la consulta para mostrar solo los permisos que el usuario puede aprobar (principales + delegados)
         $emp = auth()->user()->empleado;
+
+        if (!$emp) {
+            return parent::getEloquentQuery()->whereRaw('1 = 0');
+        }
+
         return parent::getEloquentQuery()
             ->when($emp->nivel_id == 2,
                 fn ($q)=>$q->whereHas('empleado',
-                    fn ($q) => $q->where('grupo_id', $emp->grupo_id)))
+                    fn ($q) => $q->whereIn('grupo_id', $emp->obtenerGruposAsignados())))
             ->when($emp->nivel_id == 3,
                 fn ($q)=>$q->whereHas('empleado',
-                    fn ($q) => $q->where('unidad_id', $emp->unidad_id)));
-
-
+                    fn ($q) => $q->whereIn('unidad_id', $emp->obtenerUnidadesAsignadas())));
     }
 
 

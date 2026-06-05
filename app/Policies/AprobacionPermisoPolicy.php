@@ -20,7 +20,7 @@ class AprobacionPermisoPolicy
         }
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_GRUPO
-            && $permiso->empleado->grupo_id == $emp->grupo_id
+            && in_array($permiso->empleado->grupo_id, $emp->obtenerGruposAsignados())
             && (is_null($permiso->id_estado_vb) || $permiso->id_estado_vb == 4);
     }
 
@@ -35,7 +35,7 @@ class AprobacionPermisoPolicy
         }
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_UNIDAD
-            && $permiso->empleado->unidad_id == $emp->unidad_id
+            && in_array($permiso->empleado->unidad_id, $emp->obtenerUnidadesAsignadas())
             && (is_null($permiso->id_estado_aprobacion) || $permiso->id_estado_aprobacion == 4);
     }
 
