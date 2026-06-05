@@ -22,3 +22,17 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Evitar subir archivos CSV de seeders
+/database/seeders/dui/*.csv
+/database/seeders/datos/*.csv
+
+# Evitar subir archivos cargados en storage (fotos, firmas, adjuntos)
+/storage/app/*
+!/storage/app/.gitignore
+/storage/app/private/*
+!/storage/app/private/.gitignore
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
