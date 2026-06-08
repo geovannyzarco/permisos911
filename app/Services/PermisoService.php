@@ -34,7 +34,7 @@ class PermisoService
         $fechaDesde = Carbon::parse($desde);
         $fechaHasta = Carbon::parse($hasta);
 
-        return $fechaDesde->lessThanOrEqualTo($fechaHasta);
+        return $fechaDesde->lessThan($fechaHasta);
     }
 
     /**
@@ -184,7 +184,7 @@ class PermisoService
         // 1. Validar rango horario
         if (!$this->validarRangoFechas($desde, $hasta)) {
             throw new DomainException(
-                'La fecha/hora "hasta" debe ser mayor o igual que "desde".'
+                'La fecha/hora "hasta" debe ser mayor que "desde".'
             );
         }
 

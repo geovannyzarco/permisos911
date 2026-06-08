@@ -300,7 +300,7 @@ class GestionPermisoForm
 
                             try {
                                 if (! $service->validarRangoFechas($desde, $value)) {
-                                    $fail('La fecha "hasta" debe ser mayor o igual que "desde".');
+                                    $fail('La fecha "hasta" debe ser mayor que "desde".');
 
                                     return;
                                 }

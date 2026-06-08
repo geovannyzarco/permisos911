@@ -238,9 +238,9 @@ class PermisosForm
                             $service = app(\App\Services\PermisoService::class);
 
                             try {
-                                // 1. Validamos que la fecha "hasta" no sea menor a la fecha "desde"
+                                // 1. Validamos que la fecha "hasta" no sea menor o igual a la fecha "desde"
                                 if (! $service->validarRangoFechas($desde, $value)) {
-                                    $fail('La fecha "hasta" debe ser mayor o igual que "desde".');
+                                    $fail('La fecha "hasta" debe ser mayor que "desde".');
 
                                     return; // Detenemos la ejecución aquí si el rango no tiene sentido
                                 }
