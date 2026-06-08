@@ -245,6 +245,13 @@ class PermisosForm
                                     return; // Detenemos la ejecución aquí si el rango no tiene sentido
                                 }
 
+                                // 1.2. Validamos que la hora de inicio y de fin no sean ambas 00:00
+                                if (! $service->validarHorasNoCero($desde, $value)) {
+                                    $fail('No se permite registrar permisos con la hora de inicio (desde) y hora de fin (hasta) en 00:00.');
+
+                                    return; // Detenemos la ejecución aquí
+                                }
+
                                 // 2. Validamos que el permiso no supere el límite de permisos diarios para el grupo
                                 // Si se pasa del límite, la función lanzará una excepción que atraparemos más abajo
                                 $service->validarLimitePermisosDiarios($empleado, $desde, $value, $record);

@@ -305,6 +305,13 @@ class GestionPermisoForm
                                     return;
                                 }
 
+                                // Validamos que la hora de inicio y de fin no sean ambas 00:00
+                                if (! $service->validarHorasNoCero($desde, $value)) {
+                                    $fail('No se permite registrar permisos con la hora de inicio (desde) y hora de fin (hasta) en 00:00.');
+
+                                    return; // Detenemos la ejecución aquí
+                                }
+
                                 // MODIFICACIÓN: Si el administrador activó el interruptor, nos detenemos aquí.
                                 // De esta manera no se validan los cupos diarios ni las horas personales.
                                 if ($ignorarValidaciones) {

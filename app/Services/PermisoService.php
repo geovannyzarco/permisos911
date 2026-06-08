@@ -38,6 +38,26 @@ class PermisoService
     }
 
     /**
+     * Valida que la hora de inicio (desde) y hora de fin (hasta) no sean ambas 00:00.
+     * Devuelve true si el rango es válido (no son ambas 00:00), de lo contrario false.
+     *
+     * @param string|Carbon|null $desde
+     * @param string|Carbon|null $hasta
+     * @return bool
+     */
+    public function validarHorasNoCero($desde, $hasta): bool
+    {
+        if (!$desde || !$hasta) {
+            return true;
+        }
+
+        $timeDesde = Carbon::parse($desde)->format('H:i');
+        $timeHasta = Carbon::parse($hasta)->format('H:i');
+
+        return !($timeDesde === '00:00' && $timeHasta === '00:00');
+    }
+
+    /**
      * Valida que no se exceda el límite de permisos diarios configurado para el grupo del empleado.
      * Si en alguno de los días del rango solicitado ya se alcanzó el límite, lanza una excepción.
      *
