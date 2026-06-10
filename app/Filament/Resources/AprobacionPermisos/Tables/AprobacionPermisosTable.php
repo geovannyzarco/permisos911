@@ -137,33 +137,41 @@ class AprobacionPermisosTable
                             ->label('Unidad')
                             ->options(Unidad::pluck('nombre', 'id'))
                             ->reactive()
-                            ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)
+                            ->visible(fn() => auth()->user()->empleado?->nivel_id == Empleado::NIVEL_JEFE_DIV)
                             ->afterStateUpdated(fn($set) => $set('grupo_id', null)),
 
                         Select::make('grupo_id')
                             ->label('Grupo')
                             ->options(function (callable $get) {
-                                $nivel = auth()->user()->empleado?->nivel_id;
+                                $emp = auth()->user()->empleado;
+                                if (!$emp) {
+                                    return [];
+                                }
+                                $nivel = $emp->nivel_id;
 
                                 return Grupo::query()
                                     // Nivel 4 filtra por unidad seleccionada en el formulario
                                     ->when(
-                                        $nivel == 4 && $get('unidad_id'),
+                                        $nivel == Empleado::NIVEL_JEFE_DIV && $get('unidad_id'),
                                         fn($query) => $query->where('unidad_id', $get('unidad_id'))
                                     )
                                     // Nivel 3 filtra por la unidad del jefe de unidad logueado
                                     ->when(
-                                        $nivel == 3,
-                                        fn($query) => $query->where('unidad_id', auth()->user()->empleado?->unidad_id)
+                                        $nivel == Empleado::NIVEL_JEFE_UNIDAD,
+                                        fn($query) => $query->where('unidad_id', $emp->unidad_id)
+                                    )
+                                    // Nivel 2 filtra por los grupos asignados/delegados del supervisor logueado
+                                    ->when(
+                                        $nivel == Empleado::NIVEL_JEFE_GRUPO,
+                                        fn($query) => $query->whereIn('id', $emp->obtenerGruposAsignados())
                                     )
                                     ->pluck('nombre', 'id');
                             })
                             // Solo deshabilitar para nivel 4 si no hay unidad
                             ->disabled(function (callable $get) {
-
                                 $nivel = auth()->user()->empleado?->nivel_id;
 
-                                if ($nivel == 4) {
+                                if ($nivel == Empleado::NIVEL_JEFE_DIV) {
                                     return !$get('unidad_id');
                                 }
 
@@ -179,7 +187,24 @@ class AprobacionPermisosTable
                                 $query->whereHas('empleado', fn($q) => $q->where('grupo_id', $grupoId));
                             });
                     })
-                    ->visible(fn() => in_array(auth()->user()->empleado?->nivel_id, [3, 4])),
+                    ->visible(function () {
+                        $emp = auth()->user()->empleado;
+                        if (!$emp) {
+                            return false;
+                        }
+
+                        // Jefes de Unidad (Nivel 3) y Jefes de División (Nivel 4)
+                        if (in_array($emp->nivel_id, [Empleado::NIVEL_JEFE_UNIDAD, Empleado::NIVEL_JEFE_DIV])) {
+                            return true;
+                        }
+
+                        // Supervisores (Nivel 2) si tienen más de un grupo asignado/delegado
+                        if ($emp->nivel_id == Empleado::NIVEL_JEFE_GRUPO && count($emp->obtenerGruposAsignados()) > 1) {
+                            return true;
+                        }
+
+                        return false;
+                    }),
             ])
             ->bulkActions([
                 // Acciones masivas para procesar múltiples registros a la vez
