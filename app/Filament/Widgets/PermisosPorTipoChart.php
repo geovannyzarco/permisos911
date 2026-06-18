@@ -23,6 +23,7 @@ class PermisosPorTipoChart extends ChartWidget
         $data = Permiso::select('tipo_permisos.nombre as tipo', DB::raw('COUNT(*) as total'))
             ->join('tipo_permisos', 'permisos.tipo_permiso_id', '=', 'tipo_permisos.id')
             ->whereYear('desde', $year)
+            ->where('id_estado_aprobacion_jefe_division', 3) // Solo permisos aprobados
             ->groupBy('tipo_permisos.nombre')
             ->with('tipoPermiso')
             ->get()

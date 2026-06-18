@@ -34,7 +34,7 @@ class StatsHorasPersonales extends BaseWidget
         // Calculamos la diferencia en minutos y la pasamos a horas
         $minutosUsados = Permiso::where('empleado_id', $empleado->id)
             ->where('tipo_permiso_id', 1) // Horas Personales
-            ->where('id_estado_aprobacion', 3) // Aprobado
+            ->where('id_estado_aprobacion_jefe_division', 3) // Aprobado
             ->whereYear('desde', $year)
             ->get()
             ->sum(function ($permiso) {
@@ -53,17 +53,17 @@ class StatsHorasPersonales extends BaseWidget
         $horasDisponibles = $horasAsignadas - $horasUsadas;
 
         return [
-            Stat::make('Horas Personales Asignadas', $horasAsignadas.' hrs')
+            Stat::make('Horas Personales Asignadas', $horasAsignadas . ' hrs')
                 ->description('Total de horas anuales asignadas')
                 ->icon('heroicon-o-calendar-days')
                 ->color('info'),
 
-            Stat::make('Horas Personales Usadas', $horasUsadas.' hrs')
-                ->description('Consumo acumulado en '.$year)
+            Stat::make('Horas Personales Usadas', $horasUsadas . ' hrs')
+                ->description('Consumo acumulado en ' . $year)
                 ->icon('heroicon-o-clock')
                 ->color($horasUsadas > ($horasAsignadas * 0.8) ? 'danger' : 'warning'),
 
-            Stat::make('Horas Personales Disponibles', $horasDisponibles.' hrs')
+            Stat::make('Horas Personales Disponibles', $horasDisponibles . ' hrs')
                 ->description('Saldo restante para el año')
                 ->icon('heroicon-o-academic-cap')
                 ->color($horasDisponibles > 0 ? 'success' : 'danger'),

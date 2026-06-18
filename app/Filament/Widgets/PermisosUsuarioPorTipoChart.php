@@ -41,12 +41,12 @@ class PermisosUsuarioPorTipoChart extends ChartWidget
             ->selectRaw('tipo_permiso_id, COUNT(*) as total')
             ->where('empleado_id', $empleado->id)
             ->whereYear('desde', $year)
-            ->where('id_estado_aprobacion', 3)
+            ->where('id_estado_aprobacion_jefe_division', 3)
             ->groupBy('tipo_permiso_id')
             ->with('tipoPermiso')
             ->get();
 
-        $labels = $results->map(fn ($row) => $row->tipoPermiso->nombre)->toArray();
+        $labels = $results->map(fn($row) => $row->tipoPermiso->nombre)->toArray();
         $data = $results->pluck('total')->toArray();
 
         return [
@@ -55,7 +55,12 @@ class PermisosUsuarioPorTipoChart extends ChartWidget
                     'label' => 'Total Permisos',
                     'data' => $data,
                     'backgroundColor' => [
-                        '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                        '#36A2EB',
+                        '#FF6384',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
                     ],
                 ],
             ],
