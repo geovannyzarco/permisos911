@@ -91,8 +91,9 @@ class PermisoService
         $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
 
         foreach ($periodo as $fecha) {
-            // Contar cuántos permisos activos/existentes hay en este día para este grupo
-            $permisosEnEsteDia = Permiso::query()
+            // MODIFICACIÓN: Cambiamos de contar permisos totales a contar usuarios distintos del mismo grupo.
+            // Obtenemos los IDs únicos de empleados que ya tienen permisos registrados en este día.
+            $empleadosConPermiso = Permiso::query()
                 ->whereHas('empleado', function ($query) use ($grupo) {
                     $query->where('grupo_id', $grupo->id);
                 })
@@ -101,13 +102,25 @@ class PermisoService
                 ->when($permisoActual, function ($query) use ($permisoActual) {
                     $query->where('id', '!=', $permisoActual->id);
                 })
-                // Aquí podrías agregar un filtro adicional si tienes un estado "Rechazado" o "Cancelado"
-                // para que esos no sumen al límite. Ejemplo: ->whereNotIn('id_estado_aprobacion', [ESTADO_RECHAZADO])
-                ->count();
+                // Excluimos permisos rechazados (estado 5) ya que no restan cupo
+                ->where('id_estado_aprobacion', '!=', 5)
+                ->pluck('empleado_id')
+                ->unique()
+                ->values()
+                ->toArray();
 
-            if ($permisosEnEsteDia >= $limite) {
+            $totalEmpleados = count($empleadosConPermiso);
+            
+            // Si el empleado actual no está en la lista de empleados que ya tienen permiso,
+            // esta nueva solicitud agregará un nuevo empleado a la lista para ese día.
+            if (!in_array($empleado->id, $empleadosConPermiso)) {
+                $totalEmpleados += 1;
+            }
+
+            // Validamos contra el límite de empleados distintos permitidos
+            if ($totalEmpleados > $limite) {
                 throw new DomainException(
-                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} permisos diarios permitidos para el grupo '{$grupo->nombre}'."
+                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} empleados distintos con permisos diarios permitidos para el grupo '{$grupo->nombre}'."
                 );
             }
         }
@@ -149,7 +162,8 @@ class PermisoService
         }
 
         foreach ($periodo as $fecha) {
-            $permisosEnEsteDia = Permiso::query()
+            // MODIFICACIÓN: Contamos empleados distintos en lugar de permisos totales.
+            $empleadosConPermiso = Permiso::query()
                 ->whereHas('empleado', function ($query) use ($grupo) {
                     $query->where('grupo_id', $grupo->id);
                 })
@@ -158,17 +172,74 @@ class PermisoService
                 ->when($permisoActual, function ($query) use ($permisoActual) {
                     $query->where('id', '!=', $permisoActual->id);
                 })
-                ->count();
+                // Excluimos permisos rechazados (estado 5)
+                ->where('id_estado_aprobacion', '!=', 5)
+                ->pluck('empleado_id')
+                ->unique()
+                ->values()
+                ->toArray();
+
+            $totalEmpleados = count($empleadosConPermiso);
+            if (!in_array($empleado->id, $empleadosConPermiso)) {
+                $totalEmpleados += 1;
+            }
 
             $resultado[] = [
                 'fecha' => $fecha->format('d/m/Y'),
-                'ocupados' => $permisosEnEsteDia,
+                'ocupados' => count($empleadosConPermiso),
                 'limite' => $limite,
-                'disponible' => $permisosEnEsteDia < $limite
+                'disponible' => $totalEmpleados <= $limite
             ];
         }
 
         return $resultado;
+    }
+
+    /**
+     * NUEVO MÉTODO: Valida que el empleado no tenga otro permiso que se traslape
+     * en horario (coincida total o parcialmente) con el rango de fechas solicitado.
+     * Esta validación es estricta y se ejecuta siempre para evitar inconsistencias estadísticas.
+     *
+     * @param Empleado $empleado
+     * @param string|Carbon $desde
+     * @param string|Carbon $hasta
+     * @param Permiso|null $permisoActual Para no contarlo si se está editando
+     * @return bool
+     * @throws DomainException
+     */
+    public function validarNoTraslapeHoras(
+        Empleado $empleado,
+        $desde,
+        $hasta,
+        ?Permiso $permisoActual = null
+    ): bool {
+        $fechaDesde = Carbon::parse($desde);
+        $fechaHasta = Carbon::parse($hasta);
+
+        // Buscamos si existe algún permiso para el mismo empleado que se traslape con este rango de tiempo.
+        // Se excluyen los permisos rechazados (estado 5).
+        $traslape = Permiso::query()
+            ->where('empleado_id', $empleado->id)
+            ->where('id_estado_aprobacion', '!=', 5)
+            ->where(function ($query) use ($fechaDesde, $fechaHasta) {
+                // Condición de traslape: inicio_existente < fin_solicitado AND fin_existente > inicio_solicitado
+                $query->where('desde', '<', $fechaHasta)
+                      ->where('hasta', '>', $fechaDesde);
+            })
+            ->when($permisoActual, function ($query) use ($permisoActual) {
+                $query->where('id', '!=', $permisoActual->id);
+            })
+            ->first();
+
+        if ($traslape) {
+            $desdeStr = Carbon::parse($traslape->desde)->format('d/m/Y H:i');
+            $hastaStr = Carbon::parse($traslape->hasta)->format('d/m/Y H:i');
+            throw new DomainException(
+                "El empleado ya tiene un permiso registrado para este horario que se traslapa con la solicitud actual (Permiso #{$traslape->id} desde {$desdeStr} hasta {$hastaStr})."
+            );
+        }
+
+        return true;
     }
 
     /**

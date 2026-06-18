@@ -160,11 +160,18 @@ class PermisosForm
                                         ->with('empleado')
                                         ->get();
 
-                                    // Si la cantidad de permisos es igual o mayor al límite permitido para el grupo
-                                    if ($permisosEnEsteDia->count() >= $limite) {
+                                    // MODIFICACIÓN: Evaluamos los bloqueos basándonos en empleados distintos
+                                    $empleadosConPermiso = $permisosEnEsteDia->pluck('empleado_id')->unique()->toArray();
+                                    $totalEmpleados = count($empleadosConPermiso);
+                                    if (!in_array($empleado->id, $empleadosConPermiso)) {
+                                        $totalEmpleados += 1;
+                                    }
+
+                                    // Si la cantidad de empleados distintos excede el límite permitido para el grupo
+                                    if ($totalEmpleados > $limite) {
                                         $hayBloqueo = true;
                                         $html .= "<div style='margin-bottom: 12px;'>";
-                                        $html .= "<strong style='color: #e53e3e;'>⚠️ El día {$fecha->format('d/m/Y')} está bloqueado (Límite: {$limite} permisos, Ocupados: " . $permisosEnEsteDia->count() . "):</strong>";
+                                        $html .= "<strong style='color: #e53e3e;'>⚠️ El día {$fecha->format('d/m/Y')} está bloqueado (Límite: {$limite} empleados, Ocupados: " . count($empleadosConPermiso) . " empleados distintos):</strong>";
                                         $html .= "<ul style='list-style-type: disc; margin-left: 20px; color: #4a5568;'>";
                                         foreach ($permisosEnEsteDia as $p) {
                                             $desdeStr = Carbon::parse($p->desde)->format('d/m/Y H:i');
@@ -256,6 +263,9 @@ class PermisosForm
                                 // Si se pasa del límite, la función lanzará una excepción que atraparemos más abajo
                                 $service->validarLimitePermisosDiarios($empleado, $desde, $value, $record);
 
+                                // MODIFICACIÓN: Validamos que no se traslapen los horarios del empleado (se evalúa siempre)
+                                $service->validarNoTraslapeHoras($empleado, $desde, $value, $record);
+
                                 // 3. Si el permiso es de tipo Personal (ID 1), procedemos a validar su saldo de horas
                                 if ($tipoPermisoId == 1) {
                                     // Calculamos cuántas horas está solicitando en total usando Carbon
@@ -308,7 +318,7 @@ class PermisosForm
                         foreach ($disponibilidad as $dia) {
                             $color = $dia['disponible'] ? 'text-success-600 font-medium' : 'text-danger-600 font-bold';
                             $estado = $dia['disponible'] ? '(🟢 Disponible)' : '(🔴 Lleno)';
-                            $html .= "<li class='{$color}'>{$dia['fecha']}: {$dia['ocupados']} de {$dia['limite']} permisos ocupados {$estado}</li>";
+                            $html .= "<li class='{$color}'>{$dia['fecha']}: {$dia['ocupados']} de {$dia['limite']} cupos ocupados (empleados distintos) {$estado}</li>";
                         }
                         $html .= '</ul>';
 
