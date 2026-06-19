@@ -213,18 +213,21 @@ class PermisoService
         $hasta,
         ?Permiso $permisoActual = null
     ): bool {
-        $fechaDesde = Carbon::parse($desde);
-        $fechaHasta = Carbon::parse($hasta);
+        // MODIFICACIÓN: Para bases de datos que almacenan fecha/hora con offset (ej: datetimeoffset en SQL Server),
+        // debemos pasar los valores formateados explícitamente con su offset timezone ('Y-m-d H:i:s P') en lugar de
+        // objetos Carbon crudos, ya que Laravel los serializa a UTC en las consultas sql perdiendo la congruencia local.
+        $fechaDesdeStr = Carbon::parse($desde)->format('Y-m-d H:i:s P');
+        $fechaHastaStr = Carbon::parse($hasta)->format('Y-m-d H:i:s P');
 
         // Buscamos si existe algún permiso para el mismo empleado que se traslape con este rango de tiempo.
         // Se excluyen los permisos rechazados (estado 5).
         $traslape = Permiso::query()
             ->where('empleado_id', $empleado->id)
             ->where('id_estado_aprobacion', '!=', 5)
-            ->where(function ($query) use ($fechaDesde, $fechaHasta) {
+            ->where(function ($query) use ($fechaDesdeStr, $fechaHastaStr) {
                 // Condición de traslape: inicio_existente < fin_solicitado AND fin_existente > inicio_solicitado
-                $query->where('desde', '<', $fechaHasta)
-                      ->where('hasta', '>', $fechaDesde);
+                $query->where('desde', '<', $fechaHastaStr)
+                      ->where('hasta', '>', $fechaDesdeStr);
             })
             ->when($permisoActual, function ($query) use ($permisoActual) {
                 $query->where('id', '!=', $permisoActual->id);
