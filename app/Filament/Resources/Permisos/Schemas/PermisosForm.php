@@ -203,7 +203,21 @@ class PermisosForm
                     ->readonly(),
                 Select::make('tipo_permiso_id')
                     ->label('Tipo de Permiso')
-                    ->relationship('tipoPermiso', 'nombre')
+                    // MODIFICACIÓN: Filtrar los tipos de permiso según la categoría del empleado
+                    ->relationship(
+                        name: 'tipoPermiso',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: function ($query) {
+                            // Obtenemos el empleado asociado al usuario logueado actualmente
+                            $empleado = auth()->user()?->empleado;
+
+                            // Si el empleado pertenece a la categoría ID = 24 (Telefonista),
+                            // se excluye la opción de "tiempo compensatorio / compensado" (ID = 2
+                            if ($empleado && $empleado->categoria_id == 24) {
+                                $query->where('id', '!=', 2);
+                            }
+                        }
+                    )
                     ->required()
                     ->live()
                     ->disabled($deshabilitarSiNoPendiente),
