@@ -203,17 +203,7 @@ class PermisosForm
                     ->readonly(),
                 Select::make('tipo_permiso_id')
                     ->label('Tipo de Permiso')
-                    ->relationship(
-                        name: 'tipoPermiso',
-                        titleAttribute: 'nombre',
-                        modifyQueryUsing: function ($query) {
-                            // Si el usuario logueado es telefonista (categoría 24), no se le permite solicitar tiempo compensado
-                            $empleado = auth()->user()->empleado;
-                            if ($empleado && $empleado->categoria_id == 24) {
-                                $query->where('id', '!=', 2);
-                            }
-                        }
-                    )
+                    ->relationship('tipoPermiso', 'nombre')
                     ->required()
                     ->live()
                     ->disabled($deshabilitarSiNoPendiente),

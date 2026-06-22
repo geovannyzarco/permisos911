@@ -53,11 +53,7 @@ class EmpleadoForm
 
                         TextInput::make('oni')
                             ->required()
-                            ->disabled($isEmpleado)
-                            ->unique(table: 'empleados', column: 'oni', ignoreRecord: true)
-                            ->validationMessages([
-                                'unique' => 'El ONI ingresado ya está registrado para otro empleado. Por favor, verifique el número e intente de nuevo.',
-                            ]),
+                            ->disabled($isEmpleado),
 
                         TextInput::make('email')
                             ->label('Correo Electrónico')
