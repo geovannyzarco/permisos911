@@ -432,4 +432,65 @@ class PermisoService
         return true;
     }
     // FIN CAMBIO
+
+    /**
+     * Valida que no haya más de 2 empleados con la categoría 24 (Telefonista)
+     * con permisos activos o pendientes en cada día del rango solicitado.
+     *
+     * @param Empleado $empleado
+     * @param string|Carbon $desde
+     * @param string|Carbon $hasta
+     * @param Permiso|null $permisoActual
+     * @return bool
+     * @throws DomainException
+     */
+    public function validarLimiteTelefonistas(
+        Empleado $empleado,
+        $desde,
+        $hasta,
+        ?Permiso $permisoActual = null
+    ): bool {
+        // Solo aplica si el empleado tiene la categoría 24
+        if ($empleado->categoria_id != 24) {
+            return true;
+        }
+
+        $limite = 2;
+        $fechaDesde = Carbon::parse($desde)->startOfDay();
+        $fechaHasta = Carbon::parse($hasta)->startOfDay();
+
+        $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
+
+        foreach ($periodo as $fecha) {
+            // Obtenemos los IDs de empleados distintos con categoría 24 que ya tienen permisos ese día
+            $empleadosConPermiso = Permiso::query()
+                ->whereHas('empleado', function ($query) {
+                    $query->where('categoria_id', 24);
+                })
+                ->whereDate('desde', '<=', $fecha)
+                ->whereDate('hasta', '>=', $fecha)
+                ->when($permisoActual, function ($query) use ($permisoActual) {
+                    $query->where('id', '!=', $permisoActual->id);
+                })
+                // Excluimos rechazados (estado 5)
+                ->where('id_estado_aprobacion', '!=', 5)
+                ->pluck('empleado_id')
+                ->unique()
+                ->values()
+                ->toArray();
+
+            $totalEmpleados = count($empleadosConPermiso);
+            if (!in_array($empleado->id, $empleadosConPermiso)) {
+                $totalEmpleados += 1;
+            }
+
+            if ($totalEmpleados > $limite) {
+                throw new DomainException(
+                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} empleados telefonistas permitidos con permiso diario."
+                );
+            }
+        }
+
+        return true;
+    }
 }
