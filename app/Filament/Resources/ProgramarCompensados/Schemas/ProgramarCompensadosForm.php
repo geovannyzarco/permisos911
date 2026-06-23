@@ -128,11 +128,18 @@ class ProgramarCompensadosForm
                                     return 'El rango de fechas es muy amplio.';
                                 }
 
+                                $grupo = $empleado->grupo;
+                                $limite = $grupo ? $grupo->permisos_diarios : 2;
+                                $grupoNombre = $grupo ? $grupo->nombre : 'Sin Grupo';
+
                                 $html = '<ul class="list-disc list-inside space-y-1">';
                                 foreach ($periodo as $fecha) {
                                     $empleadosConPermiso = Permiso::query()
-                                        ->whereHas('empleado', function ($query) {
-                                            $query->where('categoria_id', 24);
+                                        ->whereHas('empleado', function ($query) use ($grupo) {
+                                            $query->where('categoria_id', 24)
+                                                  ->when($grupo, function ($q) use ($grupo) {
+                                                      $q->where('grupo_id', $grupo->id);
+                                                  });
                                         })
                                         ->whereDate('desde', '<=', $fecha)
                                         ->whereDate('hasta', '>=', $fecha)
@@ -150,10 +157,10 @@ class ProgramarCompensadosForm
                                         $totalEmpleados += 1;
                                     }
 
-                                    $disponible = $totalEmpleados <= 2;
+                                    $disponible = $totalEmpleados <= $limite;
                                     $color = $disponible ? 'text-success-600 font-medium' : 'text-danger-600 font-bold';
                                     $estado = $disponible ? '(🟢 Disponible)' : '(🔴 Lleno)';
-                                    $html .= "<li class='{$color}'>{$fecha->format('d/m/Y')}: " . count($empleadosConPermiso) . " de 2 cupos ocupados {$estado}</li>";
+                                    $html .= "<li class='{$color}'>{$fecha->format('d/m/Y')}: " . count($empleadosConPermiso) . " de {$limite} cupos ocupados (Grupo: {$grupoNombre}) {$estado}</li>";
                                 }
                                 $html .= '</ul>';
 

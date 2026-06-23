@@ -455,17 +455,24 @@ class PermisoService
             return true;
         }
 
-        $limite = 2;
+        $grupo = $empleado->grupo;
+        // Si no tiene grupo o no tiene límite configurado, no hay restricción
+        if (!$grupo || empty($grupo->permisos_diarios)) {
+            return true;
+        }
+
+        $limite = $grupo->permisos_diarios;
         $fechaDesde = Carbon::parse($desde)->startOfDay();
         $fechaHasta = Carbon::parse($hasta)->startOfDay();
 
         $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
 
         foreach ($periodo as $fecha) {
-            // Obtenemos los IDs de empleados distintos con categoría 24 que ya tienen permisos ese día
+            // Obtenemos los IDs de empleados distintos con categoría 24 y del mismo grupo que ya tienen permisos ese día
             $empleadosConPermiso = Permiso::query()
-                ->whereHas('empleado', function ($query) {
-                    $query->where('categoria_id', 24);
+                ->whereHas('empleado', function ($query) use ($grupo) {
+                    $query->where('categoria_id', 24)
+                          ->where('grupo_id', $grupo->id);
                 })
                 ->whereDate('desde', '<=', $fecha)
                 ->whereDate('hasta', '>=', $fecha)
@@ -486,7 +493,7 @@ class PermisoService
 
             if ($totalEmpleados > $limite) {
                 throw new \DomainException(
-                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} empleados telefonistas permitidos con permiso diario."
+                    "No se puede registrar el permiso. El día {$fecha->format('d/m/Y')} excede el límite de {$limite} empleados telefonistas permitidos con permiso diario para el grupo '{$grupo->nombre}'."
                 );
             }
         }
