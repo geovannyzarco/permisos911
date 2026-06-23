@@ -353,7 +353,7 @@ class ProgramarCompensadosForm
                                             $hastaComp = Carbon::parse($item['hasta']);
 
                                             // 1. Validar que las fechas del compensado no se traslapen ni coincidan con el permiso principal
-                                            if (!($desdeComp->geq($hastaPrin) || $hastaComp->leq($desdePrin))) {
+                                            if (!($desdeComp->greaterThanOrEqualTo($hastaPrin) || $hastaComp->lessThanOrEqualTo($desdePrin))) {
                                                 $fail("El periodo compensado ({$desdeComp->format('d/m/Y H:i')} - {$hastaComp->format('d/m/Y H:i')}) no puede coincidir ni traslaparse con el horario del permiso solicitado.");
                                                 return;
                                             }
