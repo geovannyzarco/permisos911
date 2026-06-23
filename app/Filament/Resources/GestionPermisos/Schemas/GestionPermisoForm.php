@@ -456,6 +456,34 @@ class GestionPermisoForm
                             ? "{$empleado->oni} - {$empleado->nombre}"
                             : '';
                     }),
+                Select::make('id_estado_aprobacion_jefe_division')
+                    ->label('Estado de Aprobación Jefe División')
+                    ->relationship(
+                        name: 'estadoAprobacionJefeDivision',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn($query) => $query->where('entidad_id', 2)
+                    )
+                    ->default(4)
+                    ->required(),
+                Select::make('id_oni_jefe_division')
+                    ->label('Jefe de División')
+                    ->searchable()
+                    ->preload()
+                    ->getSearchResultsUsing(function (string $search) {
+                        return Empleado::query()
+                            ->where('nombre', 'like', "%{$search}%")
+                            ->orWhere('oni', 'like', "%{$search}%")
+                            ->limit(50)
+                            ->get()
+                            ->mapWithKeys(fn($e) => [
+                                $e->oni => "{$e->oni} - {$e->nombre}",
+                            ]);
+                    })
+                    ->getOptionLabelUsing(function ($value) {
+                        $empleado = Empleado::where('oni', $value)->first();
+                        return $empleado ? "{$empleado->oni} - {$empleado->nombre}" : '';
+                    })
+                    ->nullable(),
                 TextInput::make('comentarios')
                     ->label('Comentarios')
                     ->maxLength(500)

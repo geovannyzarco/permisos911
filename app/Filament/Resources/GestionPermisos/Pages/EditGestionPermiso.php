@@ -29,6 +29,10 @@ class EditGestionPermiso extends EditRecord
             $data['fecha_aprobacion'] = now();
         }
 
+        if (!empty($data['id_estado_aprobacion_jefe_division']) && empty($this->record->fecha_aprobacion_jefe_division)) {
+            $data['fecha_aprobacion_jefe_division'] = now();
+        }
+
         return $data;
     }
 }
