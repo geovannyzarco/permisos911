@@ -72,6 +72,8 @@ class GestionPermisoInfolist
                     ])->columns(3)
                     ->columnSpanFull(),
 
+
+
                 Section::make('Aprobaciones')
                     ->schema([
                         TextEntry::make('estadoVB.nombre')

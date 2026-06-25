@@ -295,6 +295,15 @@ class GestionPermisoForm
 
                             $ignorarValidaciones = $get('ignorar_validaciones');
 
+                            $idEstadoVb = $get('id_estado_vb');
+                            $idEstadoAprobacion = $get('id_estado_aprobacion');
+                            $idEstadoAprobacionJefeDivision = $get('id_estado_aprobacion_jefe_division');
+
+                            // Si el permiso se está anulando, no se ejecutan las validaciones de negocio ni de traslapes
+                            if ($idEstadoVb == 5 || $idEstadoAprobacion == 5 || $idEstadoAprobacionJefeDivision == 5) {
+                                return;
+                            }
+
                             if (! $desde || ! $value || ! $empleadoId) {
                                 return;
                             }
@@ -407,7 +416,14 @@ class GestionPermisoForm
                     ->label('Jefe Vo.Bo.')
                     ->searchable()
                     ->preload()
-                    ->required()
+                    ->required(function ($get) {
+                        $empleadoId = $get('empleado_id');
+                        if (!$empleadoId) {
+                            return false;
+                        }
+                        $empleado = Empleado::find($empleadoId);
+                        return $empleado && $empleado->grupo_id && $empleado->grupo_id != 12;
+                    })
                     ->getSearchResultsUsing(function (string $search) {
                         return Empleado::query()
                             ->where('nombre', 'like', "%{$search}%")
