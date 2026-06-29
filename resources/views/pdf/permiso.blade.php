@@ -90,8 +90,29 @@
             height: 70px;
             object-fit: contain;
             /* Intentamos forzar transparencia si el motor lo permite */
-            background-color: transparent;
         }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* --- MAPEO DE CAMPOS COMPENSADO --- */
+        .c-fecha { top: 73px; left: 585px; width: 180px; }
+        .c-senor { top: 270px; left: 160px; width: 500px; }
+        .c-yo { top: 380px; left: 75px; width: 440px; text-align: left; }
+        .c-oni { top: 378px; left: 575px; width: 140px; text-align: left; }
+        .c-cargo { top: 410px; left:135px; width: 330px; text-align: left; font-size: 11px; }
+        .c-dia { top: 430px; left: 755px; width: 40px; text-align: left; }
+        .c-mes { top: 464px; left: 70px; width: 120px; text-align: left; font-size: 11px; }
+        .c-anio { top: 464px; left: 150px; width: 60px; text-align: left; }
+        .c-desde-hora { top: 464px; left: 405px; width: 75px; text-align: left; }
+        .c-hasta-hora { top: 462px; left: 600px; width: 75px; text-align: left; }
+        .c-tareas { top: 500px; left: 40px; width: 740px; height: 110px; font-size: 11px; line-height: 29.5px; text-transform: uppercase; }
+        .c-duracion-horas { top: 708px; left: 755px; width: 45px; text-align: left; }
+        .c-duracion-minutos { top: 740px; left: 120px; width: 45px; text-align: left; }
+        .c-firma-empleado { top: 780px; left: 120px; width: 220px; text-align: left; }
+        .c-firma-jefe-dept { top: 782px; left: 560px; width: 220px; text-align: left; }
+        .c-firma-jefe-div { top: 880px; left: 300px; width: 220px; text-align: left; }
     </style>
 </head>
 <body>
@@ -326,5 +347,65 @@
             </div>
         @endif
     </div>
+
+    @if($permiso->tipo_permiso_id == 2 && $permiso->compensados->isNotEmpty())
+        @foreach($permiso->compensados as $comp)
+            <div class="container page-break">
+                <!-- Imagen de fondo de la hoja de compensado -->
+                <img src="{{ public_path('formatos/hoja_compensados.png') }}" class="background-img">
+
+                <!-- Campos de la hoja de compensado -->
+                <div class="field c-fecha">{{ $permiso->fecha_creacion?->format('d/m/Y') }}</div>
+                <div class="field c-senor">{{ $jefeNombre }}</div>
+
+                <div class="field c-yo">{{ $nombreEmpleado }}</div>
+                <div class="field c-oni">{{ $oniEmpleado }}</div>
+                <div class="field c-cargo">{{ $cargoNombre }}</div>
+
+                @php
+                    $desdeComp = \Carbon\Carbon::parse($comp->desde);
+                    $hastaComp = \Carbon\Carbon::parse($comp->hasta);
+                    $compMeses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                    $compMesNombre = $compMeses[$desdeComp->month - 1];
+
+                    // Calcular la duración en horas y minutos
+                    $diferenciaComp = $desdeComp->diff($hastaComp);
+                    $compHoras = $diferenciaComp->h + ($diferenciaComp->d * 24);
+                    $compMinutos = $diferenciaComp->i;
+                @endphp
+
+                <div class="field c-dia">{{ $desdeComp->format('d') }}</div>
+                <div class="field c-mes">{{ $compMesNombre }}</div>
+                <div class="field c-anio">{{ $desdeComp->format('Y') }}</div>
+
+                <div class="field c-desde-hora">{{ $desdeComp->format('H:i') }}</div>
+                <div class="field c-hasta-hora">{{ $hastaComp->format('H:i') }}</div>
+
+                <div class="field c-tareas">{{ $comp->justificacion }}</div>
+
+                <div class="field c-duracion-horas">{{ $compHoras }}</div>
+                <div class="field c-duracion-minutos">{{ $compMinutos }}</div>
+
+                <!-- Firmas -->
+                @if($firmaEmpleado)
+                    <div class="field c-firma-empleado">
+                        <img src="{{ $firmaEmpleado }}" class="firma-img">
+                    </div>
+                @endif
+
+                @if($firmaJefeAprobacion)
+                    <div class="field c-firma-jefe-dept">
+                        <img src="{{ $firmaJefeAprobacion }}" class="firma-img">
+                    </div>
+                @endif
+
+                @if($firmaJefeDivision)
+                    <div class="field c-firma-jefe-div">
+                        <img src="{{ $firmaJefeDivision }}" class="firma-img">
+                    </div>
+                @endif
+            </div>
+        @endforeach
+    @endif
 </body>
 </html>

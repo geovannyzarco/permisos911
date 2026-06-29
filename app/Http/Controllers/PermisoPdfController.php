@@ -10,7 +10,7 @@ class PermisoPdfController extends Controller
 {
     public function generar($id)
 {
-        $permiso = Permiso::with(['empleado.categoria', 'empleado.unidad.division', 'tipoPermiso', 'estadoVB', 'estadoAprobado', 'jefeVb', 'jefeAprobacion'])
+        $permiso = Permiso::with(['empleado.categoria', 'empleado.unidad.division', 'tipoPermiso', 'estadoVB', 'estadoAprobado', 'jefeVb', 'jefeAprobacion', 'compensados'])
         ->findOrFail($id);
 
         if ($permiso->desde && $permiso->hasta) {

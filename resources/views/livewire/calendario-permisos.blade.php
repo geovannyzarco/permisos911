@@ -334,7 +334,7 @@
                                 </div>
 
                                 <!-- Botones de Acción -->
-                                <div class="flex items-center gap-2 pt-2 justify-end">
+                               <!-- <div class="flex items-center gap-2 pt-2 justify-end">
                                     @if($perm['pdf_url'])
                                         <a 
                                             href="{{ $perm['pdf_url'] }}" 
@@ -351,7 +351,7 @@
                             </div>
                         @endforeach
                     @endif
-                </div>
+                </div>-->
 
                 <!-- Footer del modal -->
                 <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex justify-end bg-gray-50 dark:bg-gray-800/40">
