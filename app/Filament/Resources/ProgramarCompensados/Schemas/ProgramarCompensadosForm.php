@@ -391,7 +391,7 @@ class ProgramarCompensadosForm
                                     // 5. Validar antigüedad máxima de 6 meses
                                     $service = app(\App\Services\PermisoService::class);
                                     try {
-                                        $service->validarAntiguedadCompensados($value);
+                                        $service->validarAntiguedadCompensados($value, $desdePrincipal);
                                     } catch (\DomainException $e) {
                                         $fail($e->getMessage());
                                     }

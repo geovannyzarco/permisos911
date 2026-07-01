@@ -405,15 +405,16 @@ class PermisoService
      * @return bool
      * @throws DomainException
      */
-    public function validarAntiguedadCompensados(array $compensados, bool $ignorarValidaciones = false): bool
+    public function validarAntiguedadCompensados(array $compensados, $fechaReferencia = null, bool $ignorarValidaciones = false): bool
     {
         // Si el administrador activó la opción retroactiva, omitir la validación de fecha
         if ($ignorarValidaciones) {
             return true;
         }
 
-        // Definir el límite de antigüedad (6 meses atrás a partir del inicio del día actual)
-        $limiteSeisMeses = now()->subMonths(6)->startOfDay();
+        // Definir el límite de antigüedad (6 meses atrás a partir de la fecha de referencia o del inicio del día actual)
+        $fechaRef = $fechaReferencia ? Carbon::parse($fechaReferencia) : now();
+        $limiteSeisMeses = $fechaRef->copy()->subMonths(6)->startOfDay();
 
         foreach ($compensados as $item) {
             if (isset($item['desde']) && !empty($item['desde'])) {
