@@ -77,7 +77,7 @@ class GestionPermisosTable
                     ->label('DURACIÓN')
                     ->sortable(),
 
-                TextColumn::make('MOTIVO')
+                TextColumn::make('motivo')
                     ->label('Motivo')
                     ->limit(50)
                     ->sortable(),
@@ -123,7 +123,7 @@ class GestionPermisosTable
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
-                TextColumn::make('jefeAprobacionJefeDivision.nombre')
+                TextColumn::make('jefeDivision.nombre')
                     ->label('JEFE APROBACIÓN DIVISIÓN')
                     ->sortable(),
 
