@@ -34,16 +34,8 @@ class EditAprobacionPermiso extends EditRecord
             abort(403);
         }
 
-        if ($empleado->nivel_id == 2) {
-            if ($record->empleado->grupo_id != $empleado->grupo_id) {
-                abort(403);
-            }
-        }
-
-        if ($empleado->nivel_id == 3) {
-            if ($record->empleado->unidad_id != $empleado->unidad_id) {
-                abort(403);
-            }
+        if (! static::getResource()::canAccessRecord($record)) {
+            abort(403);
         }
     }
 }

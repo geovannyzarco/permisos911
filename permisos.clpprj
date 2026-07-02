@@ -1,9 +1,776 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project name="C:/xampp/htdocs/permisos/permisos.clpprj">
+<project name="C:\xampp\htdocs\permisos\permisos.clpprj">
  <settings>
   <PM_URL><![CDATA[http://localhost/C:/xampp/htdocs/permisos]]></PM_URL>
   <PM_HOME_URL><![CDATA[http://localhost/C:/xampp/htdocs/permisos]]></PM_HOME_URL>
   <PM_LIBS><![CDATA[]]></PM_LIBS>
+  <PM_FTP_CONNECTION><![CDATA[]]></PM_FTP_CONNECTION>
+  <PM_FTP_DIR><![CDATA[]]></PM_FTP_DIR>
+  <PM_FTP_UPLOAD_ON_SAVE><![CDATA[INT:0]]></PM_FTP_UPLOAD_ON_SAVE>
   <PM_LANGUAGE><![CDATA[]]></PM_LANGUAGE>
  </settings>
+ <removed value=";"/>
+ <added value=""/>
+ <lastopfiles>
+  <file name="C:\xampp\htdocs\permisos\app\Livewire\ReporteMarcaciones.php"/>
+  <lastactivefile name=""/>
+ </lastopfiles>
+ <todoblock>
+  <todofile name="C:\xampp\htdocs\permisos\app\Console\Commands\ResetApp.php">
+   <todo pos="21;59" name="todos los permisos al rol admin"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\app\Filament\Resources\GestionPermisos\Schemas\GestionPermisoForm.php">
+   <todo pos="49;582" name="todos los items que el usuario agregó a la lista (Repeater)"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\app\Filament\Resources\Permisos\Schemas\PermisosForm.php">
+   <todo pos="79;252" name="todos los campos), no validamos aún"/>
+   <todo pos="49;409" name="todos los items que el usuario agregó a la lista (Repeater)"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\app\Filament\Widgets\PermisosPorMesChart.php">
+   <todo pos="21;47" name="todos los meses en 0"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\app\Livewire\CalendarioPermisos.php">
+   <todo pos="34;409" name="todo según restricciones de la página"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\app\Services\PermisoService.php">
+   <todo pos="35;249" name="todo es válido."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\database\migrations\2026_05_28_114709_add_historical_fields_to_permisos_table.php">
+   <todo pos="46;42" name="todos los permisos existentes"/>
+   <todo pos="21;49" name="todos los permisos existentes en lote para evitar problemas de memoria"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\@jridgewell\gen-mapping\src\gen-mapping.ts">
+   <todo pos="3;307" name="TODO: implement originalScopes/generatedRanges"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\@jridgewell\remapping\src\build-source-map-tree.ts">
+   <todo pos="5;69" name="TODO: We should eventually support async loading of sourcemap files."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\@jridgewell\remapping\src\source-map-tree.ts">
+   <todo pos="3;101" name="TODO: Eventually support sourceRoot, which has to be removed because the sources are already"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\call-bind-apply-helpers\index.js">
+   <todo pos="82;8" name="TODO FIXME, find a w"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\cliui\build\lib\string-utils.js">
+   <todo pos="1;2" name="TODO: look at porting https://www.npmjs.com/package/wrap-ansi to ESM."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\concurrently\dist\bin\concurrently.js">
+   <todo pos="5;62" name="TODO: Add some tests for this."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\concurrently\dist\src\command.js">
+   <todo pos="5;71" name="TODO: Should exit/error/stdio subscriptions be added here?"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\concurrently\dist\src\date-format.js">
+   <todo pos="5;88" name="TODO: does not support BC years."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\concurrently\dist\src\output-writer.js">
+   <todo pos="21;64" name="TODO: Should errored commands also flush buffer?"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\enhanced-resolve\lib\ModulesInHierachicDirectoriesPlugin.js">
+   <todo pos="1;7" name="TODO remove in next major"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\enhanced-resolve\lib\Resolver.js">
+   <todo pos="1;20" name="TODO in the next major release use only `Promise.withResolvers()`"/>
+   <todo pos="4;1025" name="TODO in the next major remove `Set&lt;string>` support in favor of `StackEntry`"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\enhanced-resolve\lib\ResolverFactory.js">
+   <todo pos="2;392" name="TODO remove in next major"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\enhanced-resolve\lib\UnsafeCachePlugin.js">
+   <todo pos="2;79" name="TODO use it in the next major release, it is faster"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\form-data\lib\form_data.js">
+   <todo pos="5;122" name="TODO: Looks like there is bug in Node fs.createReadStream"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\magic-string\dist\magic-string.cjs.js">
+   <todo pos="4;130" name="TODO is this block necessary?..."/>
+   <todo pos="4;833" name="TODO last chunk in the array may not be the last chunk, if it's moved..."/>
+   <todo pos="2;1032" name="TODO deprecate this? not really very useful"/>
+   <todo pos="4;1328" name="TODO there's a bunch of this sort of thing, needs cleaning up"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\magic-string\dist\magic-string.umd.js">
+   <todo pos="5;132" name="TODO is this block necessary?..."/>
+   <todo pos="5;919" name="TODO last chunk in the array may not be the last chunk, if it's moved..."/>
+   <todo pos="3;1118" name="TODO deprecate this? not really very useful"/>
+   <todo pos="5;1414" name="TODO there's a bunch of this sort of thing, needs cleaning up"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\mime-types\index.js">
+   <todo pos="3;53" name="TODO: use media-typer"/>
+   <todo pos="3;77" name="TODO: should this even be in this module?"/>
+   <todo pos="3;90" name="TODO: use content-type or other module"/>
+   <todo pos="3;111" name="TODO: use media-typer"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rollup\dist\es\shared\node-entry.js">
+   <todo pos="4;329" name="TODO is this block necessary?..."/>
+   <todo pos="4;1032" name="TODO last chunk in the array may not be the last chunk, if it's moved..."/>
+   <todo pos="2;1231" name="TODO deprecate this? not really very useful"/>
+   <todo pos="4;1527" name="TODO there's a bunch of this sort of thing, needs cleaning up"/>
+   <todo pos="13;18065" name="TODO we are pretending it was not found while it should behave like &quot;undefined&quot;"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rollup\dist\es\shared\watch.js">
+   <todo pos="2;7485" name="TODO: emit errors properly. Example: EMFILE on Macos."/>
+   <todo pos="6;7697" name="TODO"/>
+   <todo pos="4;8119" name="TODO: real check"/>
+   <todo pos="8;8607" name="TODO: Strange thing: &quot;should not choke on an ignored watch path&quot; will be failed without 2 ready cal"/>
+   <todo pos="2;8756" name="TODO: this is not equal to path-normalize module - investigate why"/>
+   <todo pos="17;9725" name="TODO: throws or warn? Currently just ignore, uses new event"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rollup\dist\shared\index.js">
+   <todo pos="2;7481" name="TODO: emit errors properly. Example: EMFILE on Macos."/>
+   <todo pos="6;7693" name="TODO"/>
+   <todo pos="4;8115" name="TODO: real check"/>
+   <todo pos="8;8603" name="TODO: Strange thing: &quot;should not choke on an ignored watch path&quot; will be failed without 2 ready cal"/>
+   <todo pos="2;8752" name="TODO: this is not equal to path-normalize module - investigate why"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rollup\dist\shared\rollup.js">
+   <todo pos="13;19668" name="TODO we are pretending it was not found while it should behave like &quot;undefined&quot;"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rollup\dist\shared\watch.js">
+   <todo pos="17;138" name="TODO: throws or warn? Currently just ignore, uses new event"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\dist\types\internal\observable\fromSubscribable.d.ts">
+   <todo pos="2;7" name="TODO: Discuss ObservableInput supporting &quot;Subscribable&quot;."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\dist\types\internal\util\errorContext.d.ts">
+   <todo pos="2;4" name="TODO: Remove in v8"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\Notification.ts">
+   <todo pos="1;7" name="TODO: When this enum is removed, replace it with a type alias. See #4556."/>
+   <todo pos="7;174" name="TODO: consider removing this check. The only way to cause this would be to"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\NotificationFactories.ts">
+   <todo pos="2;30" name="TODO: This is only exported to support a crazy legacy test in `groupBy`."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\observable\fromSubscribable.ts">
+   <todo pos="2;9" name="TODO: Discuss ObservableInput supporting &quot;Subscribable&quot;."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\observable\generate.ts">
+   <todo pos="3;345" name="TODO: Remove this as we move away from deprecated signatures"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\finalize.ts">
+   <todo pos="5;66" name="TODO: This try/finally was only added for `useDeprecatedSynchronousErrorHandling`."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\scan.ts">
+   <todo pos="1;8" name="TODO: link to a &quot;redux pattern&quot; section in the guide (location TBD)"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\switchScan.ts">
+   <todo pos="1;4" name="TODO: Generate a marble diagram for these docs."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\timeInterval.ts">
+   <todo pos="1;58" name="TODO(benlesh): make this an interface, export the interface, but not the implemented class,"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\windowCount.ts">
+   <todo pos="11;99" name="TODO: We need to figure out if this really makes sense. We're technically"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\operators\withLatestFrom.ts">
+   <todo pos="5;65" name="TODO: At somepoint, we should investigate the performance implications here, and look"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\scheduler\AsyncAction.ts">
+   <todo pos="7;123" name="TODO: Clean this up when we refactor schedulers mid-version-8 or so."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\util\errorContext.ts">
+   <todo pos="2;8" name="TODO: Remove in v8"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\rxjs\src\internal\util\throwUnobservableError.ts">
+   <todo pos="3;5" name="TODO: We should create error codes that can be looked up, so this can be less verbose."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\shell-quote\parse.js">
+   <todo pos="3;200" name="TODO: replace this whole reduce with a concat"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\string-width\index.d.ts">
+   <todo pos="2;22" name="TODO: remove this in the next major version, refactor the whole definition to:"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\string-width\index.js">
+   <todo pos="1;45" name="TODO: remove this in the next major version"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\yargs-parser\browser.js">
+   <todo pos="1;3" name="TODO: figure out reasonable web equivalents for &quot;resolve&quot;, &quot;normalize&quot;, etc."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\yargs-parser\build\lib\index.js">
+   <todo pos="5;36" name="TODO: figure  out a  way to combine ESM and CJS coverage, such  that"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\node_modules\yargs-parser\build\lib\yargs-parser.js">
+   <todo pos="9;166" name="TODO(bcoe): for the first pass at removing object prototype  we didn't"/>
+   <todo pos="17;752" name="TODO(bcoe): in the next major version of yargs, switch to"/>
+   <todo pos="13;773" name="TODO(bcoe): in the next major version of yargs, switch to"/>
+   <todo pos="1;1031" name="TODO(bcoe): in the next major version of yargs, switch to"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\anourvalar\eloquent-serialize\src\Grammars\ModelGrammar.php">
+   <todo pos="145;84" name="TODO: >= 11.22"/>
+   <todo pos="144;84" name="@TODO: >= 11.22"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\aws\aws-sdk-php\src\Configuration\ConfigurationResolver.php">
+   <todo pos="9;114" name="TODO change after deprecation"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\aws\aws-sdk-php\src\Route53Domains\Route53DomainsClient.php">
+   <todo pos="47;10" name="ToDomain(array $args = [])"/>
+   <todo pos="63;11" name="ToDomainAsync(array $args = [])"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\chillerlan\php-qrcode\src\Common\GDLuminanceSource.php">
+   <todo pos="63;44" name="todo: remove version check in v6"/>
+   <todo pos="62;44" name="@todo: remove version check in v6"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\chillerlan\php-qrcode\src\Output\QRGdImage.php">
+   <todo pos="5;217" name="todo: remove mime parameter in v6"/>
+   <todo pos="4;217" name="@todo: remove mime parameter in v6"/>
+   <todo pos="4;270" name="todo: the jpg skip can be removed in v6"/>
+   <todo pos="3;270" name="@todo: the jpg skip can be removed in v6"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\chillerlan\php-qrcode\src\QRCode.php">
+   <todo pos="4;294" name="todo: remove custom invocation in v6"/>
+   <todo pos="3;294" name="@todo: remove custom invocation in v6"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\chillerlan\php-qrcode\src\QROptionsTrait.php">
+   <todo pos="4;543" name="todo throw or ignore silently"/>
+   <todo pos="3;543" name="@todo throw or ignore silently"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\composer\semver\src\Constraint\MultiConstraint.php">
+   <todo pos="9;294" name="TODO: Here's the place to put more optimizations"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dflydev\dot-access-data\src\Data.php">
+   <todo pos="13;66" name="TODO: Is this really what we want to do"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\lib\Cpdf.php">
+   <todo pos="14;6261" name="todo is it still needed"/>
+   <todo pos="13;6261" name="@todo is it still needed"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Adapter\GD.php">
+   <todo pos="10;500" name="todo"/>
+   <todo pos="9;500" name="@todo"/>
+   <todo pos="10;505" name="todo"/>
+   <todo pos="9;505" name="@todo"/>
+   <todo pos="10;510" name="todo"/>
+   <todo pos="9;510" name="@todo"/>
+   <todo pos="10;515" name="todo"/>
+   <todo pos="9;515" name="@todo"/>
+   <todo pos="10;530" name="todo"/>
+   <todo pos="9;530" name="@todo"/>
+   <todo pos="10;535" name="todo"/>
+   <todo pos="9;535" name="@todo"/>
+   <todo pos="10;540" name="todo"/>
+   <todo pos="9;540" name="@todo"/>
+   <todo pos="10;545" name="todo"/>
+   <todo pos="9;545" name="@todo"/>
+   <todo pos="10;550" name="todo"/>
+   <todo pos="9;550" name="@todo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Adapter\PDFLib.php">
+   <todo pos="9;591" name="TODO: we should check the current PDF stroke color"/>
+   <todo pos="9;628" name="TODO: we should check the current PDF fill color"/>
+   <todo pos="9;710" name="TODO"/>
+   <todo pos="17;1165" name="TODO: should do something with the error message"/>
+   <todo pos="13;1227" name="TODO: PDFLib::create_action does not permit non-HTTP links for URI actions"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Css\AttributeTranslator.php">
+   <todo pos="9;90" name="TODO: translate more form element attributes"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Css\Style.php">
+   <todo pos="17;1646" name="TODO: we shouldn't need to parse this twice"/>
+   <todo pos="13;1728" name="TODO: this should be a directed dependency map"/>
+   <todo pos="9;2049" name="TODO: It probably makes sense to perform the font selection outside"/>
+   <todo pos="13;2522" name="TODO: Use typographically appropriate quotes for the current"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Css\Stylesheet.php">
+   <todo pos="25;658" name="TODO: `*:first-of-type`, `*:nth-of-type` etc."/>
+   <todo pos="25;694" name="TODO: bit of a hack attempt at matches support, currently only matches against elements"/>
+   <todo pos="29;741" name="TODO"/>
+   <todo pos="13;979" name="TODO: If we use a context node can we remove the leading dot"/>
+   <todo pos="25;1412" name="Todo:Reason is unknown"/>
+   <todo pos="17;1618" name="TODO: pass media queries as an argument to load_css_file and apply to all contained styles"/>
+   <todo pos="113;1621" name="TODO)"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Dompdf.php">
+   <todo pos="14;511" name="todo Take the quirksmode into account"/>
+   <todo pos="13;511" name="@todo Take the quirksmode into account"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FontMetrics.php">
+   <todo pos="10;298" name="todo Make sure this cache is efficient before enabling it"/>
+   <todo pos="9;298" name="@todo Make sure this cache is efficient before enabling it"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php">
+   <todo pos="2;855" name="TODO: What version is the best : this one or the one in ListBullet ?"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FrameDecorator\ListBullet.php">
+   <todo pos="9;108" name="TODO: This is a copy of `FrameDecorator\Text::get_margin_height()`"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FrameReflower\Block.php">
+   <todo pos="17;98" name="TODO: This is the in-flow inline position. Use the in-flow"/>
+   <todo pos="17;341" name="TODO: This is the in-flow inline position. Use the in-flow"/>
+   <todo pos="9;416" name="TODO: Need to also take min/max height into account for absolute"/>
+   <todo pos="13;696" name="TODO: this is a WIP for handling clear/float frames that are in between inline frames"/>
+   <todo pos="17;763" name="TODO handle when floating elements don't fit"/>
+   <todo pos="9;922" name="TODO: While the containing block is not set yet on the frame, it can"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FrameReflower\Image.php">
+   <todo pos="9;60" name="TODO: While the containing block is not set yet on the frame, it can"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\FrameReflower\Text.php">
+   <todo pos="10;176" name="todo support &lt;wbr>"/>
+   <todo pos="9;176" name="@todo support &lt;wbr>"/>
+   <todo pos="13;314" name="TODO: Would probably be better to move just below the current"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Positioner\Absolute.php">
+   <todo pos="13;34" name="TODO: Resolve dimensions, margins, and offsets similar to the"/>
+   <todo pos="29;86" name="TODO change width"/>
+   <todo pos="29;115" name="TODO change height"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\dompdf\src\Positioner\Fixed.php">
+   <todo pos="13;26" name="TODO: Resolve dimensions, margins, and offsets similar to the"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-font-lib\src\FontLib\EOT\File.php">
+   <todo pos="5;59" name="TODO Read font data ..."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-font-lib\src\FontLib\Table\Type\post.php">
+   <todo pos="9;67" name="TODO"/>
+   <todo pos="9;75" name="TODO"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-font-lib\src\FontLib\TrueType\File.php">
+   <todo pos="24;335" name="todo"/>
+   <todo pos="23;335" name="@todo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-svg-lib\src\Svg\Surface\CPdf.php">
+   <todo pos="14;5803" name="todo is it still needed"/>
+   <todo pos="13;5803" name="@todo is it still needed"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-svg-lib\src\Svg\Surface\SurfaceCpdf.php">
+   <todo pos="9;114" name="TODO: Implement beginPath() method."/>
+   <todo pos="18;218" name="todo use cache for BMP and GIF"/>
+   <todo pos="17;218" name="@todo use cache for BMP and GIF"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-svg-lib\src\Svg\Surface\SurfacePDFLib.php">
+   <todo pos="9;112" name="TODO: Implement beginPath() method."/>
+   <todo pos="9;147" name="TODO: Implement drawImage() method."/>
+   <todo pos="9;426" name="TODO: Implement setFont() method."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-svg-lib\src\Svg\Tag\Path.php">
+   <todo pos="21;401" name="TODO: optimize this"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\dompdf\php-svg-lib\src\Svg\Tag\UseTag.php">
+   <todo pos="13;24" name="TODO: log circular reference error state"/>
+   <todo pos="13;66" name="TODO: log circular reference error state"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier.php">
+   <todo pos="10;147" name="TODO: make the config merge in, instead of replace"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\AttrDef\CSS\ImportantDecorator.php">
+   <todo pos="10;38" name="TODO: optimization: test directly for !important and ! important"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\CSSDefinition.php">
+   <todo pos="9;465" name="TODO: support SLASH syntax"/>
+   <todo pos="18;552" name="TODO: Is this htmlspecialchars() call really necessary"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\ChildDef\List.php">
+   <todo pos="17;70" name="ToDo: Make this more robust in the case of not ol/ul"/>
+   <todo pos="93;80" name="ToDo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\ChildDef\Required.php">
+   <todo pos="17;95" name="ToDo: Make configurable"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\HTMLModuleManager.php">
+   <todo pos="18;417" name="TODO:"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\HTMLModule\Scripting.php">
+   <todo pos="9;42" name="TODO: create custom child-definition for noscript that"/>
+   <todo pos="9;48" name="TODO: convert this to new syntax, main problem is getting"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\Printer\ConfigForm.php">
+   <todo pos="21;327" name="TODO does this need a break"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\Strategy\FixNesting.php">
+   <todo pos="25;121" name="ToDo: I don't think it matters if it's def or"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ezyang\htmlpurifier\library\HTMLPurifier\Zipper.php">
+   <todo pos="34;13" name="ToDo: Maybe it's more user friendly"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\fakerphp\faker\src\Faker\ORM\CakePHP\EntityPopulator.php">
+   <todo pos="9;121" name="TODO check if TreeBehavior attached to modify lft/rgt cols"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\fakerphp\faker\src\Faker\Provider\Base.php">
+   <todo pos="9;643" name="TODO: remove in v2"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\fakerphp\faker\src\Faker\Provider\kk_KZ\Address.php">
+   <todo pos="5;15" name="TODO list all country names in the world"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\filament\forms\resources\js\components\markdown-editor\EasyMDE.js">
+   <todo pos="42;834" name="TODO: this doesn't get tracked in the history, so can't be undone :("/>
+   <todo pos="5;990" name="TODO: Draw the image template with a fake url? ie: '![](importing foo.png...)'"/>
+   <todo pos="45;1863" name="TODO: New line insertion doesn't work here."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\filp\whoops\src\Whoops\Exception\Frame.php">
+   <todo pos="10;51" name="todo: This can be made more reliable by checking if we've entered"/>
+   <todo pos="9;51" name="@todo: This can be made more reliable by checking if we've entered"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\filp\whoops\src\Whoops\Handler\PrettyPageHandler.php">
+   <todo pos="14;188" name="todo: Make this more robust"/>
+   <todo pos="13;188" name="@todo: Make this more robust"/>
+   <todo pos="14;227" name="todo: Asset compiler"/>
+   <todo pos="13;227" name="@todo: Asset compiler"/>
+   <todo pos="10;284" name="todo: Consolidate addDataTable and addDataTableCallback"/>
+   <todo pos="9;284" name="@todo: Consolidate addDataTable and addDataTableCallback"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\filp\whoops\src\Whoops\Run.php">
+   <todo pos="14;425" name="todo Might be able to clean this up a bit better"/>
+   <todo pos="13;425" name="@todo Might be able to clean this up a bit better"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\guzzlehttp\guzzle\src\Client.php">
+   <todo pos="22;410" name="todo: Do not rely on curl"/>
+   <todo pos="21;410" name="@todo: Do not rely on curl"/>
+   <todo pos="13;435" name="TODO: Add more sink validation"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\hamcrest\hamcrest-php\hamcrest\Hamcrest\Arrays\IsArray.php">
+   <todo pos="1;10" name="TODO: Allow this to take matchers or values within the array"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\league\commonmark\src\Delimiter\DelimiterStack.php">
+   <todo pos="9;146" name="TODO: Remove the line below once PHP 7.4 support is dropped, as WeakMap won't hold onto the referen"/>
+   <todo pos="17;281" name="TODO: Remove this conditional check in 3.0. It only exists to prevent behavioral BC breaks in 2.x."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\league\commonmark\src\Extension\CommonMark\Node\Block\ListBlock.php">
+   <todo pos="36;29" name="TODO Make lists tight by default in v3"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\league\commonmark\src\Extension\CommonMark\Parser\Block\ListBlockStartParser.php">
+   <todo pos="13;60" name="TODO for 3.0: Just make them tight by default in the block so we can remove this call"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\league\commonmark\src\Parser\Block\DocumentBlockParser.php">
+   <todo pos="13;66" name="TODO for v3: It would be great if we could find an alternate way to identify such paragraphs."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\livewire\livewire\src\Features\SupportChecksumErrorDebugging\SupportChecksumErrorDebugging.php">
+   <todo pos="10;11" name="todo: dont write to this file unless the command is running..."/>
+   <todo pos="9;11" name="@todo: dont write to this file unless the command is running..."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\livewire\livewire\src\Mechanisms\HandleComponents\HandleComponents.php">
+   <todo pos="14;483" name="todo: put this in a better place:"/>
+   <todo pos="13;483" name="@todo: put this in a better place:"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\livewire\livewire\src\Mechanisms\HandleRequests\HandleRequests.php">
+   <todo pos="10;64" name="todo: Rename this back to `isLivewireRequest` once the need for it in tests has been fixed."/>
+   <todo pos="9;64" name="@todo: Rename this back to `isLivewireRequest` once the need for it in tests has been fixed."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\maatwebsite\excel\src\Imports\Persistence\CascadePersistManager.php">
+   <todo pos="5;10" name="todo"/>
+   <todo pos="4;10" name="@todo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\maennchen\zipstream-php\src\PackField.php">
+   <todo pos="2;10" name="TODO: Make class readonly when requiring PHP 8.2 exclusively"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\maennchen\zipstream-php\test\Zs\ExtendedInformationExtraFieldTest.php">
+   <todo pos="29;18" name="TODO: Document"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\masterminds\html5\src\HTML5\Parser\DOMTreeBuilder.php">
+   <todo pos="9;559" name="TODO: Need to handle case where comment appears outside of the HTML tag."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\masterminds\html5\src\HTML5\Parser\InputStream.php">
+   <todo pos="2;20" name="TODO: Move this to the scanner."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\masterminds\html5\src\HTML5\Parser\Tokenizer.php">
+   <todo pos="17;146" name="TODO is this necessary"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\masterminds\html5\src\HTML5\Parser\UTF8Utils.php">
+   <todo pos="10;105" name="todo Get iconv running in at least some environments if that is possible."/>
+   <todo pos="9;105" name="@todo Get iconv running in at least some environments if that is possible."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\masterminds\html5\src\HTML5\Serializer\OutputRules.php">
+   <todo pos="9;353" name="TODO: Currently, this always writes name=&quot;value&quot;, and does not do"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\mockery\mockery\docs\conf.py">
+   <todo pos="47;17" name="todoc) are in another directory,"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\Carbon.php">
+   <todo pos="5;22" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;833" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\CarbonImmutable.php">
+   <todo pos="5;22" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;833" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\CarbonInterface.php">
+   <todo pos="5;38" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;849" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\Factory.php">
+   <todo pos="5;28" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;132" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\FactoryImmutable.php">
+   <todo pos="5;25" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;127" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\Lang\ar_Shakl.php">
+   <todo pos="6;19" name="TODO add shakl to months"/>
+   <todo pos="5;19" name="@TODO add shakl to months"/>
+   <todo pos="6;54" name="TODO add shakl to translations below"/>
+   <todo pos="5;54" name="@TODO add shakl to translations below"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nesbot\carbon\src\Carbon\Traits\Date.php">
+   <todo pos="5;49" name="todoc generated by `composer phpdoc`>"/>
+   <todo pos="6;860" name="todoc>"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nikic\php-parser\lib\PhpParser\Comment.php">
+   <todo pos="13;199" name="TODO: Rename these to include &quot;start&quot;."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nikic\php-parser\lib\PhpParser\Internal\TokenStream.php">
+   <todo pos="17;232" name="TODO Handle non-space indentation"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nikic\php-parser\lib\PhpParser\Lexer\TokenEmulator\AttributeEmulator.php">
+   <todo pos="9;34" name="TODO"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\nikic\php-parser\lib\PhpParser\PrettyPrinterAbstract.php">
+   <todo pos="13;579" name="TODO Add &lt;"/>
+   <todo pos="17;812" name="TODO: Try to preserve formatting"/>
+   <todo pos="25;863" name="TODO: Preserve formatting."/>
+   <todo pos="25;973" name="TODO: Preserve formatting."/>
+   <todo pos="13;996" name="TODO: Support removing single node."/>
+   <todo pos="9;1463" name="TODO: &quot;yield&quot; where both key and value are inserted doesn't work"/>
+   <todo pos="86;1492" name="TODO"/>
+   <todo pos="47;1510" name="TODO These need to be treated more carefully"/>
+   <todo pos="9;1613" name="TODO Insertion into empty statement lists."/>
+   <todo pos="14;1662" name="TODO"/>
+   <todo pos="77;1689" name="TODO"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\openspout\openspout\src\Reader\XLSX\RowIterator.php">
+   <todo pos="9;212" name="TODO: This should return $this->nextRowIndexToBeProcessed"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Calculation\Financial\Depreciation.php">
+   <todo pos="9;65" name="TODO Handle period value between 0 and 1 (e.g. 0.5)"/>
+   <todo pos="9;127" name="TODO Handling for fractional $period values"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Calculation\LookupRef\Matrix.php">
+   <todo pos="2;72" name="TODO Provide support for area_num, currently not supported"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Calculation\Statistical\Distributions\Binomial.php">
+   <todo pos="2;140" name="TODO Add support for the cumulative flag not present for NEGBINOMDIST, but introduced for NEG"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Cell\DataType.php">
+   <todo pos="13;58" name="TODO: Sanitize Rich-Text string (max. character count is 32,767)"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Reader\Html.php">
+   <todo pos="13;320" name="TODO"/>
+   <todo pos="21;655" name="TODO"/>
+   <todo pos="2;872" name="TODO :"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Reader\Ods.php">
+   <todo pos="31;379" name="TODO :: Figure this out. This is only a partial implementation I guess."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Reader\Xls.php">
+   <todo pos="29;1148" name="TODO: Why is there no BSE Index"/>
+   <todo pos="21;1317" name="TODO Provide support for named values"/>
+   <todo pos="13;4221" name="todo: what if string is very long"/>
+   <todo pos="21;4747" name="todo: implement"/>
+   <todo pos="21;4956" name="TODO: Investigate structure for .xls SHEETLAYOUT record as saved by MS Office Excel 2007"/>
+   <todo pos="9;7184" name="todo: if cell range is just a single cell, should this funciton"/>
+   <todo pos="9;7241" name="TODO: if cell range is just a single cell, should this funciton"/>
+   <todo pos="21;7406" name="todo: check if we have identified the whole set of special characters"/>
+   <todo pos="21;7415" name="TODO: external sheet support"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Reader\Xlsx.php">
+   <todo pos="29;1336" name="TODO: Autoshapes from twoCellAnchors!"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\ReferenceHelper.php">
+   <todo pos="2;920" name="TODO Can we work out a method to identify Named Ranges that cease to be valid, so tha"/>
+   <todo pos="2;939" name="TODO Can we work out a method to identify Named Ranges that cease to be valid, so tha"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Html.php">
+   <todo pos="13;1795" name="TODO: Same for columns"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Ods\Cell\Style.php">
+   <todo pos="19;73" name="TODO :: To be implemented"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Xls\Escher.php">
+   <todo pos="53;181" name="todo"/>
+   <todo pos="31;187" name="todo"/>
+   <todo pos="62;222" name="todo"/>
+   <todo pos="38;225" name="todo"/>
+   <todo pos="62;249" name="todo"/>
+   <todo pos="38;252" name="todo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Xls\Parser.php">
+   <todo pos="9;561" name="TODO: use real error codes"/>
+   <todo pos="9;637" name="TODO: possible class value 0,1,2 check Formula.pm"/>
+   <todo pos="13;642" name="TODO: use real error codes"/>
+   <todo pos="13;657" name="TODO: use real error codes"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Xls\Style\ColorMap.php">
+   <todo pos="1;77" name="TODO Try and map RGB value to nearest colour within the define pallette"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Xls\Workbook.php">
+   <todo pos="10;447" name="TODO: store external SUPBOOK records and XCT and CRN records"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Writer\Xls\Worksheet.php">
+   <todo pos="13;3103" name="TODO writeCFRule() => $blockLineStyle => Index Color for left line"/>
+   <todo pos="13;3104" name="TODO writeCFRule() => $blockLineStyle => Index Color for right line"/>
+   <todo pos="13;3105" name="TODO writeCFRule() => $blockLineStyle => Top-left to bottom-right on/off"/>
+   <todo pos="13;3106" name="TODO writeCFRule() => $blockLineStyle => Bottom-left to top-right on/off"/>
+   <todo pos="13;3108" name="TODO writeCFRule() => $blockColor => Index Color for top line"/>
+   <todo pos="13;3109" name="TODO writeCFRule() => $blockColor => Index Color for bottom line"/>
+   <todo pos="13;3110" name="TODO writeCFRule() => $blockColor => Index Color for diagonal line"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\phpunit\php-code-coverage\src\StaticAnalysis\CodeUnitFindingVisitor.php">
+   <todo pos="15;179" name="todo Handle default values"/>
+   <todo pos="14;179" name="@todo Handle default values"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner.php">
+   <todo pos="14;215" name="todo Pass visitors directly to once we drop support for PHP-Parser 4.x"/>
+   <todo pos="13;215" name="@todo Pass visitors directly to once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\CalledClassPass.php">
+   <todo pos="14;57" name="todo switch this to actually validate args when we get context-aware code cleaner passes."/>
+   <todo pos="13;57" name="@todo switch this to actually validate args when we get context-aware code cleaner passes."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\ListPass.php">
+   <todo pos="2;17" name="todo Drop PhpParser\Node\Expr\ArrayItem once we drop support for PHP-Parser 4.x"/>
+   <todo pos="1;17" name="@todo Drop PhpParser\Node\Expr\ArrayItem once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\LoopContextPass.php">
+   <todo pos="18;76" name="todo Remove LNumber and DNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="17;76" name="@todo Remove LNumber and DNumber once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\PassableByReferencePass.php">
+   <todo pos="10;42" name="todo support MethodCall and StaticCall as well."/>
+   <todo pos="9;42" name="@todo support MethodCall and StaticCall as well."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\RequirePass.php">
+   <todo pos="10;52" name="todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="9;52" name="@todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="14;88" name="todo Shell::handleError would be better here, because we could"/>
+   <todo pos="13;88" name="@todo Shell::handleError would be better here, because we could"/>
+   <todo pos="14;94" name="todo trigger an error as fallback"/>
+   <todo pos="13;94" name="@todo trigger an error as fallback"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\StrictTypesPass.php">
+   <todo pos="26;66" name="todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="25;66" name="@todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="18;80" name="todo Switch to PhpParser\Node\DeclareItem once we drop support for PHP-Parser 4.x"/>
+   <todo pos="17;80" name="@todo Switch to PhpParser\Node\DeclareItem once we drop support for PHP-Parser 4.x"/>
+   <todo pos="18;81" name="todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+   <todo pos="17;81" name="@todo Remove LNumber once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\UseStatementPass.php">
+   <todo pos="14;81" name="todo Rename to Node_Visitor::REMOVE_NODE once we drop support for PHP-Parser 4.x"/>
+   <todo pos="13;81" name="@todo Rename to Node_Visitor::REMOVE_NODE once we drop support for PHP-Parser 4.x"/>
+   <todo pos="14;94" name="todo Rename to Node_Visitor::REMOVE_NODE once we drop support for PHP-Parser 4.x"/>
+   <todo pos="13;94" name="@todo Rename to Node_Visitor::REMOVE_NODE once we drop support for PHP-Parser 4.x"/>
+   <todo pos="10;108" name="todo Remove UseUse once we drop support for PHP-Parser 4.x"/>
+   <todo pos="9;108" name="@todo Remove UseUse once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\CodeCleaner\ValidFunctionNamePass.php">
+   <todo pos="14;49" name="todo add an &quot;else&quot; here which adds a runtime check for instances where we can't tell"/>
+   <todo pos="13;49" name="@todo add an &quot;else&quot; here which adds a runtime check for instances where we can't tell"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\DocCommand.php">
+   <todo pos="18;148" name="todo this is going to collide with ReflectionMethod ids"/>
+   <todo pos="17;148" name="@todo this is going to collide with ReflectionMethod ids"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\ListCommand.php">
+   <todo pos="10;129" name="todo something cleaner than this :-/"/>
+   <todo pos="9;129" name="@todo something cleaner than this :-/"/>
+   <todo pos="14;261" name="todo ensure that 'functions', 'classes', 'interfaces', 'traits' only accept namespace target"/>
+   <todo pos="13;261" name="@todo ensure that 'functions', 'classes', 'interfaces', 'traits' only accept namespace target"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\ListCommand\ClassConstantEnumerator.php">
+   <todo pos="14;32" name="todo handle ReflectionExtension as well"/>
+   <todo pos="13;32" name="@todo handle ReflectionExtension as well"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\ReflectingCommand.php">
+   <todo pos="10;54" name="todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+   <todo pos="9;54" name="@todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\SudoCommand.php">
+   <todo pos="10;38" name="todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+   <todo pos="9;38" name="@todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Command\TimeitCommand.php">
+   <todo pos="10;44" name="todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+   <todo pos="9;44" name="@todo Pass visitor directly to once we drop support for PHP-Parser 4.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Configuration.php">
+   <todo pos="10;229" name="todo support raw output with interactive input"/>
+   <todo pos="9;229" name="@todo support raw output with interactive input"/>
+   <todo pos="10;914" name="todo mebbe turn this on by default some day"/>
+   <todo pos="9;914" name="@todo mebbe turn this on by default some day"/>
+   <todo pos="10;1049" name="todo detect `chsh` != 65001 on Windows and return false"/>
+   <todo pos="9;1049" name="@todo detect `chsh` != 65001 on Windows and return false"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Formatter\CodeFormatter.php">
+   <todo pos="10;71" name="todo something better here"/>
+   <todo pos="9;71" name="@todo something better here"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Manual\V3Manual.php">
+   <todo pos="9;38" name="TODO: Remove cache after dropping support for PHP 8.2."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Output\ShellOutput.php">
+   <todo pos="10;155" name="todo Update OutputPager interface to require doWrite"/>
+   <todo pos="9;155" name="@todo Update OutputPager interface to require doWrite"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Readline\GNUReadline.php">
+   <todo pos="6;25" name="todo better type for this"/>
+   <todo pos="5;25" name="@todo better type for this"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Readline\Hoa\File.php">
+   <todo pos="10;187" name="todo manage $callable as a filter"/>
+   <todo pos="9;187" name="@todo manage $callable as a filter"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\Shell.php">
+   <todo pos="14;423" name="todo should it be possible to have raw output in an interactive run"/>
+   <todo pos="13;423" name="@todo should it be possible to have raw output in an interactive run"/>
+   <todo pos="10;522" name="todo overrides via environment variables (or should these happen in config"/>
+   <todo pos="9;522" name="@todo overrides via environment variables (or should these happen in config"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\psy\psysh\src\functions.php">
+   <todo pos="10;105" name="todo come up with a better way of doing this which doesn't involve injecting input :-P"/>
+   <todo pos="9;105" name="@todo come up with a better way of doing this which doesn't involve injecting input :-P"/>
+   <todo pos="10;223" name="todo show styles (but only if they're different than default"/>
+   <todo pos="9;223" name="@todo show styles (but only if they're different than default"/>
+   <todo pos="10;375" name="todo Show Presenter / custom casters."/>
+   <todo pos="9;375" name="@todo Show Presenter / custom casters."/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\sabberworm\php-css-parser\src\Property\Selector.php">
+   <todo pos="16;138" name="todo should exclude \# as well as &quot;#&quot;"/>
+   <todo pos="15;138" name="@todo should exclude \# as well as &quot;#&quot;"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\sabberworm\php-css-parser\src\Value\CSSFunction.php">
+   <todo pos="39;36" name="TODO: redundant"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\scrivo\highlight.php\Highlight\HighlightResult.php">
+   <todo pos="6;56" name="TODO In v10.x, remove \stdClass from this type"/>
+   <todo pos="5;56" name="@TODO In v10.x, remove \stdClass from this type"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\scrivo\highlight.php\Highlight\Highlighter.php">
+   <todo pos="6;53" name="TODO In v10.x, this value should be static to match highlight.js behavior"/>
+   <todo pos="5;53" name="@TODO In v10.x, this value should be static to match highlight.js behavior"/>
+   <todo pos="10;118" name="TODO In v10.x, remove the default value for the `languages` value to follow highlight.js behavior"/>
+   <todo pos="9;118" name="@TODO In v10.x, remove the default value for the `languages` value to follow highlight.js behavior"/>
+   <todo pos="10;162" name="TODO In 10.x, rewrite this as a generator yielding results"/>
+   <todo pos="9;162" name="@TODO In 10.x, rewrite this as a generator yielding results"/>
+   <todo pos="10;222" name="TODO In 10.x, call `listBundledLanguages()` instead when it's a generator"/>
+   <todo pos="9;222" name="@TODO In 10.x, call `listBundledLanguages()` instead when it's a generator"/>
+   <todo pos="14;424" name="TODO in v10.x, this should no longer be necessary once `$options` is made static"/>
+   <todo pos="13;424" name="@TODO in v10.x, this should no longer be necessary once `$options` is made static"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\scrivo\highlight.php\Highlight\Mode.php">
+   <todo pos="14;185" name="TODO Deprecated since 9.16.0.0; remove at 10.x"/>
+   <todo pos="13;185" name="@TODO Deprecated since 9.16.0.0; remove at 10.x"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\staabm\side-effects-detector\lib\SideEffect.php">
+   <todo pos="17;39" name="todo"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\symfony\css-selector\XPath\Extension\FunctionExtension.php">
+   <todo pos="9;93" name="todo: handle an+b, odd, even"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\symfony\css-selector\XPath\Extension\HtmlExtension.php">
+   <todo pos="9;96" name="todo: in the second half, add &quot;and is not a descendant of that fieldset element's first legend elem"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\symfony\http-kernel\HttpCache\Store.php">
+   <todo pos="9;163" name="TODO the metaStore referenced an entity that doesn't exist in"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\symfony\mime\Header\ParameterizedHeader.php">
+   <todo pos="13;117" name="TODO: text, or something else"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\symfony\translation\Loader\PoFileLoader.php">
+   <todo pos="17;87" name="TODO: this fails when comments or contexts are added"/>
+  </todofile>
+  <todofile name="C:\xampp\htdocs\permisos\vendor\ueberdosis\tiptap-php\src\Core\Schema.php">
+   <todo pos="21;86" name="TODO: Support for multiple marks is missing"/>
+  </todofile>
+ </todoblock>
+ <dbgurls/>
+ <lasttime value="1782939259"/>
 </project>
