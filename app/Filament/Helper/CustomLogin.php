@@ -38,8 +38,23 @@ class CustomLogin extends Login
 
     protected function getCredentialsFromFormData(array $data): array
     {
+        $oni = trim($data['oni']);
+        $user = \App\Models\User::where('oni', $oni)->first();
+
+        if (!$user && is_numeric($oni)) {
+            $oniInt = (int)$oni;
+            $user = \App\Models\User::where(function ($query) use ($oniInt) {
+                $query->where('oni', (string)$oniInt)
+                      ->orWhere('oni', sprintf('%02d', $oniInt))
+                      ->orWhere('oni', sprintf('%03d', $oniInt))
+                      ->orWhere('oni', sprintf('%04d', $oniInt))
+                      ->orWhere('oni', sprintf('%05d', $oniInt))
+                      ->orWhere('oni', sprintf('%06d', $oniInt));
+            })->first();
+        }
+
         return [
-            'oni' => $data['oni'],
+            'oni' => $user ? $user->oni : $oni,
             'password' => $data['password'],
         ];
     }

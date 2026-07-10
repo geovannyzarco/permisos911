@@ -57,7 +57,7 @@ class PermisosResource extends Resource
 
     public static function canCreate(): bool
     {
-        return auth()->user()->can('Create:PermisosResource');
+        return auth()->user()->can('Create:PermisosResource') && filled(auth()->user()->empleado);
     }
 
     public static function canEdit($record): bool

@@ -19,15 +19,15 @@ class UserForm
                 TextInput::make('oni')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address'),
-                    //->email(),
-                    //->required(),
+                    ->label('Email address')
+                    ->email()
+                    ->required(),
                 TextInput::make('password')
                     ->password()
                     ->required()
-                    ->dehydrateStateUsing(fn ($state)=>filled($state) ? bcrypt($state): null)
-                     ->dehydrated(fn ($state) => filled($state))
-                    ->required(fn (string $context): bool => $context === 'create')
+                    ->dehydrateStateUsing(fn($state) => filled($state) ? bcrypt($state) : null)
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create')
                     ->maxLength(255)
                     ->rule('nullable')
                     ->placeholder('Deja en blanco si no deseas cambiarla'),
@@ -36,6 +36,6 @@ class UserForm
 
 
 
-                            ]);
+            ]);
     }
 }
