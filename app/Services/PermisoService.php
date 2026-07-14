@@ -110,7 +110,7 @@ class PermisoService
                 ->toArray();
 
             $totalEmpleados = count($empleadosConPermiso);
-            
+
             // Si el empleado actual no está en la lista de empleados que ya tienen permiso,
             // esta nueva solicitud agregará un nuevo empleado a la lista para ese día.
             if (!in_array($empleado->id, $empleadosConPermiso)) {
@@ -133,9 +133,9 @@ class PermisoService
      * en el rango de fechas proporcionado, útil para mostrar en la interfaz.
      */
     public function obtenerDisponibilidadDiaria(
-        Empleado $empleado, 
-        string $desde, 
-        string $hasta, 
+        Empleado $empleado,
+        string $desde,
+        string $hasta,
         ?Permiso $permisoActual = null
     ): array {
         $resultado = [];
@@ -155,7 +155,7 @@ class PermisoService
         }
 
         $periodo = \Carbon\CarbonPeriod::create($fechaDesde, $fechaHasta);
-        
+
         // Limitamos a 31 días máximo para evitar consultas inmensas en caso de errores de usuario
         if ($periodo->count() > 31) {
             return ['error' => 'El rango de fechas es muy amplio.'];
@@ -227,7 +227,7 @@ class PermisoService
             ->where(function ($query) use ($fechaDesdeStr, $fechaHastaStr) {
                 // Condición de traslape: inicio_existente < fin_solicitado AND fin_existente > inicio_solicitado
                 $query->where('desde', '<', $fechaHastaStr)
-                      ->where('hasta', '>', $fechaDesdeStr);
+                    ->where('hasta', '>', $fechaDesdeStr);
             })
             ->when($permisoActual, function ($query) use ($permisoActual) {
                 $query->where('id', '!=', $permisoActual->id);
@@ -289,7 +289,7 @@ class PermisoService
         $minutosUsados = Permiso::query()
             ->where('empleado_id', $empleado->id)
             ->where('tipo_permiso_id', 1)
-            ->where('id_estado_aprobacion', 3) // Solo permisos ya aprobados restan del saldo
+            ->where('id_estado_aprobacion_jefe_division', 3) // Solo permisos ya aprobados restan del saldo
             ->whereYear('desde', now()->year)
             ->whereNotNull('desde')
             ->whereNotNull('hasta')
@@ -298,7 +298,7 @@ class PermisoService
 
         // 3. Convertimos los minutos utilizados a horas
         $horasUsadas = $minutosUsados / 60;
-        
+
         // 4. Calculamos las horas disponibles
         $horasDisponibles = max(0, $horasAsignadas - $horasUsadas);
 
@@ -325,7 +325,7 @@ class PermisoService
 
     public function aprobarVB(Permiso $permiso, int $estadoId, User $user): void
     {
-        if (!$user->can('aprobarVB', $permiso)){
+        if (!$user->can('aprobarVB', $permiso)) {
             throw new AuthorizationException();
         }
 
@@ -336,10 +336,10 @@ class PermisoService
         ]);
     }
 
-    public function aprobarFinal(Permiso $permiso, int $estadoId, User $user, ?string $comentario = null, ?Request $request = null ): void
+    public function aprobarFinal(Permiso $permiso, int $estadoId, User $user, ?string $comentario = null, ?Request $request = null): void
     {
         // Verificar permiso de aprobación final
-        if (!$user->can('aprobarFinal', $permiso)){
+        if (!$user->can('aprobarFinal', $permiso)) {
             throw new AuthorizationException();
         }
 
@@ -352,7 +352,7 @@ class PermisoService
             ]);
 
             // SOLO estados finales
-            if(in_array($estadoId, [3,5])){
+            if (in_array($estadoId, [3, 5])) {
                 $empleado = $user->empleado;
 
                 PermisoHistorial::create([
@@ -473,7 +473,7 @@ class PermisoService
             $empleadosConPermiso = Permiso::query()
                 ->whereHas('empleado', function ($query) use ($grupo) {
                     $query->where('categoria_id', 24)
-                          ->where('grupo_id', $grupo->id);
+                        ->where('grupo_id', $grupo->id);
                 })
                 ->whereDate('desde', '<=', $fecha)
                 ->whereDate('hasta', '>=', $fecha)
