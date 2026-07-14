@@ -82,7 +82,7 @@ class PermisosForm
                                 $resumen = Permiso::query()
                                     ->selectRaw('tipo_permiso_id, COUNT(*) as total')
                                     ->where('empleado_id', $empleado->id)
-                                    ->where('id_estado_aprobacion', 3) // ID 3 representa permisos con estado "Aprobado"
+                                    ->where('id_estado_aprobacion_jefe_division', 3) // ID 3 representa permisos con estado "Aprobado"
                                     ->whereYear('desde', $anio)
                                     ->groupBy('tipo_permiso_id')
                                     ->with('tipoPermiso:id,nombre')
