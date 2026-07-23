@@ -404,6 +404,117 @@ class GestionPermisoForm
                     ->label('Motivo')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('comentarios')
+                    ->label('Comentarios')
+                    ->maxLength(500)
+                    ->nullable(),
+
+                // Subir archivo adjunto usando FileUpload de Filament y rutas
+                FileUpload::make('adjunto')
+                    ->label('Adjunto')
+                    ->disk('public')
+                    ->directory('permisos')
+                    // ->downloadable()
+                    ->preserveFilenames()
+                    ->maxSize(10240)
+                    ->nullable(),
+                Placeholder::make('descarga')
+                    ->label('Archivo adjunto')
+                    ->icon('heroicon-o-paper-clip')
+                    ->visible(fn($record) => filled($record?->adjunto))
+                    ->content(fn($record) => new HtmlString(
+                        '<a href="' .
+                            route('descargar.archivo', $record->adjunto) .
+                            '" class="text-primary-600 underline" target="_blank">
+                                    DESCARGAR ARCHIVO ADJUNTO
+                                </a>'
+                    )),
+
+                \Filament\Forms\Components\Repeater::make('compensados')
+                    ->relationship()
+                    ->label('Periodos Compensados a Utilizar')
+                    ->schema([
+                        \Filament\Forms\Components\DateTimePicker::make('desde')
+                            ->label('Desde')
+                            ->displayFormat('d/m/Y H:i')
+                            ->format('Y-m-d H:i')
+                            ->withoutSeconds()
+                            ->native(false)
+                            ->required(),
+                        \Filament\Forms\Components\DateTimePicker::make('hasta')
+                            ->label('Hasta')
+                            ->displayFormat('d/m/Y H:i')
+                            ->format('Y-m-d H:i')
+                            ->withoutSeconds()
+                            ->native(false)
+                            ->required(),
+                        \Filament\Forms\Components\Textarea::make('justificacion')
+                            ->label('Justificación')
+                            ->required()
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+                        \Filament\Forms\Components\FileUpload::make('adjunto')
+                            ->label('Adjunto')
+                            ->preserveFilenames()
+                            ->downloadable()
+                            ->maxSize(10240)
+                            ->disk('public')
+                            ->directory('permisos/compensados_adjuntos')
+                            ->nullable()
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->visible(fn($get, ?\App\Models\Permiso $record) => $get('tipo_permiso_id') == 2 || $record?->tipo_permiso_id == 2)
+                    ->minItems(fn($get, ?\App\Models\Permiso $record) => ($get('tipo_permiso_id') == 2 || $record?->tipo_permiso_id == 2) ? 1 : 0)
+                    ->rules([
+                        fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
+                            // 1. Obtenemos las fechas generales del permiso solicitadas en la parte de arriba del formulario
+                            $desdePrincipal = $get('desde');
+                            $hastaPrincipal = $get('hasta');
+
+                            $ignorarValidaciones = $get('ignorar_validaciones');
+
+                            // 2. Comprobamos si es necesario validar:
+                            // MODIFICACIÓN: Ahora también verificamos si el administrador pidió ignorar las validaciones para saltarnos este paso
+                            if ($ignorarValidaciones || $get('tipo_permiso_id') != 2 || ! $desdePrincipal || ! $hastaPrincipal || ! is_array($value) || empty($value)) {
+                                return;
+                            }
+
+                            // 3. Calculamos la duración total en MINUTOS del permiso principal.
+                            // Usamos diffInMinutes de Carbon para ser exactos.
+                            $minutosPrincipales = \Carbon\Carbon::parse($desdePrincipal)->diffInMinutes(\Carbon\Carbon::parse($hastaPrincipal));
+
+                            // 4. Vamos a recorrer todos los items que el usuario agregó a la lista (Repeater)
+                            $minutosCompensados = 0;
+                            foreach ($value as $item) {
+                                // Validamos que el item de la lista tenga llenas sus propias fechas desde/hasta
+                                if (isset($item['desde']) && isset($item['hasta'])) {
+                                    // Sumamos la duración de este item individual al total acumulado
+                                    $minutosCompensados += \Carbon\Carbon::parse($item['desde'])->diffInMinutes(\Carbon\Carbon::parse($item['hasta']));
+                                }
+                            }
+
+                            // 5. Comparamos ambos resultados: los minutos solicitados vs los minutos respaldados en la tabla
+                            if ($minutosPrincipales !== $minutosCompensados) {
+                                // Si no coinciden, convertimos los minutos a horas para mostrarle un mensaje amigable al usuario
+                                $horasP = round($minutosPrincipales / 60, 2);
+                                $horasC = round($minutosCompensados / 60, 2);
+                                // Arrojamos el error (esto evita que el formulario se guarde)
+                                $fail("La suma de horas de los periodos compensados ({$horasC} hrs) debe ser exactamente igual a las horas solicitadas en el permiso ({$horasP} hrs).");
+                            }
+
+                            // INICIO CAMBIO: Validar antigüedad de los periodos compensados (máximo 6 meses)
+                            $service = app(\App\Services\PermisoService::class);
+                            try {
+                                $service->validarAntiguedadCompensados($value, $desdePrincipal, (bool) $ignorarValidaciones);
+                            } catch (\DomainException $e) {
+                                $fail($e->getMessage());
+                            }
+                            // FIN CAMBIO
+                        },
+                    ]),
+
                 Select::make('id_estado_vb')
                     ->label('Estado de Vo.Bo.')
                     ->relationship(
@@ -500,115 +611,6 @@ class GestionPermisoForm
                         return $empleado ? "{$empleado->oni} - {$empleado->nombre}" : '';
                     })
                     ->nullable(),
-                TextInput::make('comentarios')
-                    ->label('Comentarios')
-                    ->maxLength(500)
-                    ->nullable(),
-
-                // Subir archivo adjunto usando FileUpload de Filament y rutas
-                FileUpload::make('adjunto')
-                    ->label('Adjunto')
-                    ->disk('public')
-                    ->directory('permisos')
-                    // ->downloadable()
-                    ->preserveFilenames()
-                    ->maxSize(10240)
-                    ->nullable(),
-                Placeholder::make('descarga')
-                    ->label('Archivo adjunto')
-                    ->icon('heroicon-o-paper-clip')
-                    ->visible(fn($record) => filled($record?->adjunto))
-                    ->content(fn($record) => new HtmlString(
-                        '<a href="' .
-                            route('descargar.archivo', $record->adjunto) .
-                            '" class="text-primary-600 underline" target="_blank">
-                                    DESCARGAR ARCHIVO ADJUNTO
-                                </a>'
-                    )),
-
-                \Filament\Forms\Components\Repeater::make('compensados')
-                    ->relationship()
-                    ->label('Periodos Compensados a Utilizar')
-                    ->schema([
-                        \Filament\Forms\Components\DateTimePicker::make('desde')
-                            ->label('Desde')
-                            ->displayFormat('d/m/Y H:i')
-                            ->format('Y-m-d H:i')
-                            ->withoutSeconds()
-                            ->native(false)
-                            ->required(),
-                        \Filament\Forms\Components\DateTimePicker::make('hasta')
-                            ->label('Hasta')
-                            ->displayFormat('d/m/Y H:i')
-                            ->format('Y-m-d H:i')
-                            ->withoutSeconds()
-                            ->native(false)
-                            ->required(),
-                        \Filament\Forms\Components\Textarea::make('justificacion')
-                            ->label('Justificación')
-                            ->required()
-                            ->maxLength(65535)
-                            ->columnSpanFull(),
-                        \Filament\Forms\Components\FileUpload::make('adjunto')
-                            ->label('Adjunto')
-                            ->preserveFilenames()
-                            ->downloadable()
-                            ->maxSize(10240)
-                            ->disk('public')
-                            ->directory('permisos/compensados_adjuntos')
-                            ->nullable()
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2)
-                    ->columnSpanFull()
-                    ->visible(fn($get) => $get('tipo_permiso_id') == 2)
-                    ->rules([
-                        fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
-                            // 1. Obtenemos las fechas generales del permiso solicitadas en la parte de arriba del formulario
-                            $desdePrincipal = $get('desde');
-                            $hastaPrincipal = $get('hasta');
-
-                            $ignorarValidaciones = $get('ignorar_validaciones');
-
-                            // 2. Comprobamos si es necesario validar:
-                            // MODIFICACIÓN: Ahora también verificamos si el administrador pidió ignorar las validaciones para saltarnos este paso
-                            if ($ignorarValidaciones || $get('tipo_permiso_id') != 2 || ! $desdePrincipal || ! $hastaPrincipal || ! is_array($value) || empty($value)) {
-                                return;
-                            }
-
-                            // 3. Calculamos la duración total en MINUTOS del permiso principal.
-                            // Usamos diffInMinutes de Carbon para ser exactos.
-                            $minutosPrincipales = \Carbon\Carbon::parse($desdePrincipal)->diffInMinutes(\Carbon\Carbon::parse($hastaPrincipal));
-
-                            // 4. Vamos a recorrer todos los items que el usuario agregó a la lista (Repeater)
-                            $minutosCompensados = 0;
-                            foreach ($value as $item) {
-                                // Validamos que el item de la lista tenga llenas sus propias fechas desde/hasta
-                                if (isset($item['desde']) && isset($item['hasta'])) {
-                                    // Sumamos la duración de este item individual al total acumulado
-                                    $minutosCompensados += \Carbon\Carbon::parse($item['desde'])->diffInMinutes(\Carbon\Carbon::parse($item['hasta']));
-                                }
-                            }
-
-                            // 5. Comparamos ambos resultados: los minutos solicitados vs los minutos respaldados en la tabla
-                            if ($minutosPrincipales !== $minutosCompensados) {
-                                // Si no coinciden, convertimos los minutos a horas para mostrarle un mensaje amigable al usuario
-                                $horasP = round($minutosPrincipales / 60, 2);
-                                $horasC = round($minutosCompensados / 60, 2);
-                                // Arrojamos el error (esto evita que el formulario se guarde)
-                                $fail("La suma de horas de los periodos compensados ({$horasC} hrs) debe ser exactamente igual a las horas solicitadas en el permiso ({$horasP} hrs).");
-                            }
-
-                            // INICIO CAMBIO: Validar antigüedad de los periodos compensados (máximo 6 meses)
-                            $service = app(\App\Services\PermisoService::class);
-                            try {
-                                $service->validarAntiguedadCompensados($value, $desdePrincipal, (bool) $ignorarValidaciones);
-                            } catch (\DomainException $e) {
-                                $fail($e->getMessage());
-                            }
-                            // FIN CAMBIO
-                        },
-                    ]),
 
             ]);
     }

@@ -339,6 +339,7 @@ class ProgramarCompensadosForm
                             ])
                             ->columns(2)
                             ->columnSpanFull()
+                            ->minItems(1)
                             ->rules([
                                 fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
                                     $desdePrincipal = $get('desde');

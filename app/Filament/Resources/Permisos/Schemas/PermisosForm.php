@@ -388,7 +388,8 @@ class PermisosForm
                     ])
                     ->columns(2)
                     ->columnSpanFull()
-                    ->visible(fn($get) => $get('tipo_permiso_id') == 2)
+                    ->visible(fn($get, ?\App\Models\Permiso $record) => $get('tipo_permiso_id') == 2 || $record?->tipo_permiso_id == 2)
+                    ->minItems(fn($get, ?\App\Models\Permiso $record) => ($get('tipo_permiso_id') == 2 || $record?->tipo_permiso_id == 2) ? 1 : 0)
                     ->disabled($deshabilitarSiNoPendiente)
                     ->rules([
                         fn($get) => function (string $attribute, $value, \Closure $fail) use ($get) {
