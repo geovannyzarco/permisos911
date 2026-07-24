@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Table;
 
 class UnidadsTable
@@ -27,6 +28,8 @@ class UnidadsTable
                 TextColumn::make('limite_permisos')
                     ->label('Límite de Permisos')
                     ->sortable(),
+                ColorColumn::make('color')
+                    ->label('Color'),
             ])
             ->filters([
                 //

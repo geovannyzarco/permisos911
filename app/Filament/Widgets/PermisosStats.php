@@ -45,7 +45,7 @@ class PermisosStats extends StatsOverviewWidget
             ->count();
 
         $denegados = Permiso::where('empleado_id', $empleado->id)
-            ->where('id_estado_aprobacion_jefe_division', 5)
+            ->whereIn('id_estado_aprobacion_jefe_division', [5, 6, 7])
             ->whereYear('desde', $year)
             ->count();
 

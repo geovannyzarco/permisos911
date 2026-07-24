@@ -219,7 +219,7 @@ class AprobacionPermisosTable
                                 ->label('Estado Visto Bueno')
                                 ->options(
                                     Estado::where('entidad_id', 2)
-                                        ->whereIn('id', [3, 4, 5])
+                                        ->whereIn('id', [3, 4, 5, 6])
                                         ->pluck('nombre', 'id')
                                 )
                                 ->required(),
@@ -253,7 +253,7 @@ class AprobacionPermisosTable
                                 ->label('Estado de Aprobación')
                                 ->options(
                                     Estado::where('entidad_id', 2)
-                                        ->whereIn('id', [3, 4, 5])
+                                        ->whereIn('id', [3, 4, 5, 6])
                                         ->pluck('nombre', 'id')
                                 )
                                 ->required(),
@@ -283,7 +283,7 @@ class AprobacionPermisosTable
                                 ->label('Estado Aprobación Jefe División')
                                 ->options(
                                     Estado::where('entidad_id', 2)
-                                        ->whereIn('id', [3, 4, 5])
+                                        ->whereIn('id', [3, 4, 5, 6])
                                         ->pluck('nombre', 'id')
                                 )
                                 ->required(),

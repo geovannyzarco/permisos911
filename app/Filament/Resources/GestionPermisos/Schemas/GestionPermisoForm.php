@@ -299,8 +299,8 @@ class GestionPermisoForm
                             $idEstadoAprobacion = $get('id_estado_aprobacion');
                             $idEstadoAprobacionJefeDivision = $get('id_estado_aprobacion_jefe_division');
 
-                            // Si el permiso se está anulando, no se ejecutan las validaciones de negocio ni de traslapes
-                            if ($idEstadoVb == 5 || $idEstadoAprobacion == 5 || $idEstadoAprobacionJefeDivision == 5) {
+                            // Si el permiso se está anulando o rechazando, no se ejecutan las validaciones de negocio ni de traslapes
+                            if (in_array($idEstadoVb, [5, 6, 7]) || in_array($idEstadoAprobacion, [5, 6, 7]) || in_array($idEstadoAprobacionJefeDivision, [5, 6, 7])) {
                                 return;
                             }
 

@@ -102,8 +102,8 @@ class PermisoService
                 ->when($permisoActual, function ($query) use ($permisoActual) {
                     $query->where('id', '!=', $permisoActual->id);
                 })
-                // Excluimos permisos rechazados (estado 5) ya que no restan cupo
-                ->where('id_estado_aprobacion', '!=', 5)
+                // Excluimos permisos no válidos (estado 5, 6 y 7) ya que no restan cupo
+                ->whereNotIn('id_estado_aprobacion', [5, 6, 7])
                 ->pluck('empleado_id')
                 ->unique()
                 ->values()
@@ -172,8 +172,8 @@ class PermisoService
                 ->when($permisoActual, function ($query) use ($permisoActual) {
                     $query->where('id', '!=', $permisoActual->id);
                 })
-                // Excluimos permisos rechazados (estado 5)
-                ->where('id_estado_aprobacion', '!=', 5)
+                // Excluimos permisos no válidos (estado 5, 6 y 7)
+                ->whereNotIn('id_estado_aprobacion', [5, 6, 7])
                 ->pluck('empleado_id')
                 ->unique()
                 ->values()
@@ -220,10 +220,10 @@ class PermisoService
         $fechaHastaStr = Carbon::parse($hasta)->format('Y-m-d H:i:s P');
 
         // Buscamos si existe algún permiso para el mismo empleado que se traslape con este rango de tiempo.
-        // Se excluyen los permisos rechazados (estado 5).
+        // Se excluyen los permisos no válidos (estado 5, 6 y 7).
         $traslape = Permiso::query()
             ->where('empleado_id', $empleado->id)
-            ->where('id_estado_aprobacion', '!=', 5)
+            ->whereNotIn('id_estado_aprobacion', [5, 6, 7])
             ->where(function ($query) use ($fechaDesdeStr, $fechaHastaStr) {
                 // Condición de traslape: inicio_existente < fin_solicitado AND fin_existente > inicio_solicitado
                 $query->where('desde', '<', $fechaHastaStr)
@@ -352,7 +352,7 @@ class PermisoService
             ]);
 
             // SOLO estados finales
-            if (in_array($estadoId, [3, 5])) {
+            if (in_array($estadoId, [3, 5, 6, 7])) {
                 $empleado = $user->empleado;
 
                 PermisoHistorial::create([
@@ -480,8 +480,8 @@ class PermisoService
                 ->when($permisoActual, function ($query) use ($permisoActual) {
                     $query->where('id', '!=', $permisoActual->id);
                 })
-                // Excluimos rechazados (estado 5)
-                ->where('id_estado_aprobacion', '!=', 5)
+                // Excluimos rechazados (estado 5, 6 y 7)
+                ->whereNotIn('id_estado_aprobacion', [5, 6, 7])
                 ->pluck('empleado_id')
                 ->unique()
                 ->values()

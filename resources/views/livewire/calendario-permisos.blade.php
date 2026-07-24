@@ -194,8 +194,20 @@
                         @php $limit = 3; $shown = 0; @endphp
                         @foreach($day['groupedPermissions'] as $group)
                             @if($shown < $limit)
-                                <div class="px-2 py-1 text-[11px] font-medium rounded-lg border {{ $group['style']['border'] }} {{ $group['style']['bg'] }} {{ $group['style']['text'] }} truncate flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] shadow-sm">
-                                    <span class="w-1.5 h-1.5 rounded-full {{ $group['style']['dot'] }} shrink-0"></span>
+                                <div class="px-2 py-1 text-[11px] font-medium rounded-lg border truncate flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] shadow-sm"
+                                    style="{{ $group['style']['is_custom'] ? 'background-color: ' . $group['style']['bg'] . '; border-color: ' . $group['style']['border'] . '; color: ' . $group['style']['text'] : '' }}"
+                                    @class([
+                                        $group['style']['border'] => !$group['style']['is_custom'],
+                                        $group['style']['bg'] => !$group['style']['is_custom'],
+                                        $group['style']['text'] => !$group['style']['is_custom'],
+                                    ])
+                                >
+                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                        style="{{ $group['style']['is_custom'] ? 'background-color: ' . $group['style']['dot'] : '' }}"
+                                        @class([
+                                            $group['style']['dot'] => !$group['style']['is_custom'],
+                                        ])
+                                    ></span>
                                     <span class="truncate">{{ $group['name'] }}: {{ $group['count'] }}</span>
                                 </div>
                                 @php $shown++; @endphp
@@ -300,34 +312,19 @@
                                 <!-- Flujo de Aprobación -->
                                 <div class="flex flex-wrap items-center gap-3">
                                     <!-- Vo.Bo. Jefe Grupo -->
-                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border 
-                                        @if($perm['id_estado_vb'] == 3) bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400
-                                        @elseif($perm['id_estado_vb'] == 4) bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400
-                                        @else bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-950/20 dark:border-rose-800 dark:text-rose-400
-                                        @endif"
-                                    >
+                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border {{ $perm['style_vb'] }}">
                                         <span>Vo.Bo. Jefe Grupo:</span>
                                         <span>{{ $perm['estado_vb'] }}</span>
                                     </div>
 
                                     <!-- Aprobación Jefatura -->
-                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border 
-                                        @if($perm['id_estado_aprobacion'] == 3) bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400
-                                        @elseif($perm['id_estado_aprobacion'] == 4) bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400
-                                        @else bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-950/20 dark:border-rose-800 dark:text-rose-400
-                                        @endif"
-                                    >
+                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border {{ $perm['style_aprobacion'] }}">
                                         <span>Aprob. Unidad:</span>
                                         <span>{{ $perm['estado_aprobacion'] }}</span>
                                     </div>
 
                                     <!-- Aprobación División -->
-                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border 
-                                        @if($perm['id_estado_aprobacion_jefe_division'] == 3) bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400
-                                        @elseif($perm['id_estado_aprobacion_jefe_division'] == 4) bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400
-                                        @else bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-950/20 dark:border-rose-800 dark:text-rose-400
-                                        @endif"
-                                    >
+                                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold border {{ $perm['style_division'] }}">
                                         <span>Aprob. División:</span>
                                         <span>{{ $perm['estado_division'] }}</span>
                                     </div>

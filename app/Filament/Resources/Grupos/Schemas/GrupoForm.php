@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Grupos\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Schemas\Schema;
 
 class GrupoForm
@@ -21,6 +22,8 @@ class GrupoForm
                 TextInput::make('permisos_diarios')
                     ->label('Permisos Diarios')
                     ->numeric(),
+                ColorPicker::make('color')
+                    ->label('Color para Calendario'),
             ]);
     }
 }

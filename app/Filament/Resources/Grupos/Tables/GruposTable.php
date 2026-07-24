@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 
@@ -28,6 +29,8 @@ class GruposTable
                 TextColumn::make('permisos_diarios')
                     ->label('Permisos Diarios')
                     ->sortable(),
+                ColorColumn::make('color')
+                    ->label('Color'),
             ])
             ->filters([
                 //

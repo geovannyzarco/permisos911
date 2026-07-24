@@ -92,7 +92,7 @@ class AprobacionPermisoForm
                             ->label('VISTO BUENO')
                             ->options(
                                 Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 5])
+                                    ->whereIn('id', [3, 5, 6])
                                     ->pluck('nombre', 'id')
                             )
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 2)
@@ -110,7 +110,7 @@ class AprobacionPermisoForm
                             ->label('APROBACIÓN JEFATURA')
                             ->options(
                                 Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 5])
+                                    ->whereIn('id', [3, 5, 6])
                                     ->pluck('nombre', 'id')
                             )
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 3)
@@ -128,7 +128,7 @@ class AprobacionPermisoForm
                             ->label('APROBACIÓN JEFE DIVISIÓN')
                             ->options(
                                 Estado::where('entidad_id', 2)
-                                    ->whereIn('id', [3, 5])
+                                    ->whereIn('id', [3, 5, 6])
                                     ->pluck('nombre', 'id')
                             )
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)

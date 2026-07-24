@@ -146,7 +146,7 @@ class ProgramarCompensadosForm
                                         ->when($record, function ($query) use ($record) {
                                             $query->where('id', '!=', $record->id);
                                         })
-                                        ->where('id_estado_aprobacion', '!=', 5) // Excluir Rechazados
+                                        ->whereNotIn('id_estado_aprobacion', [5, 6, 7]) // Excluir Rechazados/Anulados/Incompletos
                                         ->pluck('empleado_id')
                                         ->unique()
                                         ->values()

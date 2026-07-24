@@ -11,7 +11,7 @@ class Grupo extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nombre', 'unidad_id', 'permisos_diarios'];
+    protected $fillable = ['nombre', 'unidad_id', 'permisos_diarios', 'color'];
 
     protected $searchableFields = ['*'];
 

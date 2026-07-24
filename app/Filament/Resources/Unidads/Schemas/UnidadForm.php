@@ -6,6 +6,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use App\Models\Division;
+use Filament\Forms\Components\ColorPicker;
 use Dom\Text;
 
 class UnidadForm
@@ -24,6 +25,8 @@ class UnidadForm
                     ->label('Límite de Permisos')
                     ->numeric()
                     ->required(),
+                ColorPicker::make('color')
+                    ->label('Color para Calendario'),
             ]);
     }
 }

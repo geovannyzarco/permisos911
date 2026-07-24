@@ -254,10 +254,13 @@ class CalendarioPermisos extends Component
                     'duracion' => $p->duracion,
                     'estado_vb' => $p->estadoVB?->nombre ?? 'PENDIENTE',
                     'id_estado_vb' => $p->id_estado_vb,
+                    'style_vb' => $this->getStatusStyle($p->id_estado_vb ?? 4),
                     'estado_aprobacion' => $p->estadoAprobado?->nombre ?? 'PENDIENTE',
                     'id_estado_aprobacion' => $p->id_estado_aprobacion,
+                    'style_aprobacion' => $this->getStatusStyle($p->id_estado_aprobacion ?? 4),
                     'estado_division' => $p->estadoAprobacionJefeDivision?->nombre ?? 'PENDIENTE',
                     'id_estado_aprobacion_jefe_division' => $p->id_estado_aprobacion_jefe_division,
+                    'style_division' => $this->getStatusStyle($p->id_estado_aprobacion_jefe_division ?? 4),
                     'pdf_url' => $p->id_estado_aprobacion_jefe_division == 3 ? route('permiso.pdf', ['id' => $p->id]) : null,
                     'view_url' => $viewUrl,
                 ];
@@ -321,14 +324,17 @@ class CalendarioPermisos extends Component
                 $emp = $p->empleado;
                 $groupName = '';
                 $type = 'unidad';
+                $dbColor = null;
 
                 if ($emp) {
                     if ($emp->grupo && $emp->grupo_id != 12) {
                         $groupName = $emp->grupo->nombre;
                         $type = 'grupo';
+                        $dbColor = $emp->grupo->color;
                     } elseif ($emp->unidad) {
                         $groupName = $emp->unidad->nombre;
                         $type = 'unidad';
+                        $dbColor = $emp->unidad->color;
                     } else {
                         $groupName = 'General';
                         $type = 'general';
@@ -339,17 +345,36 @@ class CalendarioPermisos extends Component
                 }
 
                 if (!isset($grouped[$groupName])) {
-                    // Generar un color consistente basado en el hash del nombre
-                    $colorIndex = abs(crc32($groupName)) % 6;
-                    $colors = [
-                        0 => ['border' => 'border-blue-200 dark:border-blue-800', 'bg' => 'bg-blue-50 dark:bg-blue-950/30', 'text' => 'text-blue-700 dark:text-blue-300', 'dot' => 'bg-blue-500'],
-                        1 => ['border' => 'border-emerald-200 dark:border-emerald-800', 'bg' => 'bg-emerald-50 dark:bg-emerald-950/30', 'text' => 'text-emerald-700 dark:text-emerald-300', 'dot' => 'bg-emerald-500'],
-                        2 => ['border' => 'border-amber-200 dark:border-amber-800', 'bg' => 'bg-amber-50 dark:bg-amber-950/30', 'text' => 'text-amber-700 dark:text-amber-300', 'dot' => 'bg-amber-500'],
-                        3 => ['border' => 'border-purple-200 dark:border-purple-800', 'bg' => 'bg-purple-50 dark:bg-purple-950/30', 'text' => 'text-purple-700 dark:text-purple-300', 'dot' => 'bg-purple-500'],
-                        4 => ['border' => 'border-rose-200 dark:border-rose-800', 'bg' => 'bg-rose-50 dark:bg-rose-950/30', 'text' => 'text-rose-700 dark:text-rose-300', 'dot' => 'bg-rose-500'],
-                        5 => ['border' => 'border-cyan-200 dark:border-cyan-800', 'bg' => 'bg-cyan-50 dark:bg-cyan-950/30', 'text' => 'text-cyan-700 dark:text-cyan-300', 'dot' => 'bg-cyan-500'],
-                    ];
-                    $style = $colors[$colorIndex];
+                    if ($dbColor) {
+                        $hex = trim($dbColor);
+                        if (!str_starts_with($hex, '#')) {
+                            $hex = '#' . $hex;
+                        }
+                        list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
+                        if ($r === null || $g === null || $b === null) {
+                            $r = 59; $g = 130; $b = 246; // fallback blue-500
+                        }
+
+                        $style = [
+                            'is_custom' => true,
+                            'bg' => "rgba($r, $g, $b, 0.1)",
+                            'border' => "rgba($r, $g, $b, 0.3)",
+                            'text' => $hex,
+                            'dot' => $hex,
+                        ];
+                    } else {
+                        // Generar un color consistente basado en el hash del nombre
+                        $colorIndex = abs(crc32($groupName)) % 6;
+                        $colors = [
+                            0 => ['is_custom' => false, 'border' => 'border-blue-200 dark:border-blue-800', 'bg' => 'bg-blue-50 dark:bg-blue-950/30', 'text' => 'text-blue-700 dark:text-blue-300', 'dot' => 'bg-blue-500'],
+                            1 => ['is_custom' => false, 'border' => 'border-emerald-200 dark:border-emerald-800', 'bg' => 'bg-emerald-50 dark:bg-emerald-950/30', 'text' => 'text-emerald-700 dark:text-emerald-300', 'dot' => 'bg-emerald-500'],
+                            2 => ['is_custom' => false, 'border' => 'border-amber-200 dark:border-amber-800', 'bg' => 'bg-amber-50 dark:bg-amber-950/30', 'text' => 'text-amber-700 dark:text-amber-300', 'dot' => 'bg-amber-500'],
+                            3 => ['is_custom' => false, 'border' => 'border-purple-200 dark:border-purple-800', 'bg' => 'bg-purple-50 dark:bg-purple-950/30', 'text' => 'text-purple-700 dark:text-purple-300', 'dot' => 'bg-purple-500'],
+                            4 => ['is_custom' => false, 'border' => 'border-rose-200 dark:border-rose-800', 'bg' => 'bg-rose-50 dark:bg-rose-950/30', 'text' => 'text-rose-700 dark:text-rose-300', 'dot' => 'bg-rose-500'],
+                            5 => ['is_custom' => false, 'border' => 'border-cyan-200 dark:border-cyan-800', 'bg' => 'bg-cyan-50 dark:bg-cyan-950/30', 'text' => 'text-cyan-700 dark:text-cyan-300', 'dot' => 'bg-cyan-500'],
+                        ];
+                        $style = $colors[$colorIndex];
+                    }
 
                     $grouped[$groupName] = [
                         'name' => $groupName,
@@ -429,5 +454,22 @@ class CalendarioPermisos extends Component
             'grupos' => $grupos,
             'tipoPermisos' => TipoPermiso::all(),
         ]);
+    }
+
+    public function getStatusStyle($estadoId)
+    {
+        switch ((int) $estadoId) {
+            case 3: // APROBADO
+                return 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400';
+            case 4: // PENDIENTE
+                return 'bg-[#efebe9] border-[#d7ccc8] text-[#5d4037] dark:bg-[#3e2723]/30 dark:border-[#5d4037] dark:text-[#d7ccc8]';
+            case 5: // ANULADO
+                return 'bg-sky-50 border-sky-200 text-sky-700 dark:bg-sky-950/20 dark:border-sky-800 dark:text-sky-400';
+            case 6: // RECHAZADO
+                return 'bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-950/20 dark:border-rose-800 dark:text-rose-400';
+            default:
+                // Fallback for other states (like 7)
+                return 'bg-gray-50 border-gray-200 text-gray-700 dark:bg-gray-900/20 dark:border-gray-800 dark:text-gray-400';
+        }
     }
 }
