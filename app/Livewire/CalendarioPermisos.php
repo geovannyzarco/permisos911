@@ -385,8 +385,16 @@ class CalendarioPermisos extends Component
         $user = auth()->user();
         $emp = $user->empleado;
 
-        // Cargar listas de opciones filtradas dinámicamente según nivel y delegaciones
-        if ($emp && $emp->nivel_id == 1) {
+        // Cargar listas de opciones filtradas dinámicamente según nivel, rol y delegaciones
+        if ($user->hasRole(['super_admin', 'admin'])) {
+            $divisions = Division::all();
+            $unidades = $this->divisionId ? Unidad::where('division_id', $this->divisionId)->get() : Unidad::all();
+            $grupos = $this->unidadId 
+                ? Grupo::where('unidad_id', $this->unidadId)->get() 
+                : ($this->divisionId 
+                    ? Grupo::whereHas('unidad', fn($q) => $q->where('division_id', $this->divisionId))->get() 
+                    : Grupo::all());
+        } elseif ($emp && $emp->nivel_id == 1) {
             $divisions = [];
             $unidades = [];
             $grupos = [];
@@ -407,10 +415,10 @@ class CalendarioPermisos extends Component
             $divisionIds = Unidad::whereIn('id', $allSelectableUnitIds)->pluck('division_id')->toArray();
             $divisions = Division::whereIn('id', $divisionIds)->get();
         } else {
-            // Nivel 4 o Admin: Ver todo según restricciones de la página
+            // Nivel 4 o similar: Ver todo según restricciones de la página
             $divisions = $this->isEmployeeRestricted || $this->isGrupoRestricted || $this->isUnidadRestricted || $this->isDivisionRestricted ? [] : Division::all();
             $unidades = $this->isEmployeeRestricted || $this->isGrupoRestricted ? [] : ($this->divisionId ? Unidad::where('division_id', $this->divisionId)->get() : Unidad::all());
-            $grupos = $this->isEmployeeRestricted ? [] : ($this->unidadId ? Grupo::where('unidad_id', $this->unidadId)->get() : Grupo::all());
+            $grupos = $this->isEmployeeRestricted ? [] : ($this->unidadId ? Grupo::where('unidad_id', $this->unidadId)->get() : ($this->divisionId ? Grupo::whereHas('unidad', fn($q) => $q->where('division_id', $this->divisionId))->get() : Grupo::all()));
         }
 
         return view('livewire.calendario-permisos', [
