@@ -20,6 +20,8 @@ class CategoriasTable
                     ->sortable(),
                 TextColumn::make('nombre')
                     ->searchable(),
+                TextColumn::make('grado')
+                    ->searchable(),
 
             ])
             ->filters([

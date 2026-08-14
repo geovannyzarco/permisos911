@@ -352,6 +352,22 @@ class PermisosForm
                     ->directory('permisos/adjuntos')
                     ->nullable()
                     ->disabled($deshabilitarSiNoPendiente),
+                TextInput::make('cargo_funcional')
+                    ->label('Cargo funcional')
+                    ->maxLength(255)
+                    // Requerido solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                    ->required(fn($get) => $get('tipo_permiso_id') == 18)
+                    // Visible solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                    ->visible(fn($get) => $get('tipo_permiso_id') == 18)
+                    ->disabled($deshabilitarSiNoPendiente),
+                TextInput::make('descripcion_funcion')
+                    ->label('Puesto de trabajo que desempeña')
+                    ->maxLength(255)
+                    // Requerido solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                    ->required(fn($get) => $get('tipo_permiso_id') == 18)
+                    // Visible solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                    ->visible(fn($get) => $get('tipo_permiso_id') == 18)
+                    ->disabled($deshabilitarSiNoPendiente),
 
                 \Filament\Forms\Components\Repeater::make('compensados')
                     ->relationship()

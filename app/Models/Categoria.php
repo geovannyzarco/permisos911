@@ -11,7 +11,7 @@ class Categoria extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'grado'];
 
     protected $searchableFields = ['*'];
 

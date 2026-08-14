@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Categorias\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class CategoriaForm
@@ -13,6 +14,12 @@ class CategoriaForm
             ->components([
                 TextInput::make('nombre')
                     ->required(),
+                Select::make('grado')
+                    ->options([
+                        'ADMINISTRATIVO' => 'ADMINISTRATIVO',
+                        'OPERATIVO' => 'OPERATIVO',
+                    ])
+                    ->native(false),
             ]);
     }
 }

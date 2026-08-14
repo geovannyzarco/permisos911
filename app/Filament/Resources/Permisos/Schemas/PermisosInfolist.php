@@ -28,6 +28,14 @@ class PermisosInfolist
                         TextEntry::make('adjunto')
                             ->label('Adjunto')
                             ->formatStateUsing(fn($state) => filled($state) ? 'Sí' : 'No'),
+                        TextEntry::make('cargo_funcional')
+                            ->label('Cargo funcional')
+                            // Visible solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                            ->visible(fn($record) => ($record?->tipo_permiso_id ?? null) == 18),
+                        TextEntry::make('descripcion_funcion')
+                            ->label('Puesto de trabajo que desempeña')
+                            // Visible solo cuando es tipo de permiso "Sin goce de sueldo" (18)
+                            ->visible(fn($record) => ($record?->tipo_permiso_id ?? null) == 18),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),

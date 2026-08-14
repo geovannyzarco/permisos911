@@ -33,6 +33,8 @@ class Permiso extends Model
         'fecha_aprobacion_jefe_division',
         'id_estado_aprobacion_jefe_division',
         'tramitado',
+        'cargo_funcional',
+        'descripcion_funcion',
         // --- NUEVOS CAMPOS PARA HISTÓRICO (SNAPSHOT) ---
         'empleado_nombre',
         'empleado_oni',
