@@ -113,6 +113,40 @@
         .c-firma-empleado { top: 780px; left: 120px; width: 220px; text-align: left; }
         .c-firma-jefe-dept { top: 782px; left: 560px; width: 220px; text-align: left; }
         .c-firma-jefe-div { top: 880px; left: 300px; width: 220px; text-align: left; }
+
+        /* --- MAPEO DE CAMPOS SIN GOCE DE SUELDO --- */
+        /* CSS para colocar los campos en el formato que le corresponde (singoce.jpg) */
+        .s-oni { top: 165px; left: 60px; width: 100px; }
+        .s-nombre { top: 165px; left: 360px; width: 550px; }
+        .s-grado { top: 195px; left: 190px; width: 250px; }
+        .s-cargo-nominal { top: 248px; left: 215px; width: 250px; }
+        .s-cargo-funcional { top: 248px; left: 565px; width: 580px; }
+        .s-unidad { top: 290px; left: 270px; width: 640px; }
+        .s-puesto { top: 330px; left: 215px; width: 460px; }
+        .s-motivo { top: 395px; left: 10px; width: 640px; }
+
+        /* Licencias de 1 a 8 días */
+        .s-check-1-8 { top: 540px; left: 195px; font-size: 16px; font-weight: bold; }
+        .s-del-dia { top: 585px; left: 185px; width: 30px; text-align: center; }
+        .s-del-mes { top: 585px; left: 255px; width: 100px; text-align: center; }
+        .s-al-dia { top: 585px; left: 385px; width: 30px; text-align: center; }
+        .s-al-mes { top: 585px; left: 430px; width: 100px; text-align: center; font-size: 10px;}
+        .s-al-anio { top: 585px; left: 560px; width: 40px; text-align: center; }
+        .s-total-dias { top: 585px; left: 725px; width: 50px; text-align: center; }
+
+        /* Licencias de más de 8 días */
+        .s-check-mas-8 { top: 647px; left: 195px; font-size: 16px; font-weight: bold; }
+        .s-inicio-fecha { top: 675px; left: 170px; width: 120px; text-align: center; }
+        .s-fin-fecha { top: 675px; left: 540px; width: 120px; text-align: center; }
+        .s-cant-dias { top: 705px; left: 170px; width: 50px; text-align: center; }
+
+        /* Firmas y autorización */
+        .s-firma-solicitante { top: 715px; left: 300px; width: 220px; text-align: center; }
+        .s-fecha-autorizacion { top: 840px; left: 55px; width: 120px; }
+        .s-firma-jefe-div { top: 825px; left: 230px; width: 220px; text-align: center; }
+        .s-oni-jefe-div { top: 870px; left: 515px; width: 150px; font-weight: bold;}
+        .s-nombre-jefe-div { top: 905px; left: 270px; width: 300px; font-weight: bold;}
+        .s-cargo-jefe-div { top: 943px; left: 250px; width: 300px; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -406,6 +440,90 @@
                 @endif
             </div>
         @endforeach
+    @endif
+
+    {{-- Hoja adicional para cuando el permiso es del tipo "sin goce de sueldo" (tipo_permiso_id = 18) --}}
+    @if($permiso->tipo_permiso_id == 18)
+        @php
+            // Calcular cantidad de días de diferencia entre desde y hasta
+            $totalDias = 0;
+            $fechaDesde = $permiso->desde;
+            $fechaHasta = $permiso->hasta;
+            if ($fechaDesde && $fechaHasta) {
+                $totalDias = (int) $fechaDesde->diffInDays($fechaHasta);
+                if ($totalDias === 0) {
+                    $totalDias = 1; // Si es el mismo día, se asume 1 día
+                }
+            }
+
+            // Obtener el grado según la categoría asignada
+            $gradoEmpleado = $permiso->empleado?->categoria?->grado ?? '';
+
+            // Cargo nominal del empleado (nombre de la categoría)
+            $cargoNominal = $permiso->cargo_nombre ?: ($permiso->empleado?->categoria?->nombre ?? '');
+
+            // Nombre de la división para el campo Unidad
+            $divisionNombre = $permiso->division_nombre ?: ($permiso->empleado?->unidad?->division?->nombre ?? '');
+
+            // Nombres de meses en español para la licencia de 1 a 8 días
+            $mesesEspanol = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+            // Jefe de división: se prefiere el histórico (snapshot) y de fallback el dinámico
+            $jefeNombreDiv = $permiso->jefe_division_nombre ?: ($jefeDivision?->nombre ?? '');
+            $jefeOniDiv = $permiso->jefe_division_oni ?: ($jefeDivision?->oni ?? '');
+        @endphp
+
+        <div class="container page-break">
+            <!-- Imagen de fondo de la hoja de permiso sin goce de sueldo (singoce.jpg) -->
+            <img src="{{ public_path('formatos/singoce.jpg') }}" class="background-img">
+
+            <!-- Campos del empleado y cargo -->
+            <div class="field s-oni">{{ $oniEmpleado }}</div>
+            <div class="field s-nombre">{{ $nombreEmpleado }}</div>
+            <div class="field s-grado">{{ $gradoEmpleado }}</div>
+            <div class="field s-cargo-nominal">{{ $cargoNominal }}</div>
+            <div class="field s-cargo-funcional">{{ $permiso->cargo_funcional }}</div>
+            <div class="field s-unidad">{{ $divisionNombre }}</div>
+            <div class="field s-puesto">{{ $permiso->descripcion_funcion }}</div>
+            <div class="field s-motivo">{{ $permiso->motivo }}</div>
+
+            <!-- Condicional de días de licencia -->
+            @if($totalDias >= 1 && $totalDias <= 8)
+                <!-- Licencia de 1 a 8 días -->
+                <div class="field check s-check-1-8">X</div>
+                <div class="field s-del-dia">{{ $fechaDesde?->format('d') }}</div>
+                <div class="field s-del-mes">{{ $mesesEspanol[$fechaDesde?->month - 1] ?? '' }}</div>
+                <div class="field s-al-dia">{{ $fechaHasta?->format('d') }}</div>
+                <div class="field s-al-mes">{{ $mesesEspanol[$fechaHasta?->month - 1] ?? '' }}</div>
+                <div class="field s-al-anio">{{ $fechaHasta?->format('y') }}</div>
+                <div class="field s-total-dias">{{ $totalDias }}</div>
+            @elseif($totalDias > 8)
+                <!-- Licencia de más de 8 días -->
+                <div class="field check s-check-mas-8">X</div>
+                <div class="field s-inicio-fecha">{{ $fechaDesde?->format('d/m/Y') }}</div>
+                <div class="field s-fin-fecha">{{ $fechaHasta?->format('d/m/Y') }}</div>
+                <div class="field s-cant-dias">{{ $totalDias }}</div>
+            @endif
+
+            <!-- Firma del empleado solicitante -->
+            @if($firmaEmpleado)
+                <div class="field s-firma-solicitante">
+                    <img src="{{ $firmaEmpleado }}" class="firma-img">
+                </div>
+            @endif
+
+            <!-- Sección de Autorización / Visto Bueno del Jefe de División -->
+            <div class="field s-fecha-autorizacion">{{ $permiso->fecha_creacion?->format('d/m/Y') }}</div>
+
+            @if($firmaJefeDivision)
+                <div class="field s-firma-jefe-div">
+                    <img src="{{ $firmaJefeDivision }}" class="firma-img">
+                </div>
+            @endif
+            <div class="field s-oni-jefe-div">{{ $jefeOniDiv }}</div>
+            <div class="field s-nombre-jefe-div">{{ $jefeNombreDiv }}</div>
+            <div class="field s-cargo-jefe-div">JEFE {{ $divisionNombre }}</div>
+        </div>
     @endif
 </body>
 </html>
