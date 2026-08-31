@@ -27,6 +27,7 @@ class TipoPermisoSeeder extends Seeder
             'POR LACTANCIA',
             'POR IMPARTIR CLASES',
             'MATRIMONIO',
+            'LICENCIA/PERMISO SIN GOCE DE SUELDO',
         ];
 
         DB::table('tipo_permisos')->delete();
