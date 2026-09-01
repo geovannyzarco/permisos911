@@ -31,6 +31,7 @@ class GestionPermisoInfolist
                 Section::make('Informacion del empleado')
                     ->schema([
                         ImageEntry::make('empleado.foto')
+                            ->disk('local')
                             ->label('Foto'),
                         TextEntry::make('empleado.oni')
                             ->label('ONI'),

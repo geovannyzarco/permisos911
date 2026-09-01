@@ -51,6 +51,7 @@ class GestionPermisosTable
                     ->searchable(),
 
                 ImageColumn::make('empleado.foto')
+                    ->disk('local')
                     ->circular()
                     ->label('FOTO'),
 

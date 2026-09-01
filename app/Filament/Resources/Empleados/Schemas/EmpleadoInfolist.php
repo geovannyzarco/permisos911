@@ -22,6 +22,7 @@ class EmpleadoInfolist
                     ->schema([
 
                         ImageEntry::make('foto')
+                            ->disk('local')
                             ->circular(),
 
                         TextEntry::make('nombre'),

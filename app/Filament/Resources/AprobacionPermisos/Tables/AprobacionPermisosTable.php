@@ -34,7 +34,7 @@ class AprobacionPermisosTable
             ->columns([
                 TextColumn::make('id')->label('ID')->sortable()->searchable(),
                 TextColumn::make('empleado.oni')->label('ONI')->sortable()->searchable(),
-                ImageColumn::make('empleado.foto')->label('FOTO')->circular()->size(40),
+                ImageColumn::make('empleado.foto')->label('FOTO')->disk('local')->circular()->size(40),
                 TextColumn::make('empleado.nombre')->label('NOMBRE')->sortable()->searchable(),
                 TextColumn::make('empleado.unidad.nombre')->label('UNIDAD')->sortable(),
                 TextColumn::make('empleado.grupo.nombre')->label('GRUPO')->sortable(),

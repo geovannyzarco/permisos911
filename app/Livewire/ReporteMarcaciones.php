@@ -93,6 +93,7 @@ class ReporteMarcaciones extends Component implements HasActions, HasSchemas, Ha
                     ->label('Oni')
                     ->searchable(),
                 ImageColumn::make('foto')
+                    ->disk('local')
                     ->circular()
                     ->label('Foto'),
                 TextColumn::make('nombre_empleado')
