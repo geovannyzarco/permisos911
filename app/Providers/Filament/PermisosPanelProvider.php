@@ -38,7 +38,7 @@ class PermisosPanelProvider extends PanelProvider
             ->brandLogo(asset('image/logo.png'))
             ->brandLogoHeight('4rem')
             ->brandName('Gestor de Permisos')
-            ->id('')
+            ->id('permisos')
             ->path('')
             ->login(CustomLogin::class)
             /*->userMenuItems([
