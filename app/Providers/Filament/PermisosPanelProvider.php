@@ -38,7 +38,7 @@ class PermisosPanelProvider extends PanelProvider
             ->brandLogo(asset('image/logo.png'))
             ->brandLogoHeight('4rem')
             ->brandName('Gestor de Permisos')
-            ->id('permisos')
+            ->id('')
             ->path('')
             ->login(CustomLogin::class)
             /*->userMenuItems([
@@ -59,21 +59,21 @@ class PermisosPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('Manual de Usuario')
-                    ->url(fn () => asset('documentacion/manual_usuario.html'), shouldOpenInNewTab: true)
+                    ->url(fn() => asset('documentacion/manual_usuario.html'), shouldOpenInNewTab: true)
                     ->icon('heroicon-o-book-open')
                     ->group('Documentación')
                     ->sort(90)
                     ->visible(fn() => auth()->check()),
 
                 NavigationItem::make('Manual del Administrador')
-                    ->url(fn () => asset('documentacion/manual_administrador.html'), shouldOpenInNewTab: true)
+                    ->url(fn() => asset('documentacion/manual_administrador.html'), shouldOpenInNewTab: true)
                     ->icon('heroicon-o-cog-6-tooth')
                     ->group('Documentación')
                     ->sort(91)
                     ->visible(fn() => auth()->user()?->hasRole(['super_admin', 'admin'])),
 
                 NavigationItem::make('Manual de Instalación')
-                    ->url(fn () => asset('documentacion/manual_instalacion.html'), shouldOpenInNewTab: true)
+                    ->url(fn() => asset('documentacion/manual_instalacion.html'), shouldOpenInNewTab: true)
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->group('Documentación')
                     ->sort(92)
