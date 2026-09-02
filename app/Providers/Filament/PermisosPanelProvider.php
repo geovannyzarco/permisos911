@@ -39,7 +39,7 @@ class PermisosPanelProvider extends PanelProvider
             ->brandLogoHeight('4rem')
             ->brandName('Gestor de Permisos')
             ->id('permisos')
-            ->path('')
+            ->path('admin')
             ->login(CustomLogin::class)
             /*->userMenuItems([
                 'profile' => \Filament\Navigation\MenuItem::make()

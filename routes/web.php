@@ -5,7 +5,11 @@ use App\Http\Controllers\PermisoPdfController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\MarcacionImportController;
 
-Route::redirect('/', '/permisos');
+// Al entrar a http://192.168.145.65/permisos, redirigir al panel de Filament
+Route::get('/', function () {
+    return redirect()->route('filament.permisos.pages.dashboard');
+    // Si tu panel requiere login, Filament redirigirá internamente a /permisos/admin/login
+});
 
 Route::get('/permiso/{id}/pdf', [PermisoPdfController::class, 'generar'])
     ->name('permiso.pdf');
