@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AprobacionPermisos\Schemas;
 
 use Dompdf\FrameDecorator\Image;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -69,6 +70,38 @@ class AprobacionPermisoInfolist
 
                     ])->columns(3)
                     ->columnSpanFull(),
+
+                Section::make('Detalle del tiempo compensado')
+                    ->schema([
+                        RepeatableEntry::make('compensados')
+                            ->label('')
+                            ->schema([
+                                TextEntry::make('desde')
+                                    ->label('Desde')
+                                    ->dateTime('d/m/Y H:i'),
+                                TextEntry::make('hasta')
+                                    ->label('Hasta')
+                                    ->dateTime('d/m/Y H:i'),
+                                TextEntry::make('justificacion')
+                                    ->label('Justificación')
+                                    ->columnSpanFull(),
+                                TextEntry::make('adjunto')
+                                    ->label('Anexo')
+                                    ->color('primary')
+                                    ->formatStateUsing(function ($state) {
+                                        if ($state) {
+                                            return '<a href="' . asset('storage/' . $state) . '" target="_blank">Ver Anexo</a>';
+                                        }
+                                        return 'No hay adjunto';
+                                    })
+                                    ->html()
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->grid(2),
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn($record): bool => ($record?->tipo_permiso_id ?? null) == 2),
 
                 Section::make('Aprobaciones')
                     ->schema([
