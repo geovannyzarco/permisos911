@@ -4,9 +4,13 @@ namespace App\Services;
 
 use App\Models\Marcacion;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class MarcacionImportService
 {
+    // Tamaño del lote para inserciones masivas
+    private const BATCH_SIZE = 500;
+
     public function importFromTxt(string $path): array
     {
         $file = fopen($path, 'r');
@@ -18,8 +22,8 @@ class MarcacionImportService
         fgets($file);
 
         $tempRecords = [];
-        $duplicadas = 0;
-        $seenInFile = []; // Evitar duplicidad dentro del mismo archivo
+        $seenInFile  = []; // Evitar duplicidad dentro del mismo archivo
+        $now         = now()->toDateTimeString();
 
         while (($row = fgetcsv($file, 0, "\t")) !== false) {
             $colsCount = count($row);
@@ -54,46 +58,44 @@ class MarcacionImportService
 
             $uniqueKey = $codigo . '_' . $marcacion->toDateTimeString();
 
-            // Omitir si ya se procesó en este archivo
+            // Omitir duplicados dentro del mismo archivo
             if (isset($seenInFile[$uniqueKey])) {
-                $duplicadas++;
                 continue;
             }
             $seenInFile[$uniqueKey] = true;
 
-            // Omitir si ya existe en la base de datos
-            $exists = Marcacion::where('codigo', $codigo)
-                ->where('marcacion', $marcacion)
-                ->exists();
-
-            if ($exists) {
-                $duplicadas++;
-                continue;
-            }
-
             $tempRecords[] = [
-                'codigo'    => $codigo,
-                'marcacion' => $marcacion,
+                'codigo'     => $codigo,
+                'marcacion'  => $marcacion->toDateTimeString(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ];
         }
 
         fclose($file);
 
-        // Ordenar cronológicamente ascendente
-        usort($tempRecords, function ($a, $b) {
-            return $a['marcacion']->timestamp <=> $b['marcacion']->timestamp;
-        });
-
-        // Insertar registros en la base de datos
-        $importadas = 0;
-        foreach ($tempRecords as $record) {
-            Marcacion::create([
-                'codigo'    => $record['codigo'],
-                'marcacion' => $record['marcacion'],
-            ]);
-            $importadas++;
+        if (empty($tempRecords)) {
+            return ['importadas' => 0, 'duplicadas' => 0];
         }
+
+        // Ordenar cronológicamente ascendente
+        usort($tempRecords, fn($a, $b) => $a['marcacion'] <=> $b['marcacion']);
+
+        // Insertar en lotes usando insertOrIgnore para que la BD descarte duplicados
+        // aprovechando el índice único (codigo, marcacion) ya existente en la tabla.
+        // Esto reemplaza el N+1 de SELECT+INSERT individual por una sola operación por lote.
+        $chunks     = array_chunk($tempRecords, self::BATCH_SIZE);
+        $importadas = 0;
+
+        foreach ($chunks as $chunk) {
+            $affected = DB::table('marcaciones')->insertOrIgnore($chunk);
+            $importadas += $affected;
+        }
+
+        $totalEnArchivo = count($tempRecords);
+        $duplicadas     = $totalEnArchivo - $importadas;
 
         return compact('importadas', 'duplicadas');
     }
 }
+
