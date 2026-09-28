@@ -37,5 +37,10 @@ class EditAprobacionPermiso extends EditRecord
         if (! static::getResource()::canAccessRecord($record)) {
             abort(403);
         }
+
+        // Si el permiso ya está anulado, solo se puede editar desde Gestión de Permisos
+        if ($record->id_estado_aprobacion_jefe_division == 5) {
+            abort(403, 'Los permisos anulados solo se pueden editar y cambiar el estado de las aprobaciones desde el módulo de Gestión de Permisos.');
+        }
     }
 }

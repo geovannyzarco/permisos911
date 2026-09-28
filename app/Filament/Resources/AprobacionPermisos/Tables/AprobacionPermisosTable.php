@@ -58,14 +58,24 @@ class AprobacionPermisosTable
                     ->label('VISTO BUENO')
                     ->sortable()
                     ->badge()
-                    ->color(fn($record) => $record->id_estado_vb == 3 ? 'success' : 'gray'),
+                    ->color(fn($record) => match ($record->id_estado_vb) {
+                        3 => 'success',
+                        4 => 'warning',
+                        5, 6 => 'danger',
+                        default => 'gray',
+                    }),
                 TextColumn::make('jefeVb.nombre')->label('JEFE VB')->sortable(),
                 TextColumn::make('fecha_vb')->label('FECHA DE VB')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('estadoAprobado.nombre')
                     ->label('APROBACION JEFATURA')
                     ->sortable()
                     ->badge()
-                    ->color(fn($record) => $record->id_estado_aprobacion == 3 ? 'success' : 'gray'),
+                    ->color(fn($record) => match ($record->id_estado_aprobacion) {
+                        3 => 'success',
+                        4 => 'warning',
+                        5, 6 => 'danger',
+                        default => 'gray',
+                    }),
 
                 TextColumn::make('fecha_aprobacion')->label('FECHA APROBACION JEFATURA')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('jefeAprobacion.nombre')->label('JEFE APROBACIÓN')->sortable(),
@@ -73,7 +83,12 @@ class AprobacionPermisosTable
                     ->label('APROBACION JEFE DIVISION')
                     ->sortable()
                     ->badge()
-                    ->color(fn($record) => $record->id_estado_aprobacion_jefe_division == 3 ? 'success' : 'gray'),
+                    ->color(fn($record) => match ($record->id_estado_aprobacion_jefe_division) {
+                        3 => 'success',
+                        4 => 'warning',
+                        5, 6 => 'danger',
+                        default => 'gray',
+                    }),
                 TextColumn::make('fecha_aprobacion_jefe_division')->label('FECHA APROBACION JEFE DIVISION')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('id_oni_jefe_division')->label('JEFE DIVISION')->sortable(),
                 TextColumn::make('comentarios')->label('COMENTARIOS')->limit(50)->sortable(),
@@ -232,14 +247,28 @@ class AprobacionPermisosTable
                         ])
                         ->requiresConfirmation()
                         ->action(function ($records, array $data) {
+                            $recordsOmitidos = 0;
                             // Actualización masiva de los permisos seleccionados
                             foreach ($records as $record) {
+                                if ($record->id_estado_aprobacion_jefe_division == 5) {
+                                    $recordsOmitidos++;
+                                    continue;
+                                }
+
                                 $record->update([
                                     'id_estado_vb' => $data['id_estado_vb'],
                                     'id_jefe_vb' => auth()->user()->empleado->id, // ID del jefe logueado
                                     'fecha_vb' => now(), // fecha actual de la actualización
                                     'comentarios' => $data['comentarios'] ?? $record->comentarios,
                                 ]);
+                            }
+
+                            if ($recordsOmitidos > 0) {
+                                \Filament\Notifications\Notification::make()
+                                    ->warning()
+                                    ->title('Permisos omitidos')
+                                    ->body("Se omitieron {$recordsOmitidos} permisos anulados. Los permisos anulados solo se pueden editar desde el módulo de Gestión de Permisos.")
+                                    ->send();
                             }
                         }),
 
@@ -266,10 +295,24 @@ class AprobacionPermisosTable
                         ])
                         ->requiresConfirmation()
                         ->action(function ($records, array $data, PermisoService $s) {
+                            $recordsOmitidos = 0;
                             foreach ($records as $record) {
+                                if ($record->id_estado_aprobacion_jefe_division == 5) {
+                                    $recordsOmitidos++;
+                                    continue;
+                                }
+
                                 if (auth()->user()->can('aprobarFinal', $record)) {
                                     $s->aprobarFinal($record, (int) $data['id_estado_aprobacion'], auth()->user(), $data['comentarios'] ?? null);
                                 }
+                            }
+
+                            if ($recordsOmitidos > 0) {
+                                \Filament\Notifications\Notification::make()
+                                    ->warning()
+                                    ->title('Permisos omitidos')
+                                    ->body("Se omitieron {$recordsOmitidos} permisos anulados. Los permisos anulados solo se pueden editar desde el módulo de Gestión de Permisos.")
+                                    ->send();
                             }
                         }),
 
@@ -290,7 +333,13 @@ class AprobacionPermisosTable
                         ])
                         ->requiresConfirmation()
                         ->action(function ($records, array $data) {
+                            $recordsOmitidos = 0;
                             foreach ($records as $record) {
+                                if ($record->id_estado_aprobacion_jefe_division == 5) {
+                                    $recordsOmitidos++;
+                                    continue;
+                                }
+
                                 if (auth()->user()->can('aprobarJefeDivision', $record)) {
                                     $record->update([
                                         'id_estado_aprobacion_jefe_division' => (int) $data['id_estado_aprobacion_jefe_division'],
@@ -298,6 +347,14 @@ class AprobacionPermisosTable
                                         'fecha_aprobacion_jefe_division' => now(),
                                     ]);
                                 }
+                            }
+
+                            if ($recordsOmitidos > 0) {
+                                \Filament\Notifications\Notification::make()
+                                    ->warning()
+                                    ->title('Permisos omitidos')
+                                    ->body("Se omitieron {$recordsOmitidos} permisos anulados. Los permisos anulados solo se pueden editar desde el módulo de Gestión de Permisos.")
+                                    ->send();
                             }
                         }),
                 ])->label('Acciones Masivas'),

@@ -14,6 +14,11 @@ class AprobacionPermisoPolicy
 
         if (!$emp) return false;
 
+        // Permisos anulados solo se gestionan desde Gestión de Permisos
+        if ($permiso->id_estado_aprobacion_jefe_division == 5) {
+            return false;
+        }
+
         // No auto-aprobación
         if ($permiso->empleado->oni == $emp->oni) {
             return false;
@@ -30,6 +35,11 @@ class AprobacionPermisoPolicy
 
         if (!$emp) return false;
 
+        // Permisos anulados solo se gestionan desde Gestión de Permisos
+        if ($permiso->id_estado_aprobacion_jefe_division == 5) {
+            return false;
+        }
+
         if ($permiso->empleado->oni == $emp->oni) {
             return false;
         }
@@ -44,6 +54,11 @@ class AprobacionPermisoPolicy
         $emp = $user->empleado;
 
         if (!$emp) return false;
+
+        // Permisos anulados solo se gestionan desde Gestión de Permisos
+        if ($permiso->id_estado_aprobacion_jefe_division == 5) {
+            return false;
+        }
 
         if ($permiso->empleado->oni == $emp->oni) {
             return false;

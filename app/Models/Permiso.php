@@ -71,7 +71,64 @@ class Permiso extends Model
                 $permiso->snapshotEmpleadoData();
                 $permiso->snapshotJefeData();
             }
+
+            // Regla de anulación automática por Jefe de División:
+            // Si el supervisor y el jefe de unidad anulan/rechazan (o el jefe de unidad si el empleado no tiene grupo),
+            // el permiso aparecerá automáticamente anulado por el jefe de división con su fecha y ONI.
+            $permiso->verificarAnulacionAutomaticaPorDivision();
         });
+    }
+
+    /**
+     * Verifica y aplica la regla de anulación automática por el Jefe de División:
+     * - Si el empleado tiene grupo (supervisor): requiere que ambos (supervisor y jefe de unidad)
+     *   hayan anulado/rechazado el permiso (estados 5 o 6).
+     * - Si el empleado no tiene grupo (sin grupo o grupo 12): requiere que el jefe de unidad
+     *   haya anulado/rechazado el permiso (estados 5 o 6).
+     * Al cumplirse, se marca como ANULADO por división (id_estado_aprobacion_jefe_division = 5),
+     * asignando la fecha actual y el ONI del Jefe de División correspondiente.
+     */
+    public function verificarAnulacionAutomaticaPorDivision(): void
+    {
+        $estadosRechazo = [5, 6];
+
+        $empleado = $this->empleado ?? Empleado::find($this->empleado_id);
+        if (!$empleado) {
+            return;
+        }
+
+        $tieneGrupo = !empty($empleado->grupo_id) && $empleado->grupo_id != 12;
+
+        $debeAnularPorDivision = false;
+
+        if ($tieneGrupo) {
+            $vbAnulado = in_array((int) $this->id_estado_vb, $estadosRechazo, true);
+            $aprobacionAnulado = in_array((int) $this->id_estado_aprobacion, $estadosRechazo, true);
+            $debeAnularPorDivision = ($vbAnulado && $aprobacionAnulado);
+        } else {
+            $aprobacionAnulado = in_array((int) $this->id_estado_aprobacion, $estadosRechazo, true);
+            $debeAnularPorDivision = $aprobacionAnulado;
+        }
+
+        if ($debeAnularPorDivision) {
+            $this->id_estado_aprobacion_jefe_division = 5;
+
+            if (empty($this->fecha_aprobacion_jefe_division)) {
+                $this->fecha_aprobacion_jefe_division = now();
+            }
+
+            if (empty($this->id_oni_jefe_division) && $empleado->unidad) {
+                $jefeDivision = Empleado::where('nivel_id', 4)
+                    ->whereHas('unidad', function ($q) use ($empleado) {
+                        $q->where('division_id', $empleado->unidad->division_id);
+                    })
+                    ->first();
+
+                if ($jefeDivision) {
+                    $this->id_oni_jefe_division = $jefeDivision->oni;
+                }
+            }
+        }
     }
 
     /**

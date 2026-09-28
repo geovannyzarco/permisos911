@@ -55,6 +55,11 @@ class AprobacionPermisoResource extends Resource
 
     public static function canEdit($record): bool
     {
+        // Los permisos anulados solo se pueden editar desde el módulo de Gestión de Permisos
+        if ($record && $record->id_estado_aprobacion_jefe_division == 5) {
+            return false;
+        }
+
         return auth()->user()->can('Update:AprobacionPermisoResource')
             && self::canAccessRecord($record);
     }
@@ -67,6 +72,11 @@ class AprobacionPermisoResource extends Resource
 
     public static function canDelete($record): bool
     {
+        // Los permisos anulados solo se pueden eliminar o gestionar desde el módulo de Gestión de Permisos
+        if ($record && $record->id_estado_aprobacion_jefe_division == 5) {
+            return false;
+        }
+
         return auth()->user()->can('Delete:AprobacionPermisoResource')
             && self::canAccessRecord($record);
     }
