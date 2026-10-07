@@ -334,6 +334,7 @@ class AprobacionPermisosTable
                         ->requiresConfirmation()
                         ->action(function ($records, array $data) {
                             $recordsOmitidos = 0;
+                            $recordsActualizados = 0;
                             foreach ($records as $record) {
                                 if ($record->id_estado_aprobacion_jefe_division == 5) {
                                     $recordsOmitidos++;
@@ -346,14 +347,25 @@ class AprobacionPermisosTable
                                         'id_oni_jefe_division' => auth()->user()->empleado->oni,
                                         'fecha_aprobacion_jefe_division' => now(),
                                     ]);
+                                    $recordsActualizados++;
+                                } else {
+                                    $recordsOmitidos++;
                                 }
+                            }
+
+                            if ($recordsActualizados > 0) {
+                                \Filament\Notifications\Notification::make()
+                                    ->success()
+                                    ->title('Aprobación actualizada')
+                                    ->body("Se actualizaron {$recordsActualizados} permiso(s) exitosamente.")
+                                    ->send();
                             }
 
                             if ($recordsOmitidos > 0) {
                                 \Filament\Notifications\Notification::make()
                                     ->warning()
                                     ->title('Permisos omitidos')
-                                    ->body("Se omitieron {$recordsOmitidos} permisos anulados. Los permisos anulados solo se pueden editar desde el módulo de Gestión de Permisos.")
+                                    ->body("Se omitieron {$recordsOmitidos} permisos. Verifique que no estén anulados o que cuente con las autorizaciones correspondientes.")
                                     ->send();
                             }
                         }),

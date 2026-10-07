@@ -98,8 +98,9 @@ class AprobacionPermisoForm
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 2)
                             ->reactive()
                             ->afterStateUpdated(function ($state, $record) {
-                                if ($state) {
+                                if ($state && $record) {
                                     $record->update([
+                                        'id_estado_vb' => (int) $state,
                                         'id_jefe_vb' => auth()->user()->empleado->id,
                                         'fecha_vb' => now(),
                                     ]);
@@ -116,8 +117,9 @@ class AprobacionPermisoForm
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 3)
                             ->reactive()
                             ->afterStateUpdated(function ($state, $record) {
-                                if ($state) {
+                                if ($state && $record) {
                                     $record->update([
+                                        'id_estado_aprobacion' => (int) $state,
                                         'id_jefe_aprobacion' => auth()->user()->empleado->id,
                                         'fecha_aprobacion' => now(),
                                     ]);
@@ -134,8 +136,9 @@ class AprobacionPermisoForm
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)
                             ->reactive()
                             ->afterStateUpdated(function ($state, $record) {
-                                if ($state) {
+                                if ($state && $record) {
                                     $record->update([
+                                        'id_estado_aprobacion_jefe_division' => (int) $state,
                                         'id_oni_jefe_division' => auth()->user()->empleado->oni,
                                         'fecha_aprobacion_jefe_division' => now(),
                                     ]);

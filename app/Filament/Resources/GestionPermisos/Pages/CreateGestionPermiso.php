@@ -22,15 +22,15 @@ class CreateGestionPermiso extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        if (!empty($data['id_estado_vb'])) {
+        if (!empty($data['id_estado_vb']) && $data['id_estado_vb'] != 4) {
             $data['fecha_vb'] = now();
         }
 
-        if (!empty($data['id_estado_aprobacion'])) {
+        if (!empty($data['id_estado_aprobacion']) && $data['id_estado_aprobacion'] != 4) {
             $data['fecha_aprobacion'] = now();
         }
 
-        if (!empty($data['id_estado_aprobacion_jefe_division'])) {
+        if (!empty($data['id_estado_aprobacion_jefe_division']) && $data['id_estado_aprobacion_jefe_division'] != 4) {
             $data['fecha_aprobacion_jefe_division'] = now();
         }
 

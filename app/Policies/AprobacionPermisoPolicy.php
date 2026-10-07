@@ -20,12 +20,12 @@ class AprobacionPermisoPolicy
         }
 
         // No auto-aprobación
-        if ($permiso->empleado->oni == $emp->oni) {
+        if ($permiso->empleado?->oni == $emp->oni) {
             return false;
         }
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_GRUPO
-            && in_array($permiso->empleado->grupo_id, $emp->obtenerGruposAsignados())
+            && in_array($permiso->empleado?->grupo_id, $emp->obtenerGruposAsignados())
             && (is_null($permiso->id_estado_vb) || $permiso->id_estado_vb == 4);
     }
 
@@ -40,12 +40,12 @@ class AprobacionPermisoPolicy
             return false;
         }
 
-        if ($permiso->empleado->oni == $emp->oni) {
+        if ($permiso->empleado?->oni == $emp->oni) {
             return false;
         }
 
         return $emp->nivel_id == Empleado::NIVEL_JEFE_UNIDAD
-            && in_array($permiso->empleado->unidad_id, $emp->obtenerUnidadesAsignadas())
+            && in_array($permiso->empleado?->unidad_id, $emp->obtenerUnidadesAsignadas())
             && (is_null($permiso->id_estado_aprobacion) || $permiso->id_estado_aprobacion == 4);
     }
 
@@ -60,7 +60,7 @@ class AprobacionPermisoPolicy
             return false;
         }
 
-        if ($permiso->empleado->oni == $emp->oni) {
+        if ($permiso->empleado?->oni == $emp->oni) {
             return false;
         }
 
