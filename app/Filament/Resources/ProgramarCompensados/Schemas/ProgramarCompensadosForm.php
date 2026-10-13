@@ -396,6 +396,18 @@ class ProgramarCompensadosForm
                                     } catch (\DomainException $e) {
                                         $fail($e->getMessage());
                                     }
+
+                                     // INICIO CAMBIO: Validar que ningun periodo compensado ya fue usado en otro permiso del mismo empleado
+                                     $empleadoId = $get('empleado_id');
+                                     $empleado = $empleadoId ? \App\Models\Empleado::find($empleadoId) : null;
+                                     if ($empleado) {
+                                         try {
+                                             $service->validarFechasCompensadasDuplicadas($empleado, $value, $record ?? null);
+                                         } catch (\DomainException $e) {
+                                             $fail($e->getMessage());
+                                         }
+                                     }
+                                     // FIN CAMBIO
                                 },
                             ]),
                     ])

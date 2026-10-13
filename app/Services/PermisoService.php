@@ -435,6 +435,75 @@ class PermisoService
     // FIN CAMBIO
 
     /**
+     * NUEVO MÉTODO: Valida que ninguno de los periodos compensados ingresados en el formulario
+     * coincida (se traslape) con un periodo compensado ya registrado en otro permiso
+     * del mismo empleado que no esté anulado/rechazado.
+     *
+     * @param Empleado $empleado
+     * @param array    $compensados  Array de items del Repeater [{desde, hasta, ...}, ...]
+     * @param Permiso|null $permisoActual  El permiso que se está editando (para excluirlo de la búsqueda)
+     * @return bool
+     * @throws DomainException
+     */
+    public function validarFechasCompensadasDuplicadas(
+        Empleado $empleado,
+        array $compensados,
+        ?Permiso $permisoActual = null
+    ): bool {
+        // Obtenemos todos los permisos compensados (tipo_permiso_id = 2) del mismo empleado
+        // que no estén anulados/rechazados (excluyendo estados 5, 6 y 7)
+        // y cargamos sus relaciones compensados (periodos trabajados)
+        $permisosAnteriores = Permiso::query()
+            ->where('empleado_id', $empleado->id)
+            ->where('tipo_permiso_id', 2)
+            ->whereNotIn('id_estado_aprobacion', [5, 6, 7])
+            ->when($permisoActual, function ($query) use ($permisoActual) {
+                $query->where('id', '!=', $permisoActual->id);
+            })
+            ->with('compensados')
+            ->get();
+
+        // Iteramos cada item del Repeater que el usuario está intentando registrar
+        foreach ($compensados as $itemNuevo) {
+            if (empty($itemNuevo['desde']) || empty($itemNuevo['hasta'])) {
+                continue;
+            }
+
+            $desdeNuevo = Carbon::parse($itemNuevo['desde']);
+            $hastaNuevo = Carbon::parse($itemNuevo['hasta']);
+            $fechaNueva = $desdeNuevo->toDateString(); // Solo la parte de la fecha para comparación de día
+
+            // Revisamos cada permiso anterior con sus periodos compensados
+            foreach ($permisosAnteriores as $permisoAnterior) {
+                foreach ($permisoAnterior->compensados as $compAnterior) {
+                    $desdeAnterior = Carbon::parse($compAnterior->desde);
+                    $hastaAnterior = Carbon::parse($compAnterior->hasta);
+
+                    // Verificamos si hay traslape entre el periodo nuevo y el periodo anterior.
+                    // Hay traslape si: inicio_nuevo < fin_anterior AND fin_nuevo > inicio_anterior
+                    $hayTraslape = $desdeNuevo->lessThan($hastaAnterior)
+                        && $hastaNuevo->greaterThan($desdeAnterior);
+
+                    if ($hayTraslape) {
+                        $desdeNuevoFmt    = $desdeNuevo->format('d/m/Y H:i');
+                        $hastaNuevoFmt    = $hastaNuevo->format('d/m/Y H:i');
+                        $desdeAnteriorFmt = $desdeAnterior->format('d/m/Y H:i');
+                        $hastaAnteriorFmt = $hastaAnterior->format('d/m/Y H:i');
+
+                        throw new DomainException(
+                            "El periodo compensado ({$desdeNuevoFmt} - {$hastaNuevoFmt}) se traslapa con un periodo ya utilizado " .
+                            "en el Permiso #{$permisoAnterior->id} ({$desdeAnteriorFmt} - {$hastaAnteriorFmt}). " .
+                            "No se puede reutilizar tiempo compensado ya registrado."
+                        );
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Valida que no haya más de 2 empleados con la categoría 24 (Telefonista)
      * con permisos activos o pendientes en cada día del rango solicitado.
      *

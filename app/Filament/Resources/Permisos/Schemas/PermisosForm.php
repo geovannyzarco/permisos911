@@ -451,6 +451,16 @@ class PermisosForm
                                 $fail($e->getMessage());
                             }
                             // FIN CAMBIO
+                            // INICIO CAMBIO: Validar que ningun periodo compensado ya fue usado en otro permiso del mismo empleado
+                            $empleado = auth()->user()->empleado;
+                            if ($empleado) {
+                                try {
+                                    $service->validarFechasCompensadasDuplicadas($empleado, $value, $record ?? null);
+                                } catch (\DomainException $e) {
+                                    $fail($e->getMessage());
+                                }
+                            }
+                            // FIN CAMBIO
                         },
                     ]),
 
