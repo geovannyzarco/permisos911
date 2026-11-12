@@ -50,13 +50,15 @@ class PermisosForm
 
                                 $asignadas = $resumen['asignadas'];
                                 $usadas = $resumen['usadas'];
+                                $pendientes = $resumen['pendientes'];
                                 $disponibles = $resumen['disponibles'];
 
-                                // Retornamos el resumen en HTML amigable
+                                // MODIFICACIÓN: Retornamos el resumen en HTML incluyendo horas pendientes de aprobación
                                 return new HtmlString(
                                     "<strong>Horas asignadas:</strong> {$asignadas}<br>
-                                     <strong>Horas utilizadas:</strong> {$usadas}<br>
-                                     <strong>Horas disponibles:</strong> {$disponibles}"
+                                     <strong>Horas utilizadas (aprobadas):</strong> {$usadas}<br>
+                                     <strong>Horas pendientes de aprobación:</strong> {$pendientes}<br>
+                                     <strong>Horas disponibles para solicitar:</strong> {$disponibles}"
                                 );
                             }),
                     ])
@@ -285,10 +287,8 @@ class PermisosForm
                                     // Calculamos cuántas horas está solicitando en total usando Carbon
                                     $horasSolicitadas = \Carbon\Carbon::parse($desde)->diffInMinutes(\Carbon\Carbon::parse($value)) / 60;
 
-                                    // Verificamos si la suma de lo solicitado + lo usado es menor a lo que tiene en su horario
-                                    if (! $service->puedeGuardarPermisoPersonal($empleado, $horasSolicitadas, $record)) {
-                                        $fail('El tiempo solicitado excede el saldo de horas personales disponibles según tu horario.');
-                                    }
+                                    // MODIFICACIÓN: Validamos saldo considerando horas aprobadas y pendientes; lanza DomainException con detalle si excede
+                                    $service->validarSaldoHorasPersonales($empleado, $horasSolicitadas, $record);
                                 }
                                 // Capturamos cualquier excepción de dominio (por ejemplo, el mensaje de límite diario excedido)
                             } catch (\DomainException $e) {

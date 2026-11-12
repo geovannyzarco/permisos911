@@ -73,12 +73,15 @@ class GestionPermisoForm
 
                                 $asignadas = $resumen['asignadas'];
                                 $usadas = $resumen['usadas'];
+                                $pendientes = $resumen['pendientes'];
                                 $disponibles = $resumen['disponibles'];
 
+                                // MODIFICACIÓN: Retornamos el resumen en HTML incluyendo horas pendientes de aprobación
                                 return new HtmlString(
                                     "<strong>Horas asignadas:</strong> {$asignadas}<br>
-                                            <strong>Horas utilizadas:</strong> {$usadas}<br>
-                                            <strong>Horas disponibles:</strong> {$disponibles}"
+                                     <strong>Horas utilizadas (aprobadas):</strong> {$usadas}<br>
+                                     <strong>Horas pendientes de aprobación:</strong> {$pendientes}<br>
+                                     <strong>Horas disponibles para solicitar:</strong> {$disponibles}"
                                 );
                             }),
                     ])
@@ -343,9 +346,8 @@ class GestionPermisoForm
 
                                 if ($tipoPermisoId == 1) {
                                     $horasSolicitadas = \Carbon\Carbon::parse($desde)->diffInMinutes(\Carbon\Carbon::parse($value)) / 60;
-                                    if (! $service->puedeGuardarPermisoPersonal($empleado, $horasSolicitadas, $record)) {
-                                        $fail('El tiempo solicitado excede el saldo de horas personales disponibles según tu horario.');
-                                    }
+                                    // MODIFICACIÓN: Validamos saldo considerando aprobadas y pendientes; lanza DomainException si excede
+                                    $service->validarSaldoHorasPersonales($empleado, $horasSolicitadas, $record);
                                 }
                             } catch (\DomainException $e) {
                                 $fail($e->getMessage());

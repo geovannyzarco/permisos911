@@ -27,30 +27,14 @@ class StatsHorasPersonales extends BaseWidget
 
         $year = Carbon::now()->year;
 
-        // 1. Horas Asignadas
-        $horasAsignadas = $empleado->horario->horas_personales ?? 0;
+        // MODIFICACIÓN: Obtenemos el resumen centralizado desde PermisoService para incluir horas pendientes
+        $permisoService = app(\App\Services\PermisoService::class);
+        $resumen = $permisoService->obtenerResumenHorasPersonales($empleado);
 
-        // 2. Horas Usadas (tipo_permiso_id = 1, id_estado_aprobacion = 3, año actual)
-        // Calculamos la diferencia en minutos y la pasamos a horas
-        $minutosUsados = Permiso::where('empleado_id', $empleado->id)
-            ->where('tipo_permiso_id', 1) // Horas Personales
-            ->where('id_estado_aprobacion_jefe_division', 3) // Aprobado
-            ->whereYear('desde', $year)
-            ->get()
-            ->sum(function ($permiso) {
-                if (! $permiso->desde || ! $permiso->hasta) {
-                    return 0;
-                }
-                $desde = Carbon::parse($permiso->desde);
-                $hasta = Carbon::parse($permiso->hasta);
-
-                return $desde->diffInMinutes($hasta);
-            });
-
-        $horasUsadas = round($minutosUsados / 60, 2);
-
-        // 3. Horas Disponibles
-        $horasDisponibles = $horasAsignadas - $horasUsadas;
+        $horasAsignadas = $resumen['asignadas'];
+        $horasUsadas = $resumen['usadas'];
+        $horasPendientes = $resumen['pendientes'];
+        $horasDisponibles = $resumen['disponibles'];
 
         return [
             Stat::make('Horas Personales Asignadas', $horasAsignadas . ' hrs')
@@ -59,12 +43,17 @@ class StatsHorasPersonales extends BaseWidget
                 ->color('info'),
 
             Stat::make('Horas Personales Usadas', $horasUsadas . ' hrs')
-                ->description('Consumo acumulado en ' . $year)
+                ->description('Aprobadas en ' . $year)
+                ->icon('heroicon-o-check-circle')
+                ->color($horasUsadas > ($horasAsignadas * 0.8) ? 'danger' : 'primary'),
+
+            Stat::make('Horas Pendientes', $horasPendientes . ' hrs')
+                ->description('En trámite de aprobación')
                 ->icon('heroicon-o-clock')
-                ->color($horasUsadas > ($horasAsignadas * 0.8) ? 'danger' : 'warning'),
+                ->color($horasPendientes > 0 ? 'warning' : 'gray'),
 
             Stat::make('Horas Personales Disponibles', $horasDisponibles . ' hrs')
-                ->description('Saldo restante para el año')
+                ->description('Saldo real para solicitar')
                 ->icon('heroicon-o-academic-cap')
                 ->color($horasDisponibles > 0 ? 'success' : 'danger'),
         ];

@@ -135,10 +135,37 @@ class AprobacionPermisoForm
                             )
                             ->visible(fn() => auth()->user()->empleado?->nivel_id == 4)
                             ->reactive()
-                            ->afterStateUpdated(function ($state, $record) {
+                            ->rules([
+                                // MODIFICACIÓN: Regla de validación para impedir aprobar si se supera el saldo asignado de horas personales
+                                fn ($record) => function (string $attribute, $value, \Closure $fail) use ($record) {
+                                    if ((int) $value === 3 && $record?->tipo_permiso_id == 1) {
+                                        $service = app(\App\Services\PermisoService::class);
+                                        if (! $service->puedeAprobarPermisoPersonal($record)) {
+                                            $fail('No se puede aprobar este permiso personal porque el empleado excede el total de horas anuales asignadas.');
+                                        }
+                                    }
+                                },
+                            ])
+                            ->afterStateUpdated(function ($state, $record, $set) {
                                 if ($state && $record) {
+                                    $nuevoEstado = (int) $state;
+
+                                    // MODIFICACIÓN: Si se intenta aprobar un permiso personal, validar disponibilidad antes de persistir
+                                    if ($nuevoEstado === 3 && $record->tipo_permiso_id == 1) {
+                                        $service = app(\App\Services\PermisoService::class);
+                                        if (! $service->puedeAprobarPermisoPersonal($record)) {
+                                            $set('id_estado_aprobacion_jefe_division', $record->id_estado_aprobacion_jefe_division);
+                                            \Filament\Notifications\Notification::make()
+                                                ->danger()
+                                                ->title('Saldo insuficiente')
+                                                ->body('No se puede aprobar este permiso personal porque excede el saldo de horas asignadas en el horario del empleado.')
+                                                ->send();
+                                            return;
+                                        }
+                                    }
+
                                     $record->update([
-                                        'id_estado_aprobacion_jefe_division' => (int) $state,
+                                        'id_estado_aprobacion_jefe_division' => $nuevoEstado,
                                         'id_oni_jefe_division' => auth()->user()->empleado->oni,
                                         'fecha_aprobacion_jefe_division' => now(),
                                     ]);

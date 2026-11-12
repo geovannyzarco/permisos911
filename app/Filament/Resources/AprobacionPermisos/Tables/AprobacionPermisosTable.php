@@ -332,18 +332,31 @@ class AprobacionPermisosTable
                                 ->required(),
                         ])
                         ->requiresConfirmation()
-                        ->action(function ($records, array $data) {
+                        ->action(function ($records, array $data, PermisoService $permisoService) {
                             $recordsOmitidos = 0;
                             $recordsActualizados = 0;
+                            $omitidosPorSaldo = 0;
+                            $nuevoEstado = (int) $data['id_estado_aprobacion_jefe_division'];
+
                             foreach ($records as $record) {
                                 if ($record->id_estado_aprobacion_jefe_division == 5) {
                                     $recordsOmitidos++;
                                     continue;
                                 }
 
+                                // MODIFICACIÓN: Si el jefe de división aprueba (estado 3) un permiso de horas personales (tipo 1),
+                                // validamos que no sobrepase el saldo asignado en el horario del empleado.
+                                if ($nuevoEstado === 3 && $record->tipo_permiso_id == 1) {
+                                    if (! $permisoService->puedeAprobarPermisoPersonal($record)) {
+                                        $recordsOmitidos++;
+                                        $omitidosPorSaldo++;
+                                        continue;
+                                    }
+                                }
+
                                 if (auth()->user()->can('aprobarJefeDivision', $record)) {
                                     $record->update([
-                                        'id_estado_aprobacion_jefe_division' => (int) $data['id_estado_aprobacion_jefe_division'],
+                                        'id_estado_aprobacion_jefe_division' => $nuevoEstado,
                                         'id_oni_jefe_division' => auth()->user()->empleado->oni,
                                         'fecha_aprobacion_jefe_division' => now(),
                                     ]);
@@ -362,10 +375,17 @@ class AprobacionPermisosTable
                             }
 
                             if ($recordsOmitidos > 0) {
+                                $mensajeOmision = "Se omitieron {$recordsOmitidos} permisos.";
+                                if ($omitidosPorSaldo > 0) {
+                                    $mensajeOmision .= " ({$omitidosPorSaldo} permiso(s) personal(es) fueron omitidos porque exceden el saldo de horas asignadas).";
+                                } else {
+                                    $mensajeOmision .= " Verifique que no estén anulados o que cuente con las autorizaciones correspondientes.";
+                                }
+
                                 \Filament\Notifications\Notification::make()
                                     ->warning()
                                     ->title('Permisos omitidos')
-                                    ->body("Se omitieron {$recordsOmitidos} permisos. Verifique que no estén anulados o que cuente con las autorizaciones correspondientes.")
+                                    ->body($mensajeOmision)
                                     ->send();
                             }
                         }),

@@ -253,7 +253,8 @@ class PermisoService
     public function validarPermisoPersonal(
         Empleado $empleado,
         Carbon $desde,
-        Carbon $hasta
+        Carbon $hasta,
+        ?Permiso $permisoActual = null
     ): float {
         // 1. Validar rango horario
         if (!$this->validarRangoFechas($desde, $hasta)) {
@@ -265,46 +266,59 @@ class PermisoService
         // 2. Calcular horas reales
         $horasSolicitadas = $desde->diffInMinutes($hasta) / 60;
 
-        // 3. Validar saldo disponible
-        if (! $this->puedeGuardarPermisoPersonal($empleado, $horasSolicitadas)) {
-            throw new DomainException(
-                'El tiempo solicitado excede el saldo de horas personales disponibles.'
-            );
-        }
+        // 3. Validar saldo disponible considerando tanto horas aprobadas como pendientes
+        $this->validarSaldoHorasPersonales($empleado, $horasSolicitadas, $permisoActual);
 
         return $horasSolicitadas;
     }
 
-
     /**
-     * Obtiene el resumen de horas personales (asignadas, usadas y disponibles) de un empleado.
+     * Obtiene el resumen de horas personales (asignadas, usadas, pendientes y disponibles) de un empleado.
+     * MODIFICACIÓN: Se agregan las horas pendientes de aprobación para evitar sobregiro de saldo
+     * cuando el empleado registra múltiples permisos personales antes de que el jefe de división los apruebe.
      */
     public function obtenerResumenHorasPersonales(Empleado $empleado, ?Permiso $permisoActual = null): array
     {
         // 1. Obtenemos las horas personales configuradas en el horario del empleado.
         $horasAsignadas = $empleado->horario?->horas_personales ?? 0;
 
-        // 2. Calculamos los minutos que el empleado ya ha utilizado en otros permisos.
-        // MODIFICACIÓN: Usamos DATEDIFF (Sintaxis de SQL Server 2012) y filtramos solo por permisos aprobados (ID 3)
+        // 2. Calculamos los minutos que el empleado ya ha utilizado en otros permisos APROBADOS (ID 3).
+        // Sintaxis SQL Server (DATEDIFF) filtrando por permisos aprobados del año en curso.
         $minutosUsados = Permiso::query()
             ->where('empleado_id', $empleado->id)
             ->where('tipo_permiso_id', 1)
-            ->where('id_estado_aprobacion_jefe_division', 3) // Solo permisos ya aprobados restan del saldo
+            ->where('id_estado_aprobacion_jefe_division', 3) // Solo permisos ya aprobados
             ->whereYear('desde', now()->year)
             ->whereNotNull('desde')
             ->whereNotNull('hasta')
+            ->when($permisoActual, fn($query) => $query->where('id', '!=', $permisoActual->id))
             ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
             ->value('total') ?? 0;
 
-        // 3. Convertimos los minutos utilizados a horas
-        $horasUsadas = $minutosUsados / 60;
+        // 3. NUEVO: Calculamos los minutos de permisos personales PENDIENTES de aprobación.
+        // Se consideran aquellos que no están aprobados (ID 3) ni anulados/rechazados (IDs 5, 6, 7).
+        $minutosPendientes = Permiso::query()
+            ->where('empleado_id', $empleado->id)
+            ->where('tipo_permiso_id', 1)
+            ->whereNotIn('id_estado_aprobacion_jefe_division', [3, 5, 6, 7]) // Permisos en trámite/pendientes
+            ->whereYear('desde', now()->year)
+            ->whereNotNull('desde')
+            ->whereNotNull('hasta')
+            ->when($permisoActual, fn($query) => $query->where('id', '!=', $permisoActual->id))
+            ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
+            ->value('total') ?? 0;
 
-        // 4. Calculamos las horas disponibles
-        $horasDisponibles = max(0, $horasAsignadas - $horasUsadas);
+        // 4. Convertimos los minutos a horas
+        $horasUsadas = $minutosUsados / 60;
+        $horasPendientes = $minutosPendientes / 60;
+
+        // 5. Calculamos las horas disponibles reales (descontando tanto aprobadas como pendientes)
+        $horasDisponibles = max(0, $horasAsignadas - $horasUsadas - $horasPendientes);
 
         return [
-            'asignadas' => $horasAsignadas,
+            'asignadas' => (float) $horasAsignadas,
             'usadas' => round($horasUsadas, 2),
+            'pendientes' => round($horasPendientes, 2),
             'disponibles' => round($horasDisponibles, 2),
         ];
     }
@@ -319,8 +333,70 @@ class PermisoService
     ): bool {
         $resumen = $this->obtenerResumenHorasPersonales($empleado, $permisoActual);
 
-        // Verificamos si las horas solicitadas son menores o iguales a las disponibles
+        // Verificamos si las horas solicitadas son menores o iguales a las disponibles reales
         return $horasSolicitadas <= $resumen['disponibles'];
+    }
+
+    /**
+     * NUEVO MÉTODO: Valida el saldo de horas personales y lanza una DomainException descriptiva
+     * detallando el desglose de horas asignadas, usadas y pendientes si el saldo no es suficiente.
+     *
+     * @throws DomainException
+     */
+    public function validarSaldoHorasPersonales(
+        Empleado $empleado,
+        float $horasSolicitadas,
+        ?Permiso $permisoActual = null
+    ): void {
+        $resumen = $this->obtenerResumenHorasPersonales($empleado, $permisoActual);
+
+        if ($horasSolicitadas > $resumen['disponibles']) {
+            $solFmt = number_format($horasSolicitadas, 2);
+            $dispFmt = number_format($resumen['disponibles'], 2);
+            $asigFmt = number_format($resumen['asignadas'], 2);
+            $usadFmt = number_format($resumen['usadas'], 2);
+            $pendFmt = number_format($resumen['pendientes'], 2);
+
+            throw new DomainException(
+                "El tiempo solicitado ({$solFmt} hrs) excede tu saldo de horas personales disponibles ({$dispFmt} hrs restantes). Cuentas con {$asigFmt} hrs asignadas, {$usadFmt} hrs ya aprobadas y {$pendFmt} hrs en permisos pendientes de aprobación."
+            );
+        }
+    }
+
+    /**
+     * NUEVO MÉTODO: Valida si un permiso personal puede ser aprobado por el jefe de división
+     * sin exceder el límite anual asignado en el horario del empleado.
+     */
+    public function puedeAprobarPermisoPersonal(Permiso $permiso): bool
+    {
+        if ($permiso->tipo_permiso_id != 1) {
+            return true;
+        }
+
+        $empleado = $permiso->empleado;
+        if (!$empleado || !$empleado->horario) {
+            return true;
+        }
+
+        $horasAsignadas = (float) ($empleado->horario->horas_personales ?? 0);
+        $anio = Carbon::parse($permiso->desde)->year;
+
+        // Minutos ya aprobados en OTROS permisos del empleado en el mismo año
+        $minutosAprobados = Permiso::query()
+            ->where('empleado_id', $empleado->id)
+            ->where('tipo_permiso_id', 1)
+            ->where('id_estado_aprobacion_jefe_division', 3) // Aprobado
+            ->where('id', '!=', $permiso->id)
+            ->whereYear('desde', $anio)
+            ->whereNotNull('desde')
+            ->whereNotNull('hasta')
+            ->selectRaw('SUM(DATEDIFF(MINUTE, desde, hasta)) as total')
+            ->value('total') ?? 0;
+
+        $minutosEstePermiso = Carbon::parse($permiso->desde)->diffInMinutes(Carbon::parse($permiso->hasta));
+        $horasTotales = round(($minutosAprobados + $minutosEstePermiso) / 60, 2);
+
+        return $horasTotales <= $horasAsignadas;
     }
 
     public function aprobarVB(Permiso $permiso, int $estadoId, User $user): void
