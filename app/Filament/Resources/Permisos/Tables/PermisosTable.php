@@ -118,6 +118,6 @@ class PermisosTable
                 ViewAction::make(),
             ])
 
-
+            ->bulkActions([]);
     }
 }
